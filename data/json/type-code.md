@@ -1,0 +1,9 @@
+TopicRelation.position 
+
+1 上
+
+2 下
+
+3 左
+
+4 右

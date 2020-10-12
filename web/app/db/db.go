@@ -1,8 +1,5 @@
 package db
 
-import "github.com/jmoiron/sqlx"
+func demo() {
 
-func demo()  {
-	sqlx.Connect()
-	
 }
