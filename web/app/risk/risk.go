@@ -1,7 +1,7 @@
 package risk
 
 import (
-	"github.com/Seven4X/link-link/web/app/log"
+	"github.com/Seven4X/link/web/app/log"
 	"github.com/importcjj/sensitive"
 	"sync"
 )

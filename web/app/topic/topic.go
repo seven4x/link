@@ -1,6 +1,6 @@
 package topic
 
-import "github.com/Seven4X/link-link/web/app/risk"
+import "github.com/Seven4X/link/web/app/risk"
 
 /*
 1.敏感词校验

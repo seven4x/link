@@ -1,4 +1,4 @@
-module github.com/Seven4X/link-link
+module github.com/Seven4X/link
 
 go 1.15
 
