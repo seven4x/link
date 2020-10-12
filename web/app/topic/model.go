@@ -1,6 +1,7 @@
 package topic
+
 type Topic struct {
-	ID         int    `json:"id"`
+	Id         int    `json:"id"`
 	Name       string `json:"name"`
 	Tags       string `json:"tags"`
 	CreateBy   string `json:"create_by"`
