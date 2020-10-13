@@ -31,9 +31,10 @@ func route(echo *echo.Echo) {
 3.
 */
 func newTopic(c echo.Context) error {
-	req := new(request.NewTopic)
-	//todo validate
-	c.Bind(req)
+	req := new(request.NewTopicReq)
+
+	err := c.Bind(req)
+	println(err.Error())
 	//todo convert
 	m := model.Topic{}
 	svc.Save(&m)
