@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	topicJson = `{"name":"testTopic","refTopicId":12,"position":5}`
+	topicJson = `{"name":"t","refTopicId":12,"position":5}`
 )
 
 // todo mockdb
@@ -32,6 +32,7 @@ func TestCreateTopic(t *testing.T) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 		suc := api.SuccResp{}
 		json.Unmarshal(rec.Body.Bytes(), &suc)
+		println(rec.Body.String())
 		assert.Equal(t, suc.OK, 0)
 	}
 }

@@ -34,10 +34,16 @@ func route(echo *echo.Echo) {
 */
 func newTopic(e echo.Context) error {
 	req := new(request.NewTopicReq)
-	err := e.Bind(req)
-	if err != nil {
+
+	if err := e.Bind(req); err != nil {
 		_ = e.JSON(http.StatusOK, api.Fail(err.Error()))
 		log.Info(err.Error())
+		return nil
+	}
+
+	if err := e.Validate(req); err != nil {
+		//todo 失败消息的可读性
+		e.JSON(http.StatusOK, api.Fail(err.Error()))
 		return nil
 	}
 	e.JSON(http.StatusOK, api.Succ(1))
