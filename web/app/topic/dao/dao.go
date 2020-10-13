@@ -1,8 +1,8 @@
 package dao
 
 import (
-	"github.com/Seven4X/link/web/app/store/db"
 	"github.com/Seven4X/link/web/app/topic/model"
+	"github.com/Seven4X/link/web/library/store/db"
 	"github.com/xormplus/xorm"
 )
 

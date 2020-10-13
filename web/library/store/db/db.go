@@ -1,7 +1,7 @@
 package db
 
 import (
-	"github.com/Seven4X/link/web/app/log"
+	"github.com/Seven4X/link/web/library/log"
 	_ "github.com/lib/pq"
 	"github.com/xormplus/xorm"
 )
