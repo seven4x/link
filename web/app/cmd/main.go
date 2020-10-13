@@ -1,8 +1,10 @@
 package main
+
 import (
-	"net/http"
+	topic "github.com/Seven4X/link/web/app/topic/server/http"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"net/http"
 )
 
 func main() {
@@ -16,7 +18,11 @@ func main() {
 	// Routes
 	e.GET("/", hello)
 
+	// 初始化模块
+	topic.Router(e)
+
 	// Start server
+	//todo gracehttp
 	e.Logger.Fatal(e.Start(":1323"))
 }
 func hello(c echo.Context) error {
