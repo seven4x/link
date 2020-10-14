@@ -1,30 +1,36 @@
 package db
 
 import (
+	"database/sql"
 	"github.com/Seven4X/link/web/library/log"
 	_ "github.com/lib/pq"
 	"github.com/xormplus/xorm"
 )
 
-var db *xorm.Engine
+var engine *xorm.Engine
 
 func init() {
 	var err error
 	//todo   viper
-	db, err = xorm.NewPostgreSQL("postgres://postgres:linkhub2333@127.0.0.1:5432/link_hub?sslmode=disable")
+	engine, err = xorm.NewPostgreSQL("postgres://postgres:linkhub2333@127.0.0.1:5432/link_hub?sslmode=disable")
 	if err != nil {
 		log.Error(err.Error())
 		panic(err)
 	}
-	db.ShowSQL(true)
-	err = db.Ping()
+	engine.ShowSQL(true)
+	err = engine.Ping()
 	if err != nil {
-		log.Error("db-ping-failed:", err.Error())
+		log.Error("engine-ping-failed:", err.Error())
 	}
 }
 
 //调用时，p=bil
 func NewDb() (p *xorm.Engine) {
-	p = db
-	return db
+	p = engine
+	return engine
+}
+
+//参考：https://blog.marvel6.cn/2020/01/test-and-mock-db-by-xorm-with-the-help-of-convey-and-sqlmock/
+func SetMockDb(mockDb *sql.DB) {
+	engine.DB().DB = mockDb
 }
