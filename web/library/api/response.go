@@ -2,22 +2,22 @@ package api
 
 type (
 	FailResp struct {
-		OK  int
-		Msg string
+		Ok  int    `json:"ok"`
+		Msg string `json:"msg"`
 	}
 	SuccResp struct {
-		OK   int
+		Ok   int `json:"ok"`
 		Data interface{}
 	}
 )
 
 func Fail(msg string) (res *FailResp) {
-	return &FailResp{OK: 1, Msg: msg}
+	return &FailResp{Ok: 1, Msg: msg}
 }
 
 func Succ(data interface{}) (res *SuccResp) {
 	return &SuccResp{
-		OK:   0,
+		Ok:   0,
 		Data: data,
 	}
 }

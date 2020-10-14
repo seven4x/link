@@ -33,6 +33,6 @@ func TestCreateTopic(t *testing.T) {
 		suc := api.SuccResp{}
 		json.Unmarshal(rec.Body.Bytes(), &suc)
 		println(rec.Body.String())
-		assert.Equal(t, suc.OK, 0)
+		assert.Equal(t, suc.Ok, 0)
 	}
 }

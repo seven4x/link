@@ -6,9 +6,9 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func NewEcho() (ret *echo.Echo) {
+func NewEcho() (e *echo.Echo) {
 	// Echo instance
-	e := echo.New()
+	e = echo.New()
 	e.Validator = validator.New()
 	// Middleware
 	e.Use(middleware.Logger())

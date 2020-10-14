@@ -10,6 +10,7 @@ require (
 	github.com/agrison/mxj v0.0.0-20160310142625-1269f8afb3b4 // indirect
 	github.com/bndr/gotabulate v1.1.2 // indirect
 	github.com/clbanning/mxj v1.8.4 // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-playground/validator/v10 v10.4.0
