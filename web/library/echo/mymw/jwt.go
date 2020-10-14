@@ -8,10 +8,10 @@ import (
 )
 
 const (
-	secret = "linkhub232"
+	secret = "55f0bcd1f387881682359e41"
 )
 
-type jwtCustomClaims struct {
+type JwtCustomClaims struct {
 	Name string `json:"name"`
 	Id   int    `json:"id"`
 	jwt.StandardClaims
@@ -19,7 +19,7 @@ type jwtCustomClaims struct {
 
 func BuildToken(username string, id int) (tokenstr string) {
 	// Set custom claims
-	claims := &jwtCustomClaims{
+	claims := &JwtCustomClaims{
 		username,
 		id,
 		jwt.StandardClaims{
@@ -36,7 +36,7 @@ func BuildToken(username string, id int) (tokenstr string) {
 func JWT() echo.MiddlewareFunc {
 	// Configure middleware with the custom claims type
 	config := middleware.JWTConfig{
-		Claims:     &jwtCustomClaims{},
+		Claims:     &JwtCustomClaims{},
 		SigningKey: []byte(secret),
 	}
 

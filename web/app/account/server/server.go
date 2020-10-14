@@ -5,6 +5,8 @@ import (
 	"github.com/Seven4X/link/web/app/account/service"
 	"github.com/Seven4X/link/web/library/api"
 	"github.com/Seven4X/link/web/library/echo/mymw"
+	"github.com/Seven4X/link/web/library/log"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )
@@ -20,7 +22,6 @@ func Router(e *echo.Echo) {
 
 }
 
-// todo global error handler
 func login(e echo.Context) error {
 	req := &request.Login{}
 	if err := e.Bind(req); err != nil {
@@ -38,6 +39,9 @@ func login(e echo.Context) error {
 }
 
 func info(e echo.Context) error {
-	e.JSON(http.StatusOK, api.Succ("鸡要文件"))
+	user := e.Get("user").(*jwt.Token)
+	claims := user.Claims.(*mymw.JwtCustomClaims)
+	log.Info(claims)
+	e.JSON(http.StatusOK, api.Succ([2]interface{}{"鸡要文件", claims}))
 	return nil
 }

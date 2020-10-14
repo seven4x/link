@@ -34,24 +34,28 @@ func route(echo *echo.Echo) {
 */
 func newTopic(e echo.Context) error {
 	req := new(request.NewTopicReq)
-
+	//1.解析
 	if err := e.Bind(req); err != nil {
 		_ = e.JSON(http.StatusOK, api.Fail(err.Error()))
 		log.Info(err.Error())
 		return nil
 	}
-
+	//2.校验
 	if err := e.Validate(req); err != nil {
 		//todo 失败消息的可读性
-		e.JSON(http.StatusOK, api.Fail(err.Error()))
+		_ = e.JSON(http.StatusOK, api.Fail(err.Error()))
 		return nil
 	}
-	e.JSON(http.StatusOK, api.Succ(1))
 
+	//3.转换
+	//复杂对象使用gconv
+	//topic := &model.Topic{}
+	//_ = gconv.Struct(req, topic)
+	//简单对象在Request对象中定义转化方法
+	topic := req.ToTopic()
+	log.Info(topic)
+	//4.处理
+	b, s := svc.Save(topic)
+	_ = e.JSON(http.StatusOK, api.Response(b, s))
 	return nil
-
-	////todo convert
-	//m := model.Topic{}
-	//svc.Save(&m)
-	//return nil
 }

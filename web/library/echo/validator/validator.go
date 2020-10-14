@@ -13,7 +13,6 @@ func (cv *CustomValidator) Validate(i interface{}) error {
 	return cv.validator.Struct(i)
 }
 
-// todo 验证
 func New() (v *CustomValidator) {
 	v = &CustomValidator{validator: validator.New()}
 	return

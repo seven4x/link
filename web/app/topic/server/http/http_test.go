@@ -14,11 +14,12 @@ import (
 )
 
 var (
-	topicJson = `{"name":"t","refTopicId":12,"position":5}`
+	topicJson    = `{"name":"t1","refTopicId":12,"position":4}`
+	topicJsonErr = `{"name":"t1","refTopicId":12,"position":5}`
 )
 
 // todo mockdb
-func TestCreateTopic(t *testing.T) {
+func TestCreateTopicSucc(t *testing.T) {
 	// Setup
 	e := setup.NewEcho()
 
@@ -30,9 +31,28 @@ func TestCreateTopic(t *testing.T) {
 	// Assertions
 	if assert.NoError(t, newTopic(c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
-		suc := api.SuccResp{}
+		suc := api.Result{}
 		json.Unmarshal(rec.Body.Bytes(), &suc)
 		println(rec.Body.String())
-		assert.Equal(t, suc.Ok, 0)
+		assert.Equal(t, 0, suc.Ok)
+	}
+}
+
+func TestCreateTopicFailed(t *testing.T) {
+	// Setup
+	e := setup.NewEcho()
+
+	req := httptest.NewRequest(http.MethodPost, "/topic", strings.NewReader(topicJsonErr))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	// Assertions
+	if assert.NoError(t, newTopic(c)) {
+		assert.Equal(t, http.StatusOK, rec.Code)
+		suc := api.Result{}
+		json.Unmarshal(rec.Body.Bytes(), &suc)
+		println(rec.Body.String())
+		assert.Equal(t, 1, suc.Ok)
 	}
 }
