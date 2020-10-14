@@ -72,3 +72,25 @@ func TestCreateTopicFailed(t *testing.T) {
 		assert.Equal(t, 1, suc.Ok)
 	}
 }
+
+//参考：https://learnku.com/go/t/26711 如果需要可以和配合testfixtures进行环境构造
+func TestCreateTopicSuccUseTxdb(t *testing.T) {
+	// 1.Setup
+	e := setup.NewEcho()
+
+	req := httptest.NewRequest(http.MethodPost, "/topic", strings.NewReader(topicJson))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	//2.设置mock数据库
+	mydb.RegisterMockDriver()
+	//3.Assertions
+	if assert.NoError(t, newTopic(c)) {
+		assert.Equal(t, http.StatusOK, rec.Code)
+		suc := api.Result{}
+		_ = json.Unmarshal(rec.Body.Bytes(), &suc)
+		println(rec.Body.String())
+		assert.Equal(t, 0, suc.Ok)
+		assert.Equal(t, "1", suc.Data)
+	}
+}

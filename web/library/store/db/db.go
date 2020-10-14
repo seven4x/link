@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"github.com/DATA-DOG/go-txdb"
 	"github.com/Seven4X/link/web/library/log"
 	_ "github.com/lib/pq"
 	"github.com/xormplus/xorm"
@@ -33,4 +34,20 @@ func NewDb() (p *xorm.Engine) {
 //参考：https://blog.marvel6.cn/2020/01/test-and-mock-db-by-xorm-with-the-help-of-convey-and-sqlmock/
 func SetMockDb(mockDb *sql.DB) {
 	engine.DB().DB = mockDb
+}
+
+//参考：https://github.com/DATA-DOG/Go-txdb
+func RegisterMockDriver() {
+	txdb.Register("txdb", "postgres", "postgres://postgres:linkhub2333@127.0.0.1:5432/link_hub?sslmode=disable")
+	db, err := sql.Open("txdb", "identifier")
+	if err != nil {
+		log.Error(err)
+	}
+	engine.DB().DB = db
+}
+
+func CloseEngine() {
+	if engine != nil {
+		_ = engine.Close()
+	}
 }
