@@ -2,14 +2,15 @@ package http
 
 import (
 	"encoding/json"
-	"github.com/Seven4X/link/web/library/api"
-	"github.com/Seven4X/link/web/library/echo/validator"
-	"github.com/labstack/echo/v4"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/Seven4X/link/web/library/api"
+	setup "github.com/Seven4X/link/web/library/echo"
+	"github.com/labstack/echo/v4"
+	"github.com/stretchr/testify/assert"
 )
 
 var (
@@ -19,8 +20,7 @@ var (
 // todo mockdb
 func TestCreateTopic(t *testing.T) {
 	// Setup
-	e := echo.New()
-	e.Validator = validator.New()
+	e := setup.NewEcho()
 
 	req := httptest.NewRequest(http.MethodPost, "/topic", strings.NewReader(topicJson))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)

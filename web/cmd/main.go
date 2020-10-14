@@ -1,21 +1,15 @@
 package main
 
 import (
-	topic "github.com/Seven4X/link/web/app/topic/server/http"
-	"github.com/Seven4X/link/web/library/echo/validator"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 	"net/http"
+
+	topic "github.com/Seven4X/link/web/app/topic/server/http"
+	setup "github.com/Seven4X/link/web/library/echo"
+	"github.com/labstack/echo/v4"
 )
 
 func main() {
-	// Echo instance
-	e := echo.New()
-	e.Validator = validator.New()
-	// Middleware
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-
+	e := setup.NewEcho()
 	// Routes
 	e.GET("/", hello)
 
