@@ -18,7 +18,7 @@ import (
 const (
 	endpoint         = "acm.aliyun.com"
 	namespaceId      = "16c0d799-8364-4011-9bd9-94556fe35fdb"
-	linkPreviewToken = "link-preview-token"
+	LinkPreviewToken = "link-preview-token"
 )
 
 func init() {
@@ -71,14 +71,14 @@ func initLinkPreviewToken() {
 		Group:  "DEFAULT_GROUP",
 		OnChange: func(namespace, group, dataId, data string) {
 			fmt.Println("ListenConfig group:" + group + ", dataId:" + dataId + ", data:" + data)
-			viper.Set(linkPreviewToken, data)
+			viper.Set(LinkPreviewToken, data)
 		},
 	})
 	if err != nil {
 		log.Error("acm client Listen error", err.Error())
 	}
-	res := getAcm(linkPreviewToken)
-	viper.Set(linkPreviewToken, res)
+	res := getAcm(LinkPreviewToken)
+	viper.Set(LinkPreviewToken, res)
 }
 
 func Get(key string) interface{} {
