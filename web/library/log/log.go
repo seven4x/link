@@ -26,6 +26,14 @@ func Info(args ...interface{}) {
 	sugar.Info(args...)
 }
 
+func Warn(args ...interface{}) {
+	sugar.Warn(args...)
+}
+
+func Warnf(template string, args ...interface{}) {
+	sugar.Warnf(template, args...)
+}
+
 func Error(args ...interface{}) {
 	sugar.Error(args...)
 }

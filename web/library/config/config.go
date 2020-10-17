@@ -17,8 +17,8 @@ import (
 
 const (
 	endpoint         = "acm.aliyun.com"
-	namespaceId      = "16c0d799-8364-4011-9bd9-94556fe35fdb"
 	LinkPreviewToken = "link-preview-token"
+	GroupId          = "link-hub-go"
 )
 
 func init() {
@@ -34,8 +34,9 @@ idea存在获取不到环境变量的问题，解决办法参考：
 viper会进行转换，环境变量必须是大写才能取到
 */
 func InitAcm() {
-	ak := GetString("acm_ak")
-	sk := GetString("acm_sk")
+	ak := GetString("ACM_AK")
+	sk := GetString("ACM_SK")
+	ns := GetString("ACM_NS")
 	if ak == "" || sk == "" {
 		log.Info("acm.ak acm.sk not config")
 		return
@@ -43,7 +44,7 @@ func InitAcm() {
 	clientConfig := constant.ClientConfig{
 		//
 		Endpoint:       endpoint + ":8080",
-		NamespaceId:    namespaceId,
+		NamespaceId:    ns,
 		AccessKey:      ak,
 		SecretKey:      sk,
 		TimeoutMs:      5 * 1000,
@@ -67,8 +68,8 @@ func InitAcm() {
 
 func initLinkPreviewToken() {
 	err := client.ListenConfig(vo.ConfigParam{
-		DataId: "token",
-		Group:  "DEFAULT_GROUP",
+		DataId: LinkPreviewToken,
+		Group:  GroupId,
 		OnChange: func(namespace, group, dataId, data string) {
 			fmt.Println("ListenConfig group:" + group + ", dataId:" + dataId + ", data:" + data)
 			viper.Set(LinkPreviewToken, data)
@@ -77,7 +78,7 @@ func initLinkPreviewToken() {
 	if err != nil {
 		log.Error("acm client Listen error", err.Error())
 	}
-	res := getAcm(LinkPreviewToken)
+	res := getAcmConfig(LinkPreviewToken)
 	viper.Set(LinkPreviewToken, res)
 }
 
@@ -89,17 +90,21 @@ func GetString(key string) string {
 	return viper.GetString(key)
 }
 
-func getAcm(key string) string {
+func getAcmConfig(key string) string {
 	if client == nil {
 		return ""
 	}
 	content, err := client.GetConfig(vo.ConfigParam{
 		DataId: key,
-		Group:  "DEFAULT_GROUP"})
+		Group:  "link-hub-go"})
 
 	if err != nil {
-		log.Error("getAcm Error", err.Error())
+		log.Error("getAcmConfig Error", err.Error())
 	}
 	log.Info(content)
 	return content
+}
+
+func GetAcmClient() (c config_client.IConfigClient) {
+	return client
 }

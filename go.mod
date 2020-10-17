@@ -10,6 +10,7 @@ require (
 	github.com/DATA-DOG/go-txdb v0.1.3
 	github.com/agrison/go-tablib v0.0.0-20160310143025-4930582c22ee // indirect
 	github.com/agrison/mxj v0.0.0-20160310142625-1269f8afb3b4 // indirect
+	github.com/alibaba/sentinel-golang v0.6.1
 	github.com/bndr/gotabulate v1.1.2 // indirect
 	github.com/clbanning/mxj v1.8.5-0.20200714211355-ff02cfb8ea28 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
@@ -21,7 +22,6 @@ require (
 	github.com/facebookgo/stack v0.0.0-20160209184415-751773369052 // indirect
 	github.com/facebookgo/stats v0.0.0-20151006221625-1b76add642e4 // indirect
 	github.com/facebookgo/subset v0.0.0-20200203212716-c811ad88dec4 // indirect
-	github.com/fatih/structs v1.1.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-playground/validator/v10 v10.4.0
 	github.com/go-sql-driver/mysql v1.5.0 // indirect
@@ -29,6 +29,7 @@ require (
 	github.com/importcjj/sensitive v0.0.0-20200106142752-42d1c505be7b
 	github.com/labstack/echo/v4 v4.1.17
 	github.com/lib/pq v1.8.0
+	github.com/magiconair/properties v1.8.1
 	github.com/mattn/go-sqlite3 v1.14.4 // indirect
 	github.com/nacos-group/nacos-sdk-go v1.0.0
 	github.com/spf13/viper v1.7.1

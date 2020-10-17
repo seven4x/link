@@ -12,3 +12,10 @@
 使用开源版sentinel-go 
 
 可以接受无看板，通过日志查看即可
+
+
+## sentinel-go 集成
+
+1. sentinel-go 与echo集成
+2. sentinel-go 与acm集成
+3. acm配置规则
