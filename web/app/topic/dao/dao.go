@@ -18,27 +18,28 @@ func New() (dao *Dao) {
 	return
 }
 
-func (dao *Dao) Save(topic *model.Topic, rel *model.TopicRel) (i int64, err error) {
+func (dao *Dao) Save(topic *model.Topic, rel *model.TopicRel) (i int, err error) {
 	//开启事物
 	id, err := dao.engine.Transaction(func(session *xorm.Session) (interface{}, error) {
-		if i, err = session.InsertOne(topic); err != nil {
-			return nil, err
+		i64, err := session.InsertOne(topic)
+		if err != nil {
+			return 0, err
 		}
-		rel.Bid = i
+		rel.Bid = int(i64)
 		if _, err = session.InsertOne(rel); err != nil {
-			return nil, err
+			return 0, err
 		}
-		return i, nil
+		return rel.Bid, nil
 	})
-	return id.(int64), err
+	return id.(int), err
 }
 
-func (dao *Dao) ExistById(id int64) (has bool, err error) {
+func (dao *Dao) ExistById(id int) (has bool, err error) {
 	has, err = dao.engine.Exist(&model.Topic{Id: id})
 	return has, err
 }
 
-func (dao *Dao) GetById(id int64) (topic *model.Topic, err error) {
+func (dao *Dao) GetById(id int) (topic *model.Topic, err error) {
 	topic = &model.Topic{Id: id}
 	_, err = dao.engine.Get(topic)
 	return
@@ -48,11 +49,18 @@ const (
 	FindByNameWithSameParent = `select a.name from topic a inner join topic_rel b 
 											on a.id = b.bid
 											where b.position=? and b.aid=? and a.name=? `
+	ListTopic = `select a.* from topic a left join topic_rel b 	on a.id = b.bid
+		where b.aid=? and b.position=? and a.lang = ? and a.id > ?`
 )
 
 // 校验相同位置是否
-func (dao *Dao) FindByNameWithSameParent(name string, position int, refId int64) (b bool, err error) {
+func (dao *Dao) FindByNameWithSameParent(name string, position int, refId int) (b bool, err error) {
 	topic := &model.Topic{}
 	err = dao.engine.SQL(FindByNameWithSameParent, position, refId, name).Find(topic)
 	return topic.Name == name, err
+}
+
+func (dao *Dao) ListRelativeTopic(id int, position string, lang string, prev int) (topic []model.Topic, err error) {
+	err = dao.engine.SQL(ListTopic, id, position, lang, prev).Find(topic)
+	return
 }

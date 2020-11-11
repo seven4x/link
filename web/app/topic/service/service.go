@@ -23,7 +23,7 @@ func NewService() (s *Service) {
 2.检查关联topic是否存在
 3.检查是否重复
 */
-func (service *Service) Save(topic *model.Topic, rel *model.TopicRel) (id int64, svrError *api.Err) {
+func (service *Service) Save(topic *model.Topic, rel *model.TopicRel) (id int, svrError *api.Err) {
 	//todo 单用户创建频次限
 
 	if topic.Lang == "zh" {
@@ -50,4 +50,14 @@ func (service *Service) Save(topic *model.Topic, rel *model.TopicRel) (id int64,
 	}
 	log.Infow("save-new-topic", "uid", topic.CreateBy, "aid", rel.Aid, "name", topic.Name)
 	return i, nil
+}
+
+func (service *Service) GetDetail(id int) (topic *model.Topic, err error) {
+	topic, err = service.dao.GetById(id)
+	//todo 其他关联查询信息
+	return
+}
+
+func (service *Service) ListRelativeTopic(id int, position string, lang string, prev int) (topic []model.Topic, err error) {
+	return service.dao.ListRelativeTopic(id, position, lang, prev)
 }

@@ -13,6 +13,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"strconv"
 )
 
 var (
@@ -33,9 +34,11 @@ func Router(e *echo.Echo) {
 }
 
 /*
-1.敏感词校验
-2.重复校验
-3.
+1. 参数解析
+2. 参数校验
+3. 转换参数
+4. 调用service
+5. JSON 响应
 */
 func createTopic(e echo.Context) error {
 	req := new(request.NewTopicReq)
@@ -71,6 +74,16 @@ func searchTopic(e echo.Context) error {
 	return nil
 }
 func topicDetail(e echo.Context) error {
+	id := e.Param("id")
+	if i, err := strconv.Atoi(id); err != nil {
+		_ = e.JSON(http.StatusOK, api.Fail("id must integer"))
+	} else {
+		topic, err := svc.GetDetail(i)
+		if err != nil {
+			return e.JSON(http.StatusOK, api.Fail("not found this topic"))
+		}
+		return e.JSON(http.StatusOK, api.Success(topic))
+	}
 	return nil
 }
 func hotTopic(e echo.Context) error {
@@ -83,5 +96,22 @@ func recentTopic(e echo.Context) error {
 	return nil
 }
 func relativeTopic(e echo.Context) error {
-	return nil
+	tid := e.Param("tid")
+	if id, err := strconv.Atoi(tid); err != nil {
+		return e.JSON(http.StatusOK, api.Fail("param wrong"))
+	} else {
+		position := e.Param("position")
+		lang := e.QueryParam("lang")
+		prev := e.QueryParam("prev")
+		prevInt := 0
+		if prev != "" {
+			prevInt, _ = strconv.Atoi(prev)
+		}
+		topics, err := svc.ListRelativeTopic(id, position, lang, prevInt)
+		if err != nil {
+			return e.JSON(http.StatusOK, api.ResponseHasMore(topics, len(topics) > 0))
+		} else {
+			return err
+		}
+	}
 }

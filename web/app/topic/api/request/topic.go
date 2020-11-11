@@ -4,7 +4,7 @@ import "github.com/Seven4X/link/web/app/topic/model"
 
 type NewTopicReq struct {
 	Name       string `json:"name" validate:"required,min=2,max=140"`
-	RefTopicId int64  `json:"refId" validate:"required"`
+	RefTopicId int    `json:"refId" validate:"required"`
 	Position   int    `json:"position" validate:"oneof=1 2 3 4"`
 	Predicate  string `json:"refDesc"`
 	Tags       string `json:"tags"`
