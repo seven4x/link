@@ -5,10 +5,11 @@ import (
 )
 
 type Topic struct {
-	Id        int       `json:"id" xorm:"pk autoincr"`
+	Id        int64     `json:"id" xorm:"pk autoincr"`
 	Name      string    `json:"name"`
 	Tags      string    `json:"tags"`
-	CreateBy  string    `json:"create_by"`
+	Lang      string    `json:"lang"`
+	CreateBy  int       `json:"create_by"`
 	Score     int       `json:"score"`
 	Agree     int       `json:"agree"`
 	Disagree  int       `json:"disagree"`
@@ -18,8 +19,8 @@ type Topic struct {
 }
 
 type TopicRel struct {
-	Aid        int       `json:"aid"`
-	Bid        int       `json:"bid"`
+	Aid        int64     `json:"aid"`
+	Bid        int64     `json:"bid"`
 	Position   int       `json:"position"`
 	CreateBy   string    `json:"create_by"`
 	Predicate  string    `json:"predicate"`

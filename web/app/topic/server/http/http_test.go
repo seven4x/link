@@ -44,7 +44,7 @@ func TestCreateTopicSucc(t *testing.T) {
 	//3.设置mock数据库
 	mydb.SetMockDb(db)
 	//4.Assertions
-	if assert.NoError(t, newTopic(c)) {
+	if assert.NoError(t, createTopic(c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 		suc := api.Result{}
 		_ = json.Unmarshal(rec.Body.Bytes(), &suc)
@@ -64,7 +64,7 @@ func TestCreateTopicFailed(t *testing.T) {
 	c := e.NewContext(req, rec)
 
 	// Assertions
-	if assert.NoError(t, newTopic(c)) {
+	if assert.NoError(t, createTopic(c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 		suc := api.Result{}
 		json.Unmarshal(rec.Body.Bytes(), &suc)
@@ -85,7 +85,7 @@ func TestCreateTopicSuccUseTxdb(t *testing.T) {
 	//2.设置mock数据库
 	mydb.RegisterMockDriver()
 	//3.Assertions
-	if assert.NoError(t, newTopic(c)) {
+	if assert.NoError(t, createTopic(c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 		suc := api.Result{}
 		_ = json.Unmarshal(rec.Body.Bytes(), &suc)

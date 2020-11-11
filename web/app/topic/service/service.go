@@ -4,8 +4,8 @@ import (
 	"github.com/Seven4X/link/web/app/risk"
 	"github.com/Seven4X/link/web/app/topic/dao"
 	"github.com/Seven4X/link/web/app/topic/model"
+	"github.com/Seven4X/link/web/library/api"
 	"github.com/Seven4X/link/web/library/log"
-	"strconv"
 )
 
 type Service struct {
@@ -20,20 +20,34 @@ func NewService() (s *Service) {
 
 /*
 1.敏感词过滤
-2.检查关联topic是否存在 todo
+2.检查关联topic是否存在
 3.检查是否重复
 */
-func (service *Service) Save(topic *model.Topic) (rb bool, rs string) {
-	var b, s = risk.IsAllowText(topic.Name)
-	if !b {
-		return false, s
+func (service *Service) Save(topic *model.Topic, rel *model.TopicRel) (id int64, svrError *api.Err) {
+	//todo 单用户创建频次限
+
+	if topic.Lang == "zh" {
+		var b, _ = risk.IsAllowText(topic.Name)
+		if !b {
+			return -1, api.New(api.TopicContentNotAllowed)
+		}
+	}
+	if rel.Aid == 0 {
+		return -1, api.New(api.TopicRootNotAllowed)
+	}
+	has, err := service.dao.ExistById(rel.Aid)
+	if err != nil || !has {
+		return -1, api.New(api.TopicRefTopicNoExist)
+	}
+	has, err = service.dao.FindByNameWithSameParent(topic.Name, rel.Position, rel.Aid)
+	if err != nil || !has {
+		return -1, api.New(api.TopicRepeatInSamePosition)
 	}
 
-	i, err := service.dao.Save(topic)
+	i, err := service.dao.Save(topic, rel)
 	if err != nil {
-		return false, err.Error()
+		return -1, api.New(api.TopicBackendDatabaseError)
 	}
-
-	log.Infow("save-new-topic", "id", i, "name", topic.Name)
-	return true, strconv.FormatInt(i, 10)
+	log.Infow("save-new-topic", "uid", topic.CreateBy, "aid", rel.Aid, "name", topic.Name)
+	return i, nil
 }

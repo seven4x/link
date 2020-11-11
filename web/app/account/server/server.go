@@ -30,7 +30,7 @@ func login(e echo.Context) error {
 	}
 
 	if b, s := svr.Login(*req); b {
-		e.JSON(http.StatusOK, api.Succ(s))
+		e.JSON(http.StatusOK, api.Success(s))
 	} else {
 		e.JSON(http.StatusOK, api.Fail(s))
 	}
@@ -42,6 +42,6 @@ func info(e echo.Context) error {
 	user := e.Get("user").(*jwt.Token)
 	claims := user.Claims.(*mymw.JwtCustomClaims)
 	log.Info(claims)
-	e.JSON(http.StatusOK, api.Succ([2]interface{}{"鸡要文件", claims}))
+	e.JSON(http.StatusOK, api.Success([2]interface{}{"鸡要文件", claims}))
 	return nil
 }

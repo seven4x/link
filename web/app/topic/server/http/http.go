@@ -7,7 +7,10 @@ import (
 	"github.com/Seven4X/link/web/app/topic/api/request"
 	"github.com/Seven4X/link/web/app/topic/service"
 	"github.com/Seven4X/link/web/library/api"
+	"github.com/Seven4X/link/web/library/consts"
+	"github.com/Seven4X/link/web/library/echo/mymw"
 	"github.com/Seven4X/link/web/library/log"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )
@@ -18,12 +21,14 @@ var (
 
 // call by cmd
 func Router(e *echo.Echo) {
-
-	route(e)
-}
-
-func route(echo *echo.Echo) {
-	echo.POST("/topic", newTopic)
+	g := e.Group("/link")
+	g.POST("/topic", createTopic)
+	g.GET("/topic", searchTopic)
+	g.GET("/topic/:id", topicDetail)
+	g.GET("/topic/marks/hot", hotTopic)
+	g.GET("/topic/marks/random", randomTopic)
+	g.GET("/topic/marks/recent", recentTopic)
+	g.GET("/topic/:tid/related/:position", relativeTopic)
 
 }
 
@@ -32,7 +37,7 @@ func route(echo *echo.Echo) {
 2.重复校验
 3.
 */
-func newTopic(e echo.Context) error {
+func createTopic(e echo.Context) error {
 	req := new(request.NewTopicReq)
 	//1.解析
 	if err := e.Bind(req); err != nil {
@@ -42,7 +47,6 @@ func newTopic(e echo.Context) error {
 	}
 	//2.校验
 	if err := e.Validate(req); err != nil {
-		//todo 失败消息的可读性
 		_ = e.JSON(http.StatusOK, api.Fail(err.Error()))
 		return nil
 	}
@@ -52,10 +56,32 @@ func newTopic(e echo.Context) error {
 	//topic := &model.Topic{}
 	//_ = gconv.Struct(req, topic)
 	//简单对象在Request对象中定义转化方法
-	topic := req.ToTopic()
-	log.Info(topic)
+	topic, rel := req.ToTopic()
+
+	user := e.Get(consts.User).(*jwt.Token)
+	claims := user.Claims.(*mymw.JwtCustomClaims)
+	topic.CreateBy = claims.Id
 	//4.处理
-	b, s := svc.Save(topic)
-	_ = e.JSON(http.StatusOK, api.Response(b, s))
+	id, svrErr := svc.Save(topic, rel)
+	_ = e.JSON(http.StatusOK, api.Response(id, svrErr))
+	return nil
+}
+
+func searchTopic(e echo.Context) error {
+	return nil
+}
+func topicDetail(e echo.Context) error {
+	return nil
+}
+func hotTopic(e echo.Context) error {
+	return nil
+}
+func randomTopic(e echo.Context) error {
+	return nil
+}
+func recentTopic(e echo.Context) error {
+	return nil
+}
+func relativeTopic(e echo.Context) error {
 	return nil
 }
