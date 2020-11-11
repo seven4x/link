@@ -7,8 +7,10 @@ proxy
 
 ## docker
 docker desktop
-
 PostgreSQL
+```
+docker run --name postgres  -e PGDATA=/var/lib/postgresql/data/pgdata -v /Users/seven/data:/var/lib/postgresql/data/pgdata   -e POSTGRES_PASSWORD=link233 -d postgres
+```
 redis
 ```shell script
 # 

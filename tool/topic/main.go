@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"github.com/Seven4X/link/web/app/topic/model"
+	"github.com/Seven4X/link/web/library/store/db"
 	"github.com/emirpasic/gods/lists/arraylist"
 	"github.com/emirpasic/gods/stacks/arraystack"
 	"github.com/spf13/cobra"
@@ -58,6 +60,14 @@ func importTopic(file *os.File) {
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
+	saveALl(root)
+}
+
+func parse(text string) (code, name string) {
+	res := strings.Split(text, ":")
+	code = res[0]
+	name = res[1]
+	return code, name
 }
 
 func getParent(stack *arraystack.Stack, t Topic) (topic *Topic) {
@@ -77,11 +87,67 @@ func getParent(stack *arraystack.Stack, t Topic) (topic *Topic) {
 	}
 }
 
-func parse(text string) (code, name string) {
-	res := strings.Split(text, ":")
-	code = res[0]
-	name = res[1]
-	return code, name
+func saveALl(root *Topic) {
+	if root.subs.Size() == 0 {
+		return
+	}
+	iterator := root.subs.Iterator()
+	var prev *model.Topic
+	for iterator.Next() {
+		topic := iterator.Value().(*Topic)
+		record := &model.Topic{
+			Name:     topic.name,
+			Lang:     "zh",
+			Tags:     topic.code,
+			CreateBy: 0,
+		}
+		if err := saveTopic(record); err != nil {
+			println("发生错误🙅")
+			return
+		}
+		topic.id = record.Id
+
+		//上下关系
+		saveRel(&model.TopicRel{
+			Aid:      root.id,
+			Bid:      topic.id,
+			Position: 1,
+			CreateBy: 0,
+		})
+		if prev != nil {
+			//左右关系
+			saveRel(&model.TopicRel{
+				Aid:      prev.Id,
+				Bid:      topic.id,
+				Position: 2,
+				CreateBy: 0,
+			})
+		}
+
+		saveALl(topic)
+
+		prev = record
+	}
+}
+
+var (
+	engine = db.NewDb()
+)
+
+func saveTopic(topic *model.Topic) error {
+	_, err := engine.InsertOne(topic)
+	if err == nil {
+		return nil
+	} else {
+		println(err.Error())
+		return err
+	}
+}
+func saveRel(rel *model.TopicRel) {
+	_, err := engine.InsertOne(rel)
+	if err != nil {
+		println(err.Error())
+	}
 }
 
 //topic -f topic-data.txt

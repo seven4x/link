@@ -21,8 +21,8 @@ type Topic struct {
 type TopicRel struct {
 	Aid        int       `json:"aid"`
 	Bid        int       `json:"bid"`
-	Position   int       `json:"position"`
-	CreateBy   string    `json:"create_by"`
+	Position   int       `json:"position"` //1 上下 2 左右
+	CreateBy   int       `json:"create_by"`
 	Predicate  string    `json:"predicate"`
 	CreateTime time.Time `json:"create_time" xorm:"create_time created"`
 	DeleteTime time.Time `json:"delete_time" xorm:"update_time deleted"`

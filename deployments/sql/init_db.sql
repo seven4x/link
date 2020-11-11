@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS "topic"
     "name"        VARCHAR(140) NULL,
     "tags"        VARCHAR(140) NULL,
     "create_by"   varchar(32)  NULL,
+    "lang"        char(4)     default 'zh',
     "score"       int          NULL,
     "agree"       int          NULL,
     "disagree"    int          NULL,
