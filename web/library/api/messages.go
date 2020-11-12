@@ -8,4 +8,6 @@ const (
 	TopicBackendDatabaseError = "topic.msg.database-error"
 	TopicRefTopicNoExist      = "topic.msg.ref-topic-not-exist"
 	TopicRepeatInSamePosition = "topic.msg.topic-repeat-in-same-position"
+	TopicNotFound             = "topic.msg.topic-not-found"
+	GlobalActionMustLogin     = "global.action-must-login"
 )

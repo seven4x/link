@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/Seven4X/link/web/app/risk"
+	"github.com/Seven4X/link/web/app/topic/api/response"
 	"github.com/Seven4X/link/web/app/topic/dao"
 	"github.com/Seven4X/link/web/app/topic/model"
 	"github.com/Seven4X/link/web/library/api"
@@ -27,8 +28,9 @@ func (service *Service) Save(topic *model.Topic, rel *model.TopicRel) (id int, s
 	//todo 单用户创建频次限
 
 	if topic.Lang == "zh" {
-		var b, _ = risk.IsAllowText(topic.Name)
+		var b, s = risk.IsAllowText(topic.Name)
 		if !b {
+			log.Infow("topic-save-not-allow", "keyword", s)
 			return -1, api.New(api.TopicContentNotAllowed)
 		}
 	}
@@ -52,12 +54,19 @@ func (service *Service) Save(topic *model.Topic, rel *model.TopicRel) (id int, s
 	return i, nil
 }
 
-func (service *Service) GetDetail(id int) (topic *model.Topic, err error) {
-	topic, err = service.dao.GetById(id)
+func (service *Service) GetDetail(id int) (detail *response.TopicDetail, err error) {
+	topic, err := service.dao.GetById(id)
+	detail = response.TopicDetailOfModel(topic)
 	//todo 其他关联查询信息
+
 	return
 }
 
-func (service *Service) ListRelativeTopic(id int, position string, lang string, prev int) (topic []model.Topic, err error) {
-	return service.dao.ListRelativeTopic(id, position, lang, prev)
+func (service *Service) ListRelativeTopic(id int, position string, prev int) (topic []*response.TopicSimple, e error) {
+	if topics, err := service.dao.ListRelativeTopic(id, position, prev); err == nil {
+		return response.ModelToTopicSimple(topics), nil
+	} else {
+		return nil, err
+	}
+
 }

@@ -22,14 +22,14 @@ var (
 
 // call by cmd
 func Router(e *echo.Echo) {
-	g := e.Group("/link")
-	g.POST("/topic", createTopic)
-	g.GET("/topic", searchTopic)
-	g.GET("/topic/:id", topicDetail)
-	g.GET("/topic/marks/hot", hotTopic)
-	g.GET("/topic/marks/random", randomTopic)
-	g.GET("/topic/marks/recent", recentTopic)
-	g.GET("/topic/:tid/related/:position", relativeTopic)
+	g := e.Group("/topic")
+	g.POST("", createTopic, mymw.JWT())
+	g.GET("", searchTopic)
+	g.GET("/:id", topicDetail)
+	g.GET("/marks/hot", hotTopic)
+	g.GET("/marks/random", randomTopic)
+	g.GET("/marks/recent", recentTopic)
+	g.GET("/:tid/related/:position", relativeTopic)
 
 }
 
@@ -38,10 +38,12 @@ func Router(e *echo.Echo) {
 2. 参数校验
 3. 转换参数
 4. 调用service
+5.0 转换结果model到vo
 5. JSON 响应
+
 */
 func createTopic(e echo.Context) error {
-	req := new(request.NewTopicReq)
+	req := new(request.CreateTopicRequest)
 	//1.解析
 	if err := e.Bind(req); err != nil {
 		_ = e.JSON(http.StatusOK, api.Fail(err.Error()))
@@ -60,8 +62,11 @@ func createTopic(e echo.Context) error {
 	//_ = gconv.Struct(req, topic)
 	//简单对象在Request对象中定义转化方法
 	topic, rel := req.ToTopic()
-
-	user := e.Get(consts.User).(*jwt.Token)
+	u := e.Get(consts.User)
+	if u == nil {
+		e.JSON(http.StatusOK, api.FailMsgId(api.GlobalActionMustLogin))
+	}
+	user := u.(*jwt.Token)
 	claims := user.Claims.(*mymw.JwtCustomClaims)
 	topic.CreateBy = claims.Id
 	//4.处理
@@ -78,9 +83,9 @@ func topicDetail(e echo.Context) error {
 	if i, err := strconv.Atoi(id); err != nil {
 		_ = e.JSON(http.StatusOK, api.Fail("id must integer"))
 	} else {
-		topic, err := svc.GetDetail(i)
-		if err != nil {
-			return e.JSON(http.StatusOK, api.Fail("not found this topic"))
+		topic, _ := svc.GetDetail(i)
+		if topic == nil {
+			return e.JSON(http.StatusOK, api.FailMsgId(api.TopicNotFound))
 		}
 		return e.JSON(http.StatusOK, api.Success(topic))
 	}
@@ -101,14 +106,13 @@ func relativeTopic(e echo.Context) error {
 		return e.JSON(http.StatusOK, api.Fail("param wrong"))
 	} else {
 		position := e.Param("position")
-		lang := e.QueryParam("lang")
 		prev := e.QueryParam("prev")
 		prevInt := 0
 		if prev != "" {
 			prevInt, _ = strconv.Atoi(prev)
 		}
-		topics, err := svc.ListRelativeTopic(id, position, lang, prevInt)
-		if err != nil {
+		topics, err := svc.ListRelativeTopic(id, position, prevInt)
+		if err == nil {
 			return e.JSON(http.StatusOK, api.ResponseHasMore(topics, len(topics) > 0))
 		} else {
 			return err

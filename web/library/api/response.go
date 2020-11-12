@@ -2,8 +2,8 @@ package api
 
 type (
 	Page struct {
-		HasMore bool
-		Total   int
+		HasMore bool `json:"hasMore"`
+		Total   int  `json:"total,omitempty"`
 	}
 	Result struct {
 		Ok        bool              `json:"ok"`
@@ -11,7 +11,7 @@ type (
 		MsgId     string            `json:"msgId,omitempty"`
 		Msg       string            `json:"msg,omitempty"`
 		ErrorData map[string]string `json:"errorData,omitempty"`
-		Page      Page              `json:"page,omitempty"`
+		Page      *Page             `json:"page,omitempty"`
 	}
 )
 
@@ -19,15 +19,19 @@ func Fail(msg string) (res *Result) {
 	return &Result{Ok: false, Msg: msg}
 }
 
+func FailMsgId(msgId string) (res *Result) {
+	return &Result{Ok: false, MsgId: msgId}
+}
+
 func Success(data interface{}) (res *Result) {
-	return &Result{Ok: true, Data: data}
+	return &Result{Ok: true, Data: data, Page: nil}
 }
 
 func ResponseHasMore(data interface{}, hasMore bool) (res *Result) {
 	res = &Result{
 		Ok:   true,
 		Data: data,
-		Page: Page{HasMore: hasMore},
+		Page: &Page{HasMore: hasMore},
 	}
 
 	return res

@@ -20,7 +20,9 @@ redis
 ## cosmtrek/air
 
 ```
-curl -sSfL https://raw.githubusercontent.com/cosmtrek/air/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
+安装 curl -sSfL https://raw.githubusercontent.com/cosmtrek/air/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
+
+根目录执行 air -d
 ```
 
 

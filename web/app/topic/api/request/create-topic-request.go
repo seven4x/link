@@ -2,7 +2,7 @@ package request
 
 import "github.com/Seven4X/link/web/app/topic/model"
 
-type NewTopicReq struct {
+type CreateTopicRequest struct {
 	Name       string `json:"name" validate:"required,min=2,max=140"`
 	RefTopicId int    `json:"refId" validate:"required"`
 	Position   int    `json:"position" validate:"oneof=1 2 3 4"`
@@ -11,7 +11,7 @@ type NewTopicReq struct {
 	Lang       string `json:"lang"`
 }
 
-func (req *NewTopicReq) ToTopic() (topic *model.Topic, rel *model.TopicRel) {
+func (req *CreateTopicRequest) ToTopic() (topic *model.Topic, rel *model.TopicRel) {
 	topic = &model.Topic{}
 	topic.Name = req.Name
 	topic.Tags = req.Tags
