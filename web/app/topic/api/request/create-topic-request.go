@@ -9,6 +9,7 @@ type CreateTopicRequest struct {
 	Predicate  string `json:"refDesc"`
 	Tags       string `json:"tags"`
 	Lang       string `json:"lang"`
+	Scope      int    `json:"scope" validate:"oneof=1 2 3"`
 }
 
 func (req *CreateTopicRequest) ToTopic() (topic *model.Topic, rel *model.TopicRel) {
@@ -16,6 +17,7 @@ func (req *CreateTopicRequest) ToTopic() (topic *model.Topic, rel *model.TopicRe
 	topic.Name = req.Name
 	topic.Tags = req.Tags
 	topic.Lang = req.Lang
+	topic.Scope = req.Scope
 
 	rel = &model.TopicRel{}
 	rel.Aid = req.RefTopicId

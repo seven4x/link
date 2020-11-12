@@ -5,10 +5,12 @@ import (
 )
 
 type Topic struct {
-	Id        int       `json:"id" xorm:"pk autoincr"`
-	Name      string    `json:"name"`
-	Tags      string    `json:"tags"`
-	Icon      string    `json:"icon"`
+	Id   int    `json:"id" xorm:"pk autoincr"`
+	Name string `json:"name"`
+	Tags string `json:"tags"`
+	Icon string `json:"icon"`
+	//1 公开编辑， 2个人 3 团队
+	Scope     int       `json:"scope"`
 	Lang      string    `json:"lang"`
 	CreateBy  int       `json:"createBy"`
 	Score     int       `json:"score"`

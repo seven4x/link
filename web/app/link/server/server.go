@@ -20,6 +20,15 @@ import (
 */
 func Router(e *echo.Echo) {
 	g := e.Group("/link")
+	g.POST("", createLink)
+	g.GET("", listLink)
+	g.GET("/marks/hot", hotLink)
+	g.GET("/marks/newest", newestLink)
+	g.GET("/marks/mine", mineLink)
+	g.GET("/marks/my", myAllPostLink)
+	g.POST("/:lid/comment", postComment)
+	g.GET("/:lid/comment", listComment)
+	g.DELETE("/:lid/comment/:mid", deleteComment)
 	g.GET("/preview-token", getPreviewToken)
 }
 
@@ -27,5 +36,34 @@ func getPreviewToken(e echo.Context) error {
 	str := config.GetString(config.LinkPreviewToken)
 
 	_ = e.HTML(http.StatusOK, str)
+	return nil
+}
+
+func createLink(e echo.Context) error {
+
+	return nil
+}
+func listLink(context echo.Context) error {
+	return nil
+}
+func hotLink(context echo.Context) error {
+	return nil
+}
+func newestLink(context echo.Context) error {
+	return nil
+}
+func mineLink(context echo.Context) error {
+	return nil
+}
+func myAllPostLink(context echo.Context) error {
+	return nil
+}
+func postComment(context echo.Context) error {
+	return nil
+}
+func listComment(context echo.Context) error {
+	return nil
+}
+func deleteComment(context echo.Context) error {
 	return nil
 }
