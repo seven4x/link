@@ -12,6 +12,7 @@ require (
 	github.com/agrison/mxj v0.0.0-20160310142625-1269f8afb3b4 // indirect
 	github.com/alibaba/sentinel-golang v0.6.1
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.18
+	github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef
 	github.com/bndr/gotabulate v1.1.2 // indirect
 	github.com/clbanning/mxj v1.8.5-0.20200714211355-ff02cfb8ea28 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
