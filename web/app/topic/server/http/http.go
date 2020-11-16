@@ -7,6 +7,7 @@ import (
 	"github.com/Seven4X/link/web/app/topic/api/request"
 	"github.com/Seven4X/link/web/app/topic/service"
 	"github.com/Seven4X/link/web/library/api"
+	"github.com/Seven4X/link/web/library/api/messages"
 	"github.com/Seven4X/link/web/library/consts"
 	"github.com/Seven4X/link/web/library/echo/mymw"
 	"github.com/Seven4X/link/web/library/log"
@@ -64,7 +65,8 @@ func createTopic(e echo.Context) error {
 	topic, rel := req.ToTopic()
 	u := e.Get(consts.User)
 	if u == nil {
-		e.JSON(http.StatusOK, api.FailMsgId(api.GlobalActionMustLogin))
+		e.JSON(http.StatusOK, api.FailMsgId(messages.GlobalActionMustLogin))
+		return nil
 	}
 	user := u.(*jwt.Token)
 	claims := user.Claims.(*mymw.JwtCustomClaims)
@@ -85,7 +87,7 @@ func topicDetail(e echo.Context) error {
 	} else {
 		topic, _ := svc.GetDetail(i)
 		if topic == nil {
-			return e.JSON(http.StatusOK, api.FailMsgId(api.TopicNotFound))
+			return e.JSON(http.StatusOK, api.FailMsgId(messages.TopicNotFound))
 		}
 		return e.JSON(http.StatusOK, api.Success(topic))
 	}

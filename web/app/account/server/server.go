@@ -29,10 +29,10 @@ func login(e echo.Context) error {
 		return nil
 	}
 
-	if b, s := svr.Login(*req); b {
-		e.JSON(http.StatusOK, api.Success(s))
+	if data, err := svr.Login(*req); err == nil {
+		e.JSON(http.StatusOK, api.Success(data))
 	} else {
-		e.JSON(http.StatusOK, api.Fail(s))
+		e.JSON(http.StatusOK, api.Fail(err.Error()))
 	}
 
 	return nil

@@ -1,4 +1,4 @@
-package api
+package messages
 
 const (
 	//不允许创建根级节点
@@ -9,5 +9,4 @@ const (
 	TopicRefTopicNoExist      = "topic.msg.ref-topic-not-exist"
 	TopicRepeatInSamePosition = "topic.msg.topic-repeat-in-same-position"
 	TopicNotFound             = "topic.msg.topic-not-found"
-	GlobalActionMustLogin     = "global.action-must-login"
 )

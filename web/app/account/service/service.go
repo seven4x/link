@@ -1,7 +1,9 @@
 package service
 
 import (
+	"errors"
 	"github.com/Seven4X/link/web/app/account/api/request"
+	"github.com/Seven4X/link/web/app/account/api/response"
 	"github.com/Seven4X/link/web/library/echo/mymw"
 )
 
@@ -16,11 +18,15 @@ func New() (s *Service) {
 /*
 string 成功是jwt-token,失败是错误消息
 */
-func (svr *Service) Login(l request.Login) (bool, string) {
+func (svr *Service) Login(l request.Login) (res *response.LoginResponse, err error) {
 	if l.Username == "test" {
-		//todo
-		return true, mymw.BuildToken(l.Username, 12)
+		token, claims := mymw.BuildToken(l.Username, 12)
+		res = &response.LoginResponse{
+			Token:    token,
+			ExpireAt: claims.ExpiresAt,
+		}
+		return res, nil
 	}
 
-	return false, "非法登陆"
+	return nil, errors.New("账号错误")
 }

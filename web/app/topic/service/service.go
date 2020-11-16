@@ -6,6 +6,7 @@ import (
 	"github.com/Seven4X/link/web/app/topic/dao"
 	"github.com/Seven4X/link/web/app/topic/model"
 	"github.com/Seven4X/link/web/library/api"
+	"github.com/Seven4X/link/web/library/api/messages"
 	"github.com/Seven4X/link/web/library/log"
 )
 
@@ -31,24 +32,24 @@ func (service *Service) Save(topic *model.Topic, rel *model.TopicRel) (id int, s
 		var b, s = risk.IsAllowText(topic.Name)
 		if !b {
 			log.Infow("topic-save-not-allow", "keyword", s)
-			return -1, api.New(api.TopicContentNotAllowed)
+			return -1, api.NewError(messages.TopicContentNotAllowed)
 		}
 	}
 	if rel.Aid == 0 {
-		return -1, api.New(api.TopicRootNotAllowed)
+		return -1, api.NewError(messages.TopicRootNotAllowed)
 	}
 	has, err := service.dao.ExistById(rel.Aid)
 	if err != nil || !has {
-		return -1, api.New(api.TopicRefTopicNoExist)
+		return -1, api.NewError(messages.TopicRefTopicNoExist)
 	}
 	has, err = service.dao.FindByNameWithSameParent(topic.Name, rel.Position, rel.Aid)
 	if err != nil || !has {
-		return -1, api.New(api.TopicRepeatInSamePosition)
+		return -1, api.NewError(messages.TopicRepeatInSamePosition)
 	}
 
 	i, err := service.dao.Save(topic, rel)
 	if err != nil {
-		return -1, api.New(api.TopicBackendDatabaseError)
+		return -1, api.NewError(messages.TopicBackendDatabaseError)
 	}
 	log.Infow("save-new-topic", "uid", topic.CreateBy, "aid", rel.Aid, "name", topic.Name)
 	return i, nil

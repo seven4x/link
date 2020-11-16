@@ -17,9 +17,9 @@ type JwtCustomClaims struct {
 	jwt.StandardClaims
 }
 
-func BuildToken(username string, id int) (tokenstr string) {
+func BuildToken(username string, id int) (tokenstr string, claims *JwtCustomClaims) {
 	// Set custom claims
-	claims := &JwtCustomClaims{
+	claims = &JwtCustomClaims{
 		username,
 		id,
 		jwt.StandardClaims{
@@ -30,7 +30,7 @@ func BuildToken(username string, id int) (tokenstr string) {
 	// Generate encoded token and send it as response.
 	tokenstr, _ = token.SignedString([]byte(secret))
 
-	return
+	return tokenstr, claims
 }
 
 func JWT() echo.MiddlewareFunc {
