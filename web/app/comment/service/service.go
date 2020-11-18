@@ -17,6 +17,6 @@ func NewService() (service *Service) {
 }
 
 func (service *Service) Save(comment *model.Comment) (id int, err error) {
-
-	return -1, nil
+	_, err = service.dao.InsertOne(comment)
+	return comment.Id, err
 }

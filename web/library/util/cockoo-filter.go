@@ -28,6 +28,11 @@ func GetCuckooFilter() *cuckoo.ScalableCuckooFilter {
 	return filter
 }
 
+//回档，从已有数据中加载重新构建filter todo
+func Correction() {
+
+}
+
 func DumpCuckooFilter() {
 	log.Info("start DumpCuckooFilter")
 	bytes := filter.Encode()

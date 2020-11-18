@@ -30,5 +30,6 @@ func IsAllowText(context string) (bool, string) {
 和谐用户文本
 */
 func SafeUserText(context string) string {
+	once.Do(InitFilter)
 	return filter.Replace(context, '*')
 }

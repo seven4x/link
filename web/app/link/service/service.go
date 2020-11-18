@@ -39,8 +39,9 @@ func (service *Service) Save(link *model.Link) (id int, errs *api.Err) {
 	if b := risk.IsAllowUrl(link.Link); !b {
 		return -1, api.NewError(messages.LinkNotAllowDomain)
 	}
-	repeat := service.filter.Lookup([]byte(strconv.Itoa(link.TopicId) + "_" + link.Link))
-	if repeat {
+	//先添加再保存数据
+	success := service.filter.InsertUnique([]byte(strconv.Itoa(link.TopicId) + "_" + link.Link))
+	if !success {
 		return -1, api.NewError(messages.LinkRepeatInSameTopic)
 	}
 	_, err := service.dao.Save(link)
@@ -48,9 +49,11 @@ func (service *Service) Save(link *model.Link) (id int, errs *api.Err) {
 		log.Error(err.Error())
 		return -1, api.NewError(messages.GlobalErrorAboutDatabase)
 	}
+
 	comment := &commentModel.Comment{
-		LinkId:  link.Id,
-		Context: risk.SafeUserText(link.FirstComment),
+		LinkId:   link.Id,
+		Context:  risk.SafeUserText(link.FirstComment),
+		CreateBy: link.CreateBy,
 	}
 	_, err = service.mSvr.Save(comment)
 	if err != nil {
