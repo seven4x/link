@@ -25,3 +25,10 @@ func IsAllowText(context string) (bool, string) {
 	b, s := filter.FindIn(context)
 	return !b, s
 }
+
+/*
+和谐用户文本
+*/
+func SafeUserText(context string) string {
+	return filter.Replace(context, '*')
+}

@@ -7,17 +7,14 @@ import (
 
 func TestUse(t *testing.T) {
 
-	filter := GetFilter()
+	filter := GetCuckooFilter()
 	assert.NotNil(t, filter)
-
-	//
-	//filter.Insert([]byte("https://www.yuque.com/dashboard"))
-	//filter.Insert([]byte("dashboard"))
-	//filter.Insert([]byte("dashboard3"))
-
+	filter.Insert([]byte("https://www.yuque.com/dashboard"))
+	filter.Insert([]byte("dashboard"))
+	filter.Insert([]byte("dashboard3"))
+	DumpCuckooFilter()
+	filter = GetCuckooFilter()
 	b := filter.Lookup([]byte("dashboard3"))
-
 	assert.True(t, b)
 
-	DumpFilter()
 }

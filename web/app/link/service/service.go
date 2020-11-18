@@ -9,17 +9,22 @@ import (
 	"github.com/Seven4X/link/web/library/api"
 	"github.com/Seven4X/link/web/library/api/messages"
 	"github.com/Seven4X/link/web/library/log"
+	"github.com/Seven4X/link/web/library/util"
+	cuckoo "github.com/seven4x/cuckoofilter"
+	"strconv"
 )
 
 type Service struct {
-	dao  *dao.Dao
-	mSvr *commentService.Service
+	dao    *dao.Dao
+	mSvr   *commentService.Service
+	filter *cuckoo.ScalableCuckooFilter
 }
 
 func NewService() (s *Service) {
 	s = &Service{
-		dao:  dao.New(),
-		mSvr: commentService.NewService(),
+		dao:    dao.New(),
+		mSvr:   commentService.NewService(),
+		filter: util.GetCuckooFilter(), //优雅关闭时dump filter
 	}
 	return
 }
@@ -34,14 +39,23 @@ func (service *Service) Save(link *model.Link) (id int, errs *api.Err) {
 	if b := risk.IsAllowUrl(link.Link); !b {
 		return -1, api.NewError(messages.LinkNotAllowDomain)
 	}
-
+	repeat := service.filter.Lookup([]byte(strconv.Itoa(link.TopicId) + "_" + link.Link))
+	if repeat {
+		return -1, api.NewError(messages.LinkRepeatInSameTopic)
+	}
 	_, err := service.dao.Save(link)
 	if err != nil {
 		log.Error(err.Error())
 		return -1, api.NewError(messages.GlobalErrorAboutDatabase)
 	}
-	comment := &commentModel.Comment{}
-	service.mSvr.Save(comment)
+	comment := &commentModel.Comment{
+		LinkId:  link.Id,
+		Context: risk.SafeUserText(link.FirstComment),
+	}
+	_, err = service.mSvr.Save(comment)
+	if err != nil {
+		log.Error(err.Error())
+	}
 
 	return link.Id, nil
 }
