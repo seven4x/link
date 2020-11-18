@@ -33,6 +33,7 @@ func Router(e *echo.Echo) {
 	g := e.Group("/link")
 	g.POST("", createLink, mymw.JWT())
 	g.GET("", listLink)
+	g.POST("/actions/batch", batchImport, mymw.JWT())
 	g.GET("/marks/hot", hotLink)
 	g.GET("/marks/newest", newestLink)
 	g.GET("/marks/mine", mineLink, mymw.JWT())
@@ -41,6 +42,17 @@ func Router(e *echo.Echo) {
 	g.GET("/:lid/comment", listComment)
 	g.DELETE("/:lid/comment/:mid", deleteComment, mymw.JWT())
 	g.GET("/preview-token", getPreviewToken)
+}
+
+// 解析URL中所有 a标签中的超链接保存
+func batchImport(e echo.Context) error {
+	url := e.Param("url")
+
+	return e.JSON(http.StatusOK, map[string]interface{}{
+		"url":  url,
+		"size": 0,
+	})
+
 }
 
 func getPreviewToken(e echo.Context) error {
