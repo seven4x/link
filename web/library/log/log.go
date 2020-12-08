@@ -21,6 +21,9 @@ func Infow(msg string, keysAndValues ...interface{}) {
 func Debug(args ...interface{}) {
 	sugar.Debug(args)
 }
+func DebugW(msg string, keysAndValues ...interface{}) {
+	sugar.Debugw(msg, keysAndValues...)
+}
 
 func Info(args ...interface{}) {
 	sugar.Info(args...)
@@ -36,4 +39,8 @@ func Warnf(template string, args ...interface{}) {
 
 func Error(args ...interface{}) {
 	sugar.Error(args...)
+}
+
+func Errorw(msg string, args ...interface{}) {
+	sugar.Errorw(msg, args...)
 }

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/Seven4X/link/web/app"
 	"github.com/Seven4X/link/web/app/link/server/request"
 	"github.com/Seven4X/link/web/app/link/service"
 	"github.com/Seven4X/link/web/library/api"
@@ -11,6 +12,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"strconv"
 )
 
 var (
@@ -86,7 +88,20 @@ func createLink(e echo.Context) error {
 
 	return nil
 }
-func listLink(context echo.Context) error {
+
+/*
+
+ */
+func listLink(e echo.Context) error {
+	req := new(request.ListLinkRequest)
+	e.Bind(req)
+	if err := e.Validate(req); err != nil {
+		return err
+	}
+	uid := app.GetUserId(e)
+	req.UserId = uid
+	res, err := svr.ListLink(req)
+	e.JSON(http.StatusOK, api.Response(res, err))
 	return nil
 }
 func hotLink(context echo.Context) error {
@@ -101,7 +116,33 @@ func mineLink(context echo.Context) error {
 func myAllPostLink(context echo.Context) error {
 	return nil
 }
-func postComment(context echo.Context) error {
+func postComment(e echo.Context) error {
+	req := new(request.NewCommentRequest)
+	if err := e.Bind(req); err != nil {
+		e.JSON(http.StatusOK, api.Fail(err.Error()))
+		return nil
+	}
+	if err := e.Validate(req); err != nil {
+		e.JSON(http.StatusOK, api.Fail(err.Error()))
+		return nil
+	}
+	u := e.Get(consts.User)
+	if u == nil {
+		e.JSON(http.StatusOK, api.FailMsgId(messages.GlobalActionMustLogin))
+		return nil
+	}
+	user := u.(*jwt.Token)
+	claims := user.Claims.(*mymw.JwtCustomClaims)
+	req.CreateBy = claims.Id
+	lid := e.Param("lid")
+	if id, err := strconv.Atoi(lid); err != nil {
+		e.JSON(http.StatusOK, api.FailMsgId(messages.GlobalParamWrong))
+	} else {
+		req.LinkId = id
+	}
+
+	id, err := svr.SaveComment(req)
+	_ = e.JSON(http.StatusOK, api.Response(id, err))
 	return nil
 }
 func listComment(context echo.Context) error {

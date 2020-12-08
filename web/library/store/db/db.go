@@ -13,7 +13,7 @@ var engine *xorm.Engine
 func init() {
 	var err error
 	//todo   viper
-	engine, err = xorm.NewPostgreSQL("postgres://postgres:linkhub2333@127.0.0.1:5432/link_hub?sslmode=disable")
+	engine, err = xorm.NewPostgreSQL("postgres://roach:Q7gc8rEdS@127.0.0.1:26257/link_hub")
 	if err != nil {
 		log.Error(err.Error())
 		panic(err)
@@ -38,7 +38,7 @@ func SetMockDb(mockDb *sql.DB) {
 
 //参考：https://github.com/DATA-DOG/Go-txdb
 func RegisterMockDriver() {
-	txdb.Register("txdb", "postgres", "postgres://postgres:linkhub2333@127.0.0.1:5432/link_hub?sslmode=disable")
+	txdb.Register("txdb", "postgres", "postgres://roach:Q7gc8rEdS@127.0.0.1:26257/link_hub")
 	db, err := sql.Open("txdb", "identifier")
 	if err != nil {
 		log.Error(err)
