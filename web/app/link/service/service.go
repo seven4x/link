@@ -80,22 +80,49 @@ func (service *Service) SaveComment(req *request.NewCommentRequest) (id int, err
 
 /*
 1 转换对象
-2 关联查询
+2 关联查询 ：评论数，热评，是否喜欢
 */
 func (service *Service) ListLink(req *request.ListLinkRequest) (res []response.ListLinkResponse, errs *api.Err) {
+
+	return service.listLinkNoJoin(req)
+}
+
+//两种查询方法需要用基准测一下哪个快
+func (service *Service) listLinkJoin(req *request.ListLinkRequest) (res []response.ListLinkResponse, errs *api.Err) {
 	req.Size = 10
 	var links []model.Link
 	var total int64
 	var err error
 
 	if req.UserId == 0 {
-		links, total, err = service.dao.ListLinkWithoutUser(req)
+		links, total, err = service.dao.ListLink(req)
 	} else {
-		links, total, err = service.dao.ListLinkWithUser(req)
+		links, total, err = service.dao.ListLinkJoinUserVote(req)
 	}
 	if err != nil {
 		log.Error(err.Error())
 	}
+
+	log.DebugW("ListLink",
+		"links", len(links),
+		"total", total)
+
+	return nil, nil
+}
+
+func (service *Service) listLinkNoJoin(req *request.ListLinkRequest) (res []response.ListLinkResponse, errs *api.Err) {
+	req.Size = 10
+	var links []model.Link
+	var total int64
+	var err error
+
+	if req.UserId == 0 {
+		links, total, err = service.dao.ListLink(req)
+	}
+	if err != nil {
+		log.Error(err.Error())
+	}
+
 	log.DebugW("ListLink",
 		"links", len(links),
 		"total", total)

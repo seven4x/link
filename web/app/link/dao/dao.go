@@ -27,21 +27,21 @@ func (dao *Dao) Save(link *model.Link) (i int, err error) {
 	return link.Id, err
 }
 
-func (dao *Dao) ListLinkWithoutUser(req *request.ListLinkRequest) (links []model.Link, total int64, err error) {
+func (dao *Dao) ListLink(req *request.ListLinkRequest) (links []model.Link, total int64, err error) {
 
 	link := model.Link{}
 	link.TopicId = req.Tid
-	total, err = dao.Where("id>?", req.Prev).Count(link)
+	total, err = dao.Where("topic_id=?", req.Tid).And("id>?", req.Prev).Count(link)
 	if err != nil {
 		return nil, 0, err
 	}
 	err = dao.Where("topic_id=?", req.Tid).And("id>?", req.Prev).Limit(req.Size, 0).Find(&links)
 	return links, total, err
 }
-func (dao *Dao) ListLinkWithUser(req *request.ListLinkRequest) (links []model.Link, total int64, err error) {
+func (dao *Dao) ListLinkJoinUserVote(req *request.ListLinkRequest) (links []model.Link, total int64, err error) {
 	link := model.Link{}
 	link.TopicId = req.Tid
-	total, err = dao.Where("id>?", req.Prev).Count(link)
+	total, err = dao.Where("topic_id=?", req.Tid).And("id>?", req.Prev).Count(link)
 	if err != nil {
 		return nil, 0, err
 	}
