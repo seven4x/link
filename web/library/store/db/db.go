@@ -6,6 +6,7 @@ import (
 	"github.com/Seven4X/link/web/library/log"
 	_ "github.com/lib/pq"
 	"github.com/xormplus/xorm"
+	"github.com/xormplus/xorm/names"
 )
 
 var engine *xorm.Engine
@@ -19,6 +20,7 @@ func init() {
 		panic(err)
 	}
 	engine.ShowSQL(true)
+	names.NewPrefixMapper(names.SnakeMapper{}, "t_")
 	err = engine.Ping()
 	if err != nil {
 		log.Error("engine-ping-failed:", err.Error())

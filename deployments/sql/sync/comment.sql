@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS "comment"
+CREATE TABLE IF NOT EXISTS "t_comment"
 (
     "id"          SERIAL PRIMARY KEY NOT NULL,
     "link_id"     INTEGER            NULL,

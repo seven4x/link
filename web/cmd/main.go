@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/Seven4X/link/web/app/topic"
 	"github.com/Seven4X/link/web/library/util"
 	"log"
 	"net/http"
@@ -9,10 +10,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	account "github.com/Seven4X/link/web/app/account/server"
-	link "github.com/Seven4X/link/web/app/link/server"
-	topic "github.com/Seven4X/link/web/app/topic/server/http"
-	vote "github.com/Seven4X/link/web/app/vote/server"
+	"github.com/Seven4X/link/web/app/account"
+	"github.com/Seven4X/link/web/app/link"
+	"github.com/Seven4X/link/web/app/vote"
 	setup "github.com/Seven4X/link/web/library/echo"
 	"github.com/labstack/echo/v4"
 )
