@@ -83,8 +83,8 @@ func (s *Service) Vote(req *VoteRequest) (bool, *api.Err) {
 	return false, nil
 }
 
-func (s *Service) ListIsLike(ids []int, userId int, mtype string) (liked []UserVote, err error) {
-	return s.dao.ListByBusinessId(ids, userId, mtype)
+func (s *Service) ListIsLike(ids []interface{}, userId int, mtype string) (liked []UserVote, err error) {
+	return s.dao.ListUserVoteByBusinessId(ids, userId, mtype)
 }
 
 func dualScore(info *VoteInfo, before rune, now rune) {

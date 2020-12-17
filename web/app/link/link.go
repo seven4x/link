@@ -22,5 +22,5 @@ type Link struct {
 	CreateBy     int       `json:"create_by"`
 	FirstComment string    `xorm:"-"`
 	IsLike       rune      `xorm:"-"`
-	Creator      user.User `xorm:"-"`
+	Creator      user.User `xorm:"extends <-"`
 }

@@ -27,11 +27,13 @@ func (dao *Dao) GetUserVote(userId int, mtype rune, mid int) (rune, error) {
 
 }
 
-func (dao *Dao) ListByBusinessId(ids []int, userId int, mtype string) ([]UserVote, error) {
+func (dao *Dao) ListUserVoteByBusinessId(ids []interface{}, userId int, mtype string) ([]UserVote, error) {
 	res := make([]UserVote, 0)
-	err := dao.Table("vote").Cols("id", "is_like").In("id", ids).
-		And("user_id", userId).
-		And("type", mtype).
+	err := dao.Table("user_vote").
+		Cols("id", "is_like").
+		In("id", ids...).
+		And("user_id=?", userId).
+		And("type=?", mtype).
 		Find(&res)
 	return res, err
 }

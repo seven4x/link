@@ -16,7 +16,7 @@ func (service *Service) Save(comment *Comment) (id int, err error) {
 	return comment.Id, err
 }
 
-func (service *Service) ListHotCommentByLinkId(ids []int) ([]Comment, error) {
+func (service *Service) ListHotCommentByLinkId(ids []interface{}) ([]Comment, error) {
 
 	return service.dao.ListHotCommentByLinkId(ids)
 }

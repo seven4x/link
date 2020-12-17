@@ -83,26 +83,31 @@ func (s *Service) ListLink(req *ListLinkRequest) (res []*ListLinkResponse, errs 
 }
 
 //两种查询方法需要用基准测一下哪个快
-func (s *Service) listLinkJoin(req *ListLinkRequest) (res []ListLinkResponse, errs *api.Err) {
+func (s *Service) listLinkJoin(req *ListLinkRequest) (res []*ListLinkResponse, errs *api.Err) {
 	req.Size = 10
 	var links []Link
 	var total int64
 	var err error
 
 	if req.UserId == 0 {
-		links, total, err = s.dao.ListLink(req)
+		links, total, err = s.dao.ListLinkJoinHotComment(req)
 	} else {
-		links, total, err = s.dao.ListLinkJoinUserVote(req)
+		links, total, err = s.dao.ListLinkJoinCommentAndUserVote(req)
 	}
 	if err != nil {
 		log.Error(err.Error())
 	}
+	res = make([]*ListLinkResponse, 0)
+	visit(&links, func(m Link) {
+		link := BuildLinkResponseOfModel(&m)
+		res = append(res, link)
+	})
 
 	log.DebugW("ListLink",
 		"links", len(links),
 		"total", total)
 
-	return nil, nil
+	return res, nil
 }
 
 func visit(links *[]Link, f func(link Link)) {
@@ -154,9 +159,9 @@ func (s *Service) listLinkNoJoin(req *ListLinkRequest) (res []*ListLinkResponse,
 	}
 	wg.Wait()
 
-	return nil, nil
+	return res, nil
 }
-func (s *Service) fetchHotComment(ids []int, links []*ListLinkResponse) {
+func (s *Service) fetchHotComment(ids []interface{}, links []*ListLinkResponse) {
 
 	commentList, err := s.commentSvr.ListHotCommentByLinkId(ids)
 	if err != nil {
@@ -164,7 +169,7 @@ func (s *Service) fetchHotComment(ids []int, links []*ListLinkResponse) {
 	}
 	hash := make(map[int]comment.Comment)
 	for _, comment := range commentList {
-		hash[comment.Id] = comment
+		hash[comment.LinkId] = comment
 	}
 	for _, link := range links {
 		c, b := hash[link.Id]
@@ -174,13 +179,13 @@ func (s *Service) fetchHotComment(ids []int, links []*ListLinkResponse) {
 	}
 }
 
-func (s *Service) fetchIsLike(ids []int, links []*ListLinkResponse, req *ListLinkRequest) {
+func (s *Service) fetchIsLike(ids []interface{}, links []*ListLinkResponse, req *ListLinkRequest) {
 	userVotes, e := s.voteSvr.ListIsLike(ids, req.UserId, vote.VoteType_Link)
 	if e == nil {
-		for _, vote := range userVotes {
+		for _, userVote := range userVotes {
 			for _, link := range links {
-				if vote.Id == link.Id {
-					link.IsLike = vote.IsLike
+				if userVote.Id == link.Id {
+					link.IsLike = userVote.IsLike
 					break
 				}
 			}
@@ -189,8 +194,8 @@ func (s *Service) fetchIsLike(ids []int, links []*ListLinkResponse, req *ListLin
 	}
 }
 
-func getLinkIds(links *[]Link) []int {
-	linkIds := make([]int, 0)
+func getLinkIds(links *[]Link) []interface{} {
+	linkIds := make([]interface{}, 0)
 	for _, link := range *links {
 		linkIds = append(linkIds, link.Id)
 	}

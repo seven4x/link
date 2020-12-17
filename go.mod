@@ -41,7 +41,7 @@ require (
 	github.com/stretchr/testify v1.6.1
 	github.com/syndtr/goleveldb v1.0.0 // indirect
 	github.com/tealeg/xlsx v1.0.5 // indirect
-	github.com/xormplus/builder v0.0.0-20200331055651-240ff40009be // indirect
+	github.com/xormplus/builder v0.0.0-20200331055651-240ff40009be
 	github.com/xormplus/xorm v0.0.0-20200912034818-5d90dcd4e3d6
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.16.0
