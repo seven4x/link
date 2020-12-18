@@ -65,34 +65,22 @@ func (s *Service) Save(link *Link) (id int, errs *api.Err) {
 	return link.Id, nil
 }
 
-func (s *Service) SaveComment(req *NewCommentRequest) (id int, errs *api.Err) {
-	comment := &comment.Comment{
-		LinkId:   req.LinkId,
-		Context:  risk.SafeUserText(req.Content),
-		CreateBy: req.CreateBy,
-	}
-	if _, err := s.commentSvr.Save(comment); err != nil {
-		return -1, api.NewError(messages.GlobalErrorAboutDatabase)
-	}
-	return comment.Id, nil
-}
+func (s *Service) ListLink(req *ListLinkRequest) (res []*ListLinkResponse, total int, errs *api.Err) {
 
-func (s *Service) ListLink(req *ListLinkRequest) (res []*ListLinkResponse, errs *api.Err) {
-
-	return s.listLinkNoJoin(req)
+	res, t, errs := s.listLinkNoJoin(req)
+	return res, int(t), errs
 }
 
 //两种查询方法需要用基准测一下哪个快
-func (s *Service) listLinkJoin(req *ListLinkRequest) (res []*ListLinkResponse, errs *api.Err) {
+func (s *Service) listLinkJoin(req *ListLinkRequest) (res []*ListLinkResponse, total int64, errs *api.Err) {
 	req.Size = 10
 	var links []Link
-	var total int64
 	var err error
 
 	if req.UserId == 0 {
-		links, total, err = s.dao.ListLinkJoinHotComment(req)
+		links, total, err = s.dao.ListLink(req)
 	} else {
-		links, total, err = s.dao.ListLinkJoinCommentAndUserVote(req)
+		links, total, err = s.dao.ListLinkJoinUserVote(req)
 	}
 	if err != nil {
 		log.Error(err.Error())
@@ -102,12 +90,18 @@ func (s *Service) listLinkJoin(req *ListLinkRequest) (res []*ListLinkResponse, e
 		link := BuildLinkResponseOfModel(&m)
 		res = append(res, link)
 	})
+	ids := getLinkIds(&links)
+	//var wg sync.WaitGroup
+	wg := sync.WaitGroup{}
+	//热评
+	wg.Add(1)
+	go func() {
+		s.fetchHotComment(ids, res)
+		wg.Done()
+	}()
 
-	log.DebugW("ListLink",
-		"links", len(links),
-		"total", total)
-
-	return res, nil
+	wg.Wait()
+	return res, total, nil
 }
 
 func visit(links *[]Link, f func(link Link)) {
@@ -121,18 +115,15 @@ func visit(links *[]Link, f func(link Link)) {
 热评，热评头像、昵称
 是否喜欢
 */
-func (s *Service) listLinkNoJoin(req *ListLinkRequest) (res []*ListLinkResponse, errs *api.Err) {
+func (s *Service) listLinkNoJoin(req *ListLinkRequest) (res []*ListLinkResponse, total int64, errs *api.Err) {
 	req.Size = 10
 	var links []Link
-	var total int64
 	var err error
 	links, total, err = s.dao.ListLink(req)
 	if err != nil {
 		log.Error(err.Error())
 	}
-	log.DebugW("ListLink",
-		"links", len(links),
-		"total", total)
+
 	res = make([]*ListLinkResponse, 0)
 	visit(&links, func(m Link) {
 		link := BuildLinkResponseOfModel(&m)
@@ -159,7 +150,7 @@ func (s *Service) listLinkNoJoin(req *ListLinkRequest) (res []*ListLinkResponse,
 	}
 	wg.Wait()
 
-	return res, nil
+	return res, total, nil
 }
 func (s *Service) fetchHotComment(ids []interface{}, links []*ListLinkResponse) {
 

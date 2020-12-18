@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// bo+po
 type Comment struct {
 	Id         int       `json:"id" xorm:"pk autoincr"`
 	LinkId     int       `json:"link_id"`
@@ -17,4 +18,5 @@ type Comment struct {
 	UpdateAt   time.Time `json:"update_time" xorm:"update_time updated"`
 	DeletedAt  time.Time `json:"delete_time" xorm:"delete_time deleted"`
 	Creator    user.User `xorm:"extends <-"`
+	IsLike     rune      `xorm:"<-"`
 }

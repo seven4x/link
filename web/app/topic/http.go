@@ -60,7 +60,7 @@ func createTopic(e echo.Context) error {
 	//topic := &model.Topic{}
 	//_ = gconv.Struct(req, topic)
 	//简单对象在Request对象中定义转化方法
-	topic, rel := req.ToTopic()
+	topic, rel := req.ConvertRequestToTopicModel()
 	u := e.Get(consts.User)
 	if u == nil {
 		e.JSON(http.StatusOK, api.FailMsgId(messages.GlobalActionMustLogin))

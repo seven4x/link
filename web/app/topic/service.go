@@ -52,17 +52,17 @@ func (service *Service) Save(topic *Topic, rel *TopicRel) (id int, svrError *api
 	return i, nil
 }
 
-func (service *Service) GetDetail(id int) (detail *TopicDetail, err error) {
+func (service *Service) GetDetail(id int) (detail *Detail, err error) {
 	topic, err := service.dao.GetById(id)
-	detail = TopicDetailOfModel(topic)
+	detail = BuildDetailFromModel(topic)
 	//todo 其他关联查询信息
 
 	return
 }
 
-func (service *Service) ListRelativeTopic(id int, position string, prev int) (topic []*TopicSimple, e error) {
+func (service *Service) ListRelativeTopic(id int, position string, prev int) (topic []*Simple, e error) {
 	if topics, err := service.dao.ListRelativeTopic(id, position, prev); err == nil {
-		return ModelToTopicSimple(topics), nil
+		return ConvertModelToTopicSimple(topics), nil
 	} else {
 		return nil, err
 	}

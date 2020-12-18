@@ -66,7 +66,7 @@ func GetVoteInfo(session *xorm.Session, mtype rune, mid int) (VoteInfo, error) {
 		_, err := session.SQL("select score,agree,disagree,id from link where id=?", mid).Get(&result)
 		return result, err
 	case 'c':
-		_, err := session.SQL("select score,agree,disagree,id from comment where id=?", mid).Get(&result)
+		_, err := session.SQL("select score,agree,disagree,id from t_comment where id=?", mid).Get(&result)
 		return result, err
 	}
 	return result, nil
@@ -88,7 +88,7 @@ func UpdateVoteInfo(session *xorm.Session, info *VoteInfo, mtype rune) error {
 		}
 
 	case 'c':
-		_, err := session.Exec("update comment set  score=?,agree=?,disagree=? where id=? ", info.Score, info.Agree, info.DisAgree, info.Id)
+		_, err := session.Exec("update t_comment set  score=?,agree=?,disagree=? where id=? ", info.Score, info.Agree, info.DisAgree, info.Id)
 		if err != nil {
 			return err
 		}

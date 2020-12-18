@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/Seven4X/link/web/app/comment"
 	"github.com/Seven4X/link/web/app/topic"
 	"github.com/Seven4X/link/web/library/util"
 	"log"
@@ -27,6 +28,7 @@ func main() {
 	account.Router(e)
 	link.Router(e)
 	vote.Router(e)
+	comment.Router(e)
 
 	idleConnsClosed := make(chan struct{})
 	go func() {
@@ -51,5 +53,5 @@ func main() {
 	log.Printf("app shutdown")
 }
 func hello(c echo.Context) error {
-	return c.String(http.StatusOK, "Hello, World!")
+	return c.String(http.StatusOK, "develop ..")
 }

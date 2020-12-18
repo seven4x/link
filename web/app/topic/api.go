@@ -10,7 +10,7 @@ type CreateTopicRequest struct {
 	Scope      int    `json:"scope" validate:"oneof=1 2 3"`
 }
 
-func (req *CreateTopicRequest) ToTopic() (topic *Topic, rel *TopicRel) {
+func (req *CreateTopicRequest) ConvertRequestToTopicModel() (topic *Topic, rel *TopicRel) {
 	topic = &Topic{}
 	topic.Name = req.Name
 	topic.Tags = req.Tags
@@ -24,18 +24,18 @@ func (req *CreateTopicRequest) ToTopic() (topic *Topic, rel *TopicRel) {
 	return topic, rel
 }
 
-type TopicDetail struct {
+type Detail struct {
 	Name       string `json:"name"`
 	Id         int    `json:"id"`
 	Icon       string `json:"icon"`
 	CreateUser string `json:"createUser"`
 }
 
-func TopicDetailOfModel(topic *Topic) (res *TopicDetail) {
+func BuildDetailFromModel(topic *Topic) (res *Detail) {
 	if topic == nil {
 		return nil
 	}
-	res = &TopicDetail{
+	res = &Detail{
 		Name: topic.Name,
 		Id:   topic.Id,
 		Icon: topic.Icon,
@@ -44,16 +44,16 @@ func TopicDetailOfModel(topic *Topic) (res *TopicDetail) {
 	return
 }
 
-type TopicSimple struct {
+type Simple struct {
 	Name string `json:"name"`
 	Id   int    `json:"id"`
 }
 
-func TopicSimpleOfModel(topic *Topic) (res *TopicSimple) {
+func buildSimpleFromModel(topic *Topic) (res *Simple) {
 	if topic == nil {
 		return nil
 	}
-	res = &TopicSimple{
+	res = &Simple{
 		Name: topic.Name,
 		Id:   topic.Id,
 	}
@@ -61,10 +61,10 @@ func TopicSimpleOfModel(topic *Topic) (res *TopicSimple) {
 	return
 }
 
-func ModelToTopicSimple(topics []Topic) (res []*TopicSimple) {
-	topic := make([]*TopicSimple, len(topics))
+func ConvertModelToTopicSimple(topics []Topic) (res []*Simple) {
+	topic := make([]*Simple, len(topics))
 	for i, v := range topics {
-		topic[i] = TopicSimpleOfModel(&v)
+		topic[i] = buildSimpleFromModel(&v)
 	}
 	return topic
 }

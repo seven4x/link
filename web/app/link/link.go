@@ -21,6 +21,6 @@ type Link struct {
 	DeletedAt    time.Time `json:"delete_time" xorm:"delete_time deleted"`
 	CreateBy     int       `json:"create_by"`
 	FirstComment string    `xorm:"-"`
-	IsLike       rune      `xorm:"-"`
+	IsLike       rune      `xorm:"<-"`
 	Creator      user.User `xorm:"extends <-"`
 }

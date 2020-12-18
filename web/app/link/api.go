@@ -55,13 +55,6 @@ func BuildLinkResponseOfModel(m *Link) (res *ListLinkResponse) {
 	return res
 }
 
-type NewCommentRequest struct {
-	Content string `validate:"max=140"`
-	LinkId  int
-	//
-	CreateBy int
-}
-
 type ListLinkRequest struct {
 	Prev   int
 	Size   int

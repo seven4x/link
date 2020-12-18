@@ -10,7 +10,6 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"net/http"
-	"strconv"
 )
 
 var (
@@ -38,9 +37,7 @@ func Router(e *echo.Echo) {
 	g.GET("/marks/newest", newestLink)
 	g.GET("/marks/mine", mineLink, mymw.JWT())
 	g.GET("/marks/my", myAllPostLink, mymw.JWT())
-	g.POST("/:lid/comment", postComment, mymw.JWT())
-	g.GET("/:lid/comment", listComment)
-	g.DELETE("/:lid/comment/:mid", deleteComment, mymw.JWT())
+
 	g.GET("/preview-token", getPreviewToken)
 }
 
@@ -87,9 +84,6 @@ func createLink(e echo.Context) error {
 	return nil
 }
 
-/*
-
- */
 func listLink(e echo.Context) error {
 	req := new(ListLinkRequest)
 	e.Bind(req)
@@ -98,8 +92,10 @@ func listLink(e echo.Context) error {
 	}
 	uid := app.GetUserId(e)
 	req.UserId = uid
-	res, err := svr.ListLink(req)
-	e.JSON(http.StatusOK, api.Response(res, err))
+	res, total, err := svr.ListLink(req)
+	data := api.Response(res, err)
+	data.Page = api.Page{Total: total, HasMore: len(res) > 0}
+	e.JSON(http.StatusOK, data)
 	return nil
 }
 func hotLink(context echo.Context) error {
@@ -112,40 +108,5 @@ func mineLink(context echo.Context) error {
 	return nil
 }
 func myAllPostLink(context echo.Context) error {
-	return nil
-}
-func postComment(e echo.Context) error {
-	req := new(NewCommentRequest)
-	if err := e.Bind(req); err != nil {
-		e.JSON(http.StatusOK, api.Fail(err.Error()))
-		return nil
-	}
-	if err := e.Validate(req); err != nil {
-		e.JSON(http.StatusOK, api.Fail(err.Error()))
-		return nil
-	}
-	u := e.Get(consts.User)
-	if u == nil {
-		e.JSON(http.StatusOK, api.FailMsgId(messages.GlobalActionMustLogin))
-		return nil
-	}
-	user := u.(*jwt.Token)
-	claims := user.Claims.(*mymw.JwtCustomClaims)
-	req.CreateBy = claims.Id
-	lid := e.Param("lid")
-	if id, err := strconv.Atoi(lid); err != nil {
-		e.JSON(http.StatusOK, api.FailMsgId(messages.GlobalParamWrong))
-	} else {
-		req.LinkId = id
-	}
-
-	id, err := svr.SaveComment(req)
-	_ = e.JSON(http.StatusOK, api.Response(id, err))
-	return nil
-}
-func listComment(context echo.Context) error {
-	return nil
-}
-func deleteComment(context echo.Context) error {
 	return nil
 }

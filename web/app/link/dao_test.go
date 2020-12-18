@@ -29,7 +29,9 @@ func TestCountLink(t *testing.T) {
 		UserId: 1,
 	}
 
-	total := dao.countLink(req)
+	total, err := dao.countLink(req)
+
+	assert.Nil(t, err)
 
 	assert.True(t, total > 0)
 }
