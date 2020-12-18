@@ -1,5 +1,7 @@
 package topic
 
+import "strconv"
+
 type CreateTopicRequest struct {
 	Name       string `json:"name" validate:"required,min=2,max=140"`
 	RefTopicId int    `json:"refId" validate:"required"`
@@ -44,25 +46,26 @@ func BuildDetailFromModel(topic *Topic) (res *Detail) {
 	return
 }
 
-type Simple struct {
+type SnapShot struct {
 	Name string `json:"name"`
-	Id   int    `json:"id"`
+	//之所以使用字符串是因为Go int64的表示范围会超过JavaScript中number的表示范围
+	Id string `json:"id"`
 }
 
-func buildSimpleFromModel(topic *Topic) (res *Simple) {
+func buildSimpleFromModel(topic *Topic) (res *SnapShot) {
 	if topic == nil {
 		return nil
 	}
-	res = &Simple{
+	res = &SnapShot{
 		Name: topic.Name,
-		Id:   topic.Id,
+		Id:   strconv.Itoa(topic.Id),
 	}
 
 	return
 }
 
-func ConvertModelToTopicSimple(topics []Topic) (res []*Simple) {
-	topic := make([]*Simple, len(topics))
+func ConvertModelToTopicSimple(topics []Topic) (res []*SnapShot) {
+	topic := make([]*SnapShot, len(topics))
 	for i, v := range topics {
 		topic[i] = buildSimpleFromModel(&v)
 	}

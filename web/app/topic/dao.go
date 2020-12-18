@@ -32,19 +32,19 @@ const (
 
 // 这里考虑要不要把 db暴露出去，简单的操作直接在service中做，这样反模式了，跨层调用了
 type Dao struct {
-	engine *xorm.Engine
+	*xorm.Engine
 }
 
 func NewDao() (dao *Dao) {
 	dao = &Dao{
-		engine: db.NewDb(),
+		Engine: db.NewDb(),
 	}
 	return
 }
 
 func (dao *Dao) Save(topic *Topic, rel *TopicRel) (i int, err error) {
 	//开启事物
-	id, err := dao.engine.Transaction(func(session *xorm.Session) (interface{}, error) {
+	id, err := dao.Transaction(func(session *xorm.Session) (interface{}, error) {
 		_, err := session.InsertOne(topic)
 		if err != nil {
 			return 0, err
@@ -80,13 +80,13 @@ func (dao *Dao) Save(topic *Topic, rel *TopicRel) (i int, err error) {
 }
 
 func (dao *Dao) ExistById(id int) (has bool, err error) {
-	has, err = dao.engine.Exist(&Topic{Id: id})
+	has, err = dao.Exist(&Topic{Id: id})
 	return has, err
 }
 
 func (dao *Dao) GetById(id int) (topic *Topic, err error) {
 	topic = &Topic{Id: id}
-	b, err := dao.engine.Get(topic)
+	b, err := dao.Get(topic)
 	if b {
 		return topic, nil
 	} else {
@@ -97,7 +97,7 @@ func (dao *Dao) GetById(id int) (topic *Topic, err error) {
 // 校验相同位置是否
 func (dao *Dao) FindByNameWithSameParent(name string, position int, refId int) (b bool, err error) {
 	topic := &Topic{}
-	_, err = dao.engine.SQL(FindByNameWithSameParent, convertPositionValue(position), refId, refId, name).Get(topic)
+	_, err = dao.SQL(FindByNameWithSameParent, convertPositionValue(position), refId, refId, name).Get(topic)
 	return topic.Name != name, err
 }
 
@@ -142,6 +142,17 @@ func (dao *Dao) ListRelativeTopic(id int, position string, prev int) (topic []To
 
 	}
 	topic = make([]Topic, 0)
-	err = dao.engine.SQL(sql, id, dbPosition, prev).Find(&topic)
+	err = dao.SQL(sql, id, dbPosition, prev).Find(&topic)
 	return
+}
+
+func (dao *Dao) SearchTopic(keyword string, prev int, size int) (res []Topic, hasMore bool, err error) {
+	res = make([]Topic, 0)
+	err = dao.Table("topic").
+		Cols("name", "id").
+		Where("id>?", prev).
+		And("name like ?", keyword+"%").Limit(size+1, 0).Find(&res)
+
+	return res[:len(res)-1], len(res) > size, err
+
 }

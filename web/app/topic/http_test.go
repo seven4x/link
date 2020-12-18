@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"strings"
 	"testing"
 
@@ -93,4 +94,21 @@ func TestCreateTopicSuccUseTxdb(t *testing.T) {
 		assert.Equal(t, 0, suc.Ok)
 		assert.Equal(t, "1", suc.Data)
 	}
+}
+
+func TestServer_SearchTopic(t *testing.T) {
+
+	e := setup.NewEcho()
+	q := make(url.Values)
+	q.Set("q", "哲学")
+	req := httptest.NewRequest(http.MethodGet, "/topic?"+q.Encode(), nil)
+
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	err := searchTopic(c)
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusOK, rec.Code)
+	println(rec.Body.String())
+
 }

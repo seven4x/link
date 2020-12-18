@@ -19,6 +19,10 @@ var (
 	svc = NewService()
 )
 
+const (
+	DefaultSize = 10
+)
+
 // call by cmd
 func Router(e *echo.Echo) {
 	g := e.Group("/topic")
@@ -76,7 +80,22 @@ func createTopic(e echo.Context) error {
 }
 
 func searchTopic(e echo.Context) error {
-	return nil
+	keyword := e.QueryParam("q")
+	if keyword == "" {
+		e.JSON(http.StatusBadRequest, api.FailMsgId(messages.GlobalParamWrong))
+		return nil
+	}
+	prev := e.QueryParam("prev")
+	size, _ := strconv.Atoi(e.QueryParam("size"))
+	if size > DefaultSize || size == 0 {
+		size = DefaultSize
+	}
+	prevInt, _ := strconv.Atoi(prev)
+	res, hasMore, err := svc.SearchTopic(keyword, prevInt, size)
+	if err != nil {
+		return nil
+	}
+	return e.JSON(http.StatusOK, api.ResponseHasMore(res, hasMore))
 }
 func topicDetail(e echo.Context) error {
 	id := e.Param("id")

@@ -5,6 +5,7 @@ import (
 	"github.com/Seven4X/link/web/library/api"
 	"github.com/Seven4X/link/web/library/api/messages"
 	"github.com/Seven4X/link/web/library/log"
+	"strconv"
 )
 
 type Service struct {
@@ -60,11 +61,24 @@ func (service *Service) GetDetail(id int) (detail *Detail, err error) {
 	return
 }
 
-func (service *Service) ListRelativeTopic(id int, position string, prev int) (topic []*Simple, e error) {
+func (service *Service) ListRelativeTopic(id int, position string, prev int) (topic []*SnapShot, e error) {
 	if topics, err := service.dao.ListRelativeTopic(id, position, prev); err == nil {
 		return ConvertModelToTopicSimple(topics), nil
 	} else {
 		return nil, err
 	}
+
+}
+
+func (service *Service) SearchTopic(keyword string, prev int, size int) (res []*SnapShot, hasMore bool, err error) {
+	topics, hasMore, err := service.dao.SearchTopic(keyword, prev, size)
+	res = make([]*SnapShot, 0)
+	for _, t := range topics {
+		res = append(res, &SnapShot{
+			Name: t.Name,
+			Id:   strconv.Itoa(t.Id),
+		})
+	}
+	return res, hasMore, err
 
 }
