@@ -23,4 +23,13 @@ create table if not exists "topic_rel"
     "predicate"   varchar(140),
     "create_time" timestamp   NULL,
     "delete_time" timestamp   NULL
+);
+
+create table hot_topic
+(
+    id     int,
+    expire timestamp,
+    "create_time" timestamp    NULL,
+    "update_time" timestamp    NULL,
+    "delete_time" timestamp    NULL
 )

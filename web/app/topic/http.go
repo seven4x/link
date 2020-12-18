@@ -110,7 +110,13 @@ func topicDetail(e echo.Context) error {
 	}
 	return nil
 }
+
 func hotTopic(e echo.Context) error {
+	res, err := svc.ListHotTopic()
+	if err != nil {
+		return err
+	}
+	e.JSON(http.StatusOK, api.Response(res, nil))
 	return nil
 }
 func randomTopic(e echo.Context) error {

@@ -6,6 +6,7 @@ import (
 	"github.com/Seven4X/link/web/library/api/messages"
 	"github.com/Seven4X/link/web/library/log"
 	"strconv"
+	"time"
 )
 
 type Service struct {
@@ -81,4 +82,15 @@ func (service *Service) SearchTopic(keyword string, prev int, size int) (res []*
 	}
 	return res, hasMore, err
 
+}
+
+// 每日统计写hot_topic表
+func (service *Service) ListHotTopic() (res []SnapShot, err error) {
+	topics := make([]SnapShot, 0)
+	err = service.dao.Table("hot_topic").
+		Cols("topic.name", "topic.id").
+		Join("inner", "topic", "topic.id=hot_topic.id").
+		Where("expire>?", time.Now()).
+		Limit(10, 0).Find(&topics)
+	return topics, err
 }

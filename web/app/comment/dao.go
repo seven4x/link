@@ -46,6 +46,6 @@ func (dao *Dao) ListComment(req *ListCommentRequest) (res []*Comment, hasMore bo
 	} else if req.SortBy == "hot" {
 		session.OrderBy("t_comment.agree desc ")
 	}
-	session.Limit(req.Size+1, 0).Find(&res)
-	return res, len(res) == req.Size, err
+	err = session.Limit(req.Size+1, 0).Find(&res)
+	return res[:len(res)-1], len(res) > req.Size, err
 }

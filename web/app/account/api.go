@@ -10,3 +10,15 @@ type (
 		Password string
 	}
 )
+
+type WechatUserInfo struct {
+	Openid     string
+	Nickname   string
+	Sex        int
+	Province   string
+	City       string
+	Country    string
+	Geadimgurl string
+	Privilege  []string
+	Unionid    string
+}
