@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"github.com/Seven4X/link/web/app/topic/model"
+	t "github.com/Seven4X/link/web/app/topic"
 	"github.com/Seven4X/link/web/library/store/db"
 	"github.com/emirpasic/gods/lists/arraylist"
 	"github.com/emirpasic/gods/stacks/arraystack"
@@ -92,10 +92,10 @@ func saveALl(root *Topic) {
 		return
 	}
 	iterator := root.subs.Iterator()
-	var prev *model.Topic
+	var prev *t.Topic
 	for iterator.Next() {
 		topic := iterator.Value().(*Topic)
-		record := &model.Topic{
+		record := &t.Topic{
 			Name:     topic.name,
 			Lang:     "zh",
 			Tags:     topic.code,
@@ -108,7 +108,7 @@ func saveALl(root *Topic) {
 		topic.id = record.Id
 
 		//上下关系
-		saveRel(&model.TopicRel{
+		saveRel(&t.TopicRel{
 			Aid:      root.id,
 			Bid:      topic.id,
 			Position: 1,
@@ -116,7 +116,7 @@ func saveALl(root *Topic) {
 		})
 		if prev != nil {
 			//左右关系
-			saveRel(&model.TopicRel{
+			saveRel(&t.TopicRel{
 				Aid:      prev.Id,
 				Bid:      topic.id,
 				Position: 2,
@@ -134,7 +134,7 @@ var (
 	engine = db.NewDb()
 )
 
-func saveTopic(topic *model.Topic) error {
+func saveTopic(topic *t.Topic) error {
 	_, err := engine.InsertOne(topic)
 	if err == nil {
 		return nil
@@ -143,7 +143,7 @@ func saveTopic(topic *model.Topic) error {
 		return err
 	}
 }
-func saveRel(rel *model.TopicRel) {
+func saveRel(rel *t.TopicRel) {
 	_, err := engine.InsertOne(rel)
 	if err != nil {
 		println(err.Error())
