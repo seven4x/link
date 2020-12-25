@@ -1,4 +1,4 @@
-package account
+package user
 
 import (
 	"encoding/json"
@@ -22,8 +22,19 @@ func Router(e *echo.Echo) {
 	e.GET("/wx/cb", wechatCallback)
 	g := e.Group("/account")
 	g.POST("/login", login)
+	g.POST("/register", register)
 	g.GET("/info", info, mymw.JWT())
 
+}
+
+func register(e echo.Context) error {
+	req := new(RegisterRequest)
+	e.Bind(req)
+	if err := e.Validate(req); err != nil {
+		return err
+	}
+	echo.New
+	return nil
 }
 
 func login(e echo.Context) error {
