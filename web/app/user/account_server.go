@@ -23,8 +23,24 @@ func Router(e *echo.Echo) {
 	g := e.Group("/account")
 	g.POST("/login", login)
 	g.POST("/register", register)
+	g.GET("/get-my-code", generatorRegisterCode, mymw.JWT())
 	g.GET("/info", info, mymw.JWT())
+}
 
+func generatorRegisterCode(e echo.Context) error {
+	user := e.Get("user").(*jwt.Token)
+	if user == nil {
+		e.JSON(http.StatusOK, api.Fail("need login"))
+		return nil
+	}
+	claims := user.Claims.(*mymw.JwtCustomClaims)
+
+	if code, err := svr.GeneratorRegisterCode(claims.Id); err != nil {
+		return e.JSON(http.StatusInternalServerError, api.Fail(err.Error()))
+	} else {
+		return e.JSON(http.StatusOK, api.Success(code))
+	}
+	return nil
 }
 
 func register(e echo.Context) error {
@@ -33,8 +49,8 @@ func register(e echo.Context) error {
 	if err := e.Validate(req); err != nil {
 		return err
 	}
-	echo.New
-	return nil
+	res, err := svr.Register(req)
+	return e.JSON(http.StatusOK, api.Response(res, err))
 }
 
 func login(e echo.Context) error {

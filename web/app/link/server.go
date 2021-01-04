@@ -93,8 +93,7 @@ func listLink(e echo.Context) error {
 	uid := app.GetUserId(e)
 	req.UserId = uid
 	res, total, err := svr.ListLink(req)
-	data := api.Response(res, err)
-	data.Page = api.Page{Total: total, HasMore: len(res) > 0}
+	data := api.ResponsePage(res, err, total, len(res) > 0)
 	e.JSON(http.StatusOK, data)
 	return nil
 }
