@@ -24,15 +24,15 @@ func (dao *Dao) Save(link *Link) (i int, err error) {
 	return link.Id, err
 }
 
-func (dao *Dao) ListLink(req *ListLinkRequest) (links []Link, total int64, err error) {
+func (dao *Dao) ListLink(req *ListLinkRequest) (links []LinkUser, total int64, err error) {
 	total, err = dao.countLink(req)
 	if total < 1 {
 		return nil, 0, err
 	}
-	links = make([]Link, 0)
+	links = make([]LinkUser, 0)
 	err = dao.Table("link").
-		Cols(append([]string{"t_user.id", "t_user.name", "t_user.avatar"}, BaseColumn...)...).
-		Join("left", "t_user", "t_user.id=link.create_by").
+		Cols(append([]string{"account.id", "account.name", "account.avatar"}, BaseColumn...)...).
+		Join("left", "account", "account.id=link.create_by").
 		Where("link.topic_id=?", req.Tid).
 		And("link.id>?", req.Prev).
 		Limit(req.Size, 0).
@@ -52,14 +52,14 @@ func (dao *Dao) countLink(req *ListLinkRequest) (total int64, err error) {
 
 }
 
-func (dao *Dao) ListLinkJoinUserVote(req *ListLinkRequest) (links []Link, total int64, err error) {
+func (dao *Dao) ListLinkJoinUserVote(req *ListLinkRequest) (links []LinkUser, total int64, err error) {
 	total, err = dao.countLink(req)
 	if total < 1 {
 		return nil, 0, err
 	}
 	err = dao.Table("link").
-		Cols(append([]string{"t_user.id", "t_user.name", "t_user.avatar", "user_vote.is_like"}, BaseColumn...)...).
-		Join("left", "t_user", "t_user.id=link.create_by").
+		Cols(append([]string{"account.id", "account.name", "account.avatar", "user_vote.is_like"}, BaseColumn...)...).
+		Join("left", "account", "account.id=link.create_by").
 		Join("left", "user_vote", strconv.Itoa(req.UserId)+"=user_vote.user_id and user_vote.type='l' and user_vote.id=link.id").
 		Where("link.topic_id=?", req.Tid).
 		And("link.id>?", req.Prev).

@@ -26,8 +26,8 @@ func (svr *Service) Login(l Login) (res *LoginResponse, err error) {
 	if strings.ContainsAny(l.Username, "'<>@#&|") {
 		return nil, errors.New("非法登陆")
 	}
-	u := User{UserName: l.Username}
-	if _, err := svr.dao.Table("t_user").Get(&u); err != nil {
+	u := Account{UserName: l.Username}
+	if _, err := svr.dao.Table("user").Get(&u); err != nil {
 		return nil, err
 	}
 	if u.Id == 0 {
@@ -56,8 +56,8 @@ func (svr *Service) Register(req *RegisterRequest) (b bool, err *api.Err) {
 	if ri, err := svr.dao.GetRegisterInfoByCode(req.Code); err != nil {
 		return false, api.NewError("code err")
 	} else {
-		u := User{UserName: req.LoginId}
-		svr.dao.Table("t_user").Get(&u)
+		u := Account{UserName: req.LoginId}
+		svr.dao.Get(&u)
 		if u.Id != 0 {
 			return false, api.NewError("username had registered")
 		}

@@ -28,13 +28,13 @@ func (d *Dao) Register(rc *RegisterCode, req *RegisterRequest) error {
 	sess := d.NewSession()
 	defer sess.Close()
 	sess.Begin()
-	u := User{
+	u := Account{
 		UserName: req.LoginId,
 		NickName: req.NickName,
 		Password: req.Password,
 		Avatar:   "",
 	}
-	if _, err := sess.Table("t_user").InsertOne(&u); err != nil {
+	if _, err := sess.InsertOne(&u); err != nil {
 		sess.Rollback()
 		return err
 	}

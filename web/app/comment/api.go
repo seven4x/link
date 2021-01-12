@@ -27,12 +27,12 @@ type ListCommentResponse struct {
 	Agree    int    `json:"agree"  `
 	Disagree int    `json:"disagree"  `
 	//之所以返回给前端Unix时间，时间显示样式由前端决定，为：1秒前，2天前，人类容易阅读的文本
-	CreateTime int       `json:"createTime"  `
-	Creator    user.User `json:"creator" `
-	IsLike     rune      `json:"isLike"`
+	CreateTime int          `json:"createTime"  `
+	Creator    user.Account `json:"creator" `
+	IsLike     rune         `json:"isLike"`
 }
 
-func BuildListCommentFromModel(model *Comment) (res *ListCommentResponse) {
+func BuildListCommentFromModel(model *CommentUser) (res *ListCommentResponse) {
 	return &ListCommentResponse{
 		Id:         model.Id,
 		LinkId:     model.LinkId,

@@ -151,8 +151,10 @@ func (dao *Dao) SearchTopic(keyword string, prev int, size int) (res []Topic, ha
 	err = dao.Table("topic").
 		Cols("name", "id").
 		Where("id>?", prev).
-		And("name like ?", keyword+"%").Limit(size+1, 0).Find(&res)
-
+		And("name like ?", "%"+keyword+"%").Limit(size+1, 0).Find(&res)
+	if len(res) == 0 {
+		return res, false, err
+	}
 	return res[:len(res)-1], len(res) > size, err
 
 }

@@ -74,7 +74,7 @@ func (s *Service) ListLink(req *ListLinkRequest) (res []*ListLinkResponse, total
 //两种查询方法需要用基准测一下哪个快
 func (s *Service) listLinkJoin(req *ListLinkRequest) (res []*ListLinkResponse, total int64, errs *api.Err) {
 	req.Size = 10
-	var links []Link
+	var links []LinkUser
 	var err error
 
 	if req.UserId == 0 {
@@ -86,7 +86,7 @@ func (s *Service) listLinkJoin(req *ListLinkRequest) (res []*ListLinkResponse, t
 		log.Error(err.Error())
 	}
 	res = make([]*ListLinkResponse, 0)
-	visit(&links, func(m Link) {
+	visit(&links, func(m LinkUser) {
 		link := BuildLinkResponseOfModel(&m)
 		res = append(res, link)
 	})
@@ -104,7 +104,7 @@ func (s *Service) listLinkJoin(req *ListLinkRequest) (res []*ListLinkResponse, t
 	return res, total, nil
 }
 
-func visit(links *[]Link, f func(link Link)) {
+func visit(links *[]LinkUser, f func(link LinkUser)) {
 	for _, link := range *links {
 		f(link)
 	}
@@ -117,7 +117,7 @@ func visit(links *[]Link, f func(link Link)) {
 */
 func (s *Service) listLinkNoJoin(req *ListLinkRequest) (res []*ListLinkResponse, total int64, errs *api.Err) {
 	req.Size = 10
-	var links []Link
+	var links []LinkUser
 	var err error
 	links, total, err = s.dao.ListLink(req)
 	if err != nil {
@@ -125,7 +125,7 @@ func (s *Service) listLinkNoJoin(req *ListLinkRequest) (res []*ListLinkResponse,
 	}
 
 	res = make([]*ListLinkResponse, 0)
-	visit(&links, func(m Link) {
+	visit(&links, func(m LinkUser) {
 		link := BuildLinkResponseOfModel(&m)
 		res = append(res, link)
 	})
@@ -158,7 +158,7 @@ func (s *Service) fetchHotComment(ids []interface{}, links []*ListLinkResponse) 
 	if err != nil {
 		return
 	}
-	hash := make(map[int]comment.Comment)
+	hash := make(map[int]comment.CommentUser)
 	for _, comment := range commentList {
 		hash[comment.LinkId] = comment
 	}
@@ -185,7 +185,7 @@ func (s *Service) fetchIsLike(ids []interface{}, links []*ListLinkResponse, req 
 	}
 }
 
-func getLinkIds(links *[]Link) []interface{} {
+func getLinkIds(links *[]LinkUser) []interface{} {
 	linkIds := make([]interface{}, 0)
 	for _, link := range *links {
 		linkIds = append(linkIds, link.Id)

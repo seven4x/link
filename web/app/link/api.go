@@ -1,6 +1,9 @@
 package link
 
-import "time"
+import (
+	"strconv"
+	"time"
+)
 
 type ListLinkResponse struct {
 	Id         int    `json:"id"`
@@ -30,11 +33,11 @@ type Creator struct {
 	Avatar string
 }
 
-func BuildLinkResponseOfModel(m *Link) (res *ListLinkResponse) {
+func BuildLinkResponseOfModel(m *LinkUser) (res *ListLinkResponse) {
 
 	res = &ListLinkResponse{
 		Id:           m.Id,
-		Link:         m.Link,
+		Link:         m.Link.Link,
 		Title:        m.Title,
 		Agree:        m.Agree,
 		Disagree:     m.Disagree,
@@ -64,7 +67,7 @@ type ListLinkRequest struct {
 }
 
 type CreateLinkRequest struct {
-	TopicId int    `validate:"required"`
+	TopicId string `validate:"required"`
 	Title   string `validate:"required"`
 	Url     string `validate:"required"`
 	Comment string `validate:"max=140"`
@@ -75,11 +78,12 @@ type CreateLinkRequest struct {
 }
 
 func (req *CreateLinkRequest) ToLink() (link *Link) {
+	topicId, _ := strconv.Atoi(req.TopicId)
 	link = &Link{
 		Id:           0,
 		Link:         req.Url,
 		Title:        req.Title,
-		TopicId:      req.TopicId,
+		TopicId:      topicId,
 		Score:        0,
 		Agree:        0,
 		Disagree:     0,

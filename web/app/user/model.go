@@ -2,7 +2,7 @@ package user
 
 import "time"
 
-type User struct {
+type Account struct {
 	Id       int    `json:"id" xorm:"pk autoincr"`
 	UserName string `json:"userName"`
 	NickName string `json:"nickName"`

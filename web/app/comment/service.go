@@ -33,7 +33,7 @@ func (s *Service) SaveNewComment(req *NewCommentRequest) (id int, errs *api.Err)
 	}
 	return comment.Id, nil
 }
-func (s *Service) ListHotCommentByLinkId(ids []interface{}) ([]Comment, error) {
+func (s *Service) ListHotCommentByLinkId(ids []interface{}) ([]CommentUser, error) {
 
 	return s.dao.ListHotCommentByLinkId(ids)
 }

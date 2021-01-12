@@ -1,5 +1,5 @@
-drop table t_user;
-CREATE TABLE IF NOT EXISTS "t_user"
+drop table account;
+CREATE TABLE IF NOT EXISTS "account"
 (
     "id"          SERIAL       NOT NULL primary key,
     "user_name"   VARCHAR(140) NULL,
@@ -11,9 +11,9 @@ CREATE TABLE IF NOT EXISTS "t_user"
     "update_time" timestamp    NULL,
     "delete_time" timestamp    NULL
 );
-insert into t_user
-values (0, 'seven4x', 'seven4x', '2d12ed02b04144390546484a6ad73b23','', 0, null, null, null);
-select * from t_user;
+insert into account
+values (9, 'seven4x', 'seven4x', '2d12ed02b04144390546484a6ad73b23','', 0, null, null, null);
+select * from account;
 drop table register_code;
 create table if not exists "register_code"
 (
