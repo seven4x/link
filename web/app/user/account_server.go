@@ -10,6 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 var (
@@ -61,6 +62,11 @@ func login(e echo.Context) error {
 	}
 
 	if data, err := svr.Login(*req); err == nil {
+		cookie := new(http.Cookie)
+		cookie.Name = "token"
+		cookie.Value = data.Token
+		cookie.Expires = time.Unix(data.ExpireAt, 0)
+		e.SetCookie(cookie)
 		e.JSON(http.StatusOK, api.Success(data))
 	} else {
 		e.JSON(http.StatusOK, api.Fail(err.Error()))

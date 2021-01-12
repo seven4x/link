@@ -36,9 +36,12 @@ func (svr *Service) Login(l Login) (res *LoginResponse, err error) {
 	if u.Password != md5password(l.Password) {
 		return nil, errors.New("密码错误")
 	}
-	token, claims := mymw.BuildToken(l.Username, u.Id)
+	claims, err := mymw.BuildToken(l.Username, u.Id)
+	if err != nil {
+		return nil, err
+	}
 	res = &LoginResponse{
-		Token:    token,
+		Token:    claims.Token,
 		ExpireAt: claims.ExpiresAt,
 	}
 	return res, nil

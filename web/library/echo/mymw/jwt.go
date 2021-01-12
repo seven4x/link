@@ -12,32 +12,36 @@ const (
 )
 
 type JwtCustomClaims struct {
-	Name string `json:"name"`
-	Id   int    `json:"id"`
+	Name  string `json:"name"`
+	Id    int    `json:"id"`
+	Token string `json:"token"`
 	jwt.StandardClaims
 }
 
-func BuildToken(username string, id int) (tokenstr string, claims *JwtCustomClaims) {
+func BuildToken(username string, id int) (claims *JwtCustomClaims, err error) {
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	// Generate encoded token and send it as response.
+	tokenstr, err := token.SignedString([]byte(secret))
 	// Set custom claims
 	claims = &JwtCustomClaims{
-		username,
-		id,
-		jwt.StandardClaims{
+		Name:  username,
+		Id:    id,
+		Token: tokenstr,
+		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
 		},
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	// Generate encoded token and send it as response.
-	tokenstr, _ = token.SignedString([]byte(secret))
 
-	return tokenstr, claims
+	return claims, err
 }
 
 func JWT() echo.MiddlewareFunc {
 	// Configure middleware with the custom claims type
 	config := middleware.JWTConfig{
-		Claims:     &JwtCustomClaims{},
-		SigningKey: []byte(secret),
+		Claims:      &JwtCustomClaims{},
+		SigningKey:  []byte(secret),
+		TokenLookup: "cookie:token",
 	}
 
 	return middleware.JWTWithConfig(config)
