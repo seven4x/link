@@ -16,3 +16,12 @@ func GetUserId(e echo.Context) int {
 	claims := user.Claims.(*mymw.JwtCustomClaims)
 	return claims.Id
 }
+func GetUser(e echo.Context) *mymw.JwtCustomClaims {
+	u := e.Get(consts.User)
+	if u == nil {
+		return nil
+	}
+	user := u.(*jwt.Token)
+	claims := user.Claims.(*mymw.JwtCustomClaims)
+	return claims
+}

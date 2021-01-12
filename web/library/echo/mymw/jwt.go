@@ -12,28 +12,25 @@ const (
 )
 
 type JwtCustomClaims struct {
-	Name  string `json:"name"`
-	Id    int    `json:"id"`
-	Token string `json:"token"`
+	Name string `json:"name"`
+	Id   int    `json:"id"`
 	jwt.StandardClaims
 }
 
-func BuildToken(username string, id int) (claims *JwtCustomClaims, err error) {
+func BuildToken(username string, id int) (token string, claims *JwtCustomClaims, err error) {
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	// Generate encoded token and send it as response.
-	tokenstr, err := token.SignedString([]byte(secret))
 	// Set custom claims
 	claims = &JwtCustomClaims{
-		Name:  username,
-		Id:    id,
-		Token: tokenstr,
+		Name: username,
+		Id:   id,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
 		},
 	}
+	t := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenstr, err := t.SignedString([]byte(secret))
 
-	return claims, err
+	return tokenstr, claims, err
 }
 
 func JWT() echo.MiddlewareFunc {

@@ -3,6 +3,7 @@ package user
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/Seven4X/link/web/app"
 	"github.com/Seven4X/link/web/library/api"
 	"github.com/Seven4X/link/web/library/echo/mymw"
 	"github.com/Seven4X/link/web/library/log"
@@ -66,6 +67,7 @@ func login(e echo.Context) error {
 		cookie.Name = "token"
 		cookie.Value = data.Token
 		cookie.Expires = time.Unix(data.ExpireAt, 0)
+		cookie.Path = "/"
 		e.SetCookie(cookie)
 		e.JSON(http.StatusOK, api.Success(data))
 	} else {
@@ -151,9 +153,8 @@ func wechatCallback(e echo.Context) error {
 }
 
 func info(e echo.Context) error {
-	user := e.Get("user").(*jwt.Token)
-	claims := user.Claims.(*mymw.JwtCustomClaims)
-	log.Info(claims)
-	e.JSON(http.StatusOK, api.Success([2]interface{}{"鸡要文件", claims}))
+	u := app.GetUser(e)
+	log.Info(u)
+	e.JSON(http.StatusOK, api.Success(u))
 	return nil
 }
