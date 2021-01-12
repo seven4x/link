@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Seven4X/link/web/library/api"
+	"github.com/Seven4X/link/web/library/api/messages"
 	"github.com/Seven4X/link/web/library/echo/mymw"
 	"math/rand"
 	"strings"
@@ -54,12 +55,12 @@ func md5password(originPwd string) string {
 
 func (svr *Service) Register(req *RegisterRequest) (b bool, err *api.Err) {
 	if ri, err := svr.dao.GetRegisterInfoByCode(req.Code); err != nil {
-		return false, api.NewError("code err")
+		return false, api.NewError(messages.REGISTER_CODE_ERROR)
 	} else {
 		u := Account{UserName: req.LoginId}
 		svr.dao.Get(&u)
 		if u.Id != 0 {
-			return false, api.NewError("username had registered")
+			return false, api.NewError(messages.REGISTER_NAME_REPEAT)
 		}
 
 		req.Password = md5password(req.Password)

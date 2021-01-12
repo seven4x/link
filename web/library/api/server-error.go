@@ -11,11 +11,12 @@ func (e *Err) Error() string {
 	err, _ := json.Marshal(e)
 	return string(err)
 }
-func NewError(msg string) *Err {
+func NewError(msgId string) *Err {
 	return &Err{
-		MsgId: msg,
+		MsgId: msgId,
 	}
 }
+
 func NewErrorWithData(msg string, key1, value1 string) *Err {
 	return &Err{
 		MsgId: msg,
