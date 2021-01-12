@@ -10,6 +10,7 @@ import (
 	"github.com/alibaba/sentinel-golang/ext/datasource/nacos"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"net/http"
 )
 
 func NewEcho() (e *echo.Echo) {
@@ -47,7 +48,20 @@ func NewEcho() (e *echo.Echo) {
 			}),
 		),
 	)
+
+	e.HTTPErrorHandler = customHTTPErrorHandler
 	return e
+}
+func customHTTPErrorHandler(err error, c echo.Context) {
+	code := http.StatusInternalServerError
+	if he, ok := err.(*echo.HTTPError); ok {
+		code = he.Code
+	}
+	res := map[string]interface{}{"ok": false, "msg": err.Error()}
+	if err := c.JSON(code, res); err != nil {
+		c.Logger().Error(err)
+	}
+	c.Logger().Error(err)
 }
 
 func initSentinel() {

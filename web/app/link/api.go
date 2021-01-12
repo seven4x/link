@@ -48,7 +48,7 @@ func BuildLinkResponseOfModel(m *Link) (res *ListLinkResponse) {
 		ClickCount:   0,
 	}
 	res.CreateBy = &Creator{
-		Name:   m.Creator.Name,
+		Name:   m.Creator.NickName,
 		UserId: m.Creator.Id,
 		Avatar: m.Creator.Avatar,
 	}

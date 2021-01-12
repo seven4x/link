@@ -1,4 +1,4 @@
-package account
+package user
 
 import (
 	"encoding/json"
@@ -22,8 +22,35 @@ func Router(e *echo.Echo) {
 	e.GET("/wx/cb", wechatCallback)
 	g := e.Group("/account")
 	g.POST("/login", login)
+	g.POST("/register", register)
+	g.GET("/get-my-code", generatorRegisterCode, mymw.JWT())
 	g.GET("/info", info, mymw.JWT())
+}
 
+func generatorRegisterCode(e echo.Context) error {
+	user := e.Get("user").(*jwt.Token)
+	if user == nil {
+		e.JSON(http.StatusOK, api.Fail("need login"))
+		return nil
+	}
+	claims := user.Claims.(*mymw.JwtCustomClaims)
+
+	if code, err := svr.GeneratorRegisterCode(claims.Id); err != nil {
+		return e.JSON(http.StatusInternalServerError, api.Fail(err.Error()))
+	} else {
+		return e.JSON(http.StatusOK, api.Success(code))
+	}
+	return nil
+}
+
+func register(e echo.Context) error {
+	req := new(RegisterRequest)
+	e.Bind(req)
+	if err := e.Validate(req); err != nil {
+		return err
+	}
+	res, err := svr.Register(req)
+	return e.JSON(http.StatusOK, api.Response(res, err))
 }
 
 func login(e echo.Context) error {

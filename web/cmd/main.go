@@ -11,8 +11,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/Seven4X/link/web/app/account"
 	"github.com/Seven4X/link/web/app/link"
+	"github.com/Seven4X/link/web/app/user"
 	"github.com/Seven4X/link/web/app/vote"
 	setup "github.com/Seven4X/link/web/library/echo"
 	"github.com/labstack/echo/v4"
@@ -25,7 +25,7 @@ func main() {
 
 	// 初始化模块
 	topic.Router(e)
-	account.Router(e)
+	user.Router(e)
 	link.Router(e)
 	vote.Router(e)
 	comment.Router(e)

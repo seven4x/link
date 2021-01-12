@@ -1,53 +1,81 @@
 package api
 
 type (
+	SimpleResult struct {
+		Ok   bool        `json:"ok"`
+		Data interface{} `json:"data,omitempty"`
+	}
+	PageResult struct {
+		Ok   bool        `json:"ok"`
+		Data interface{} `json:"data,omitempty"`
+		Page Page        `json:"page,omitempty"`
+	}
+
+	ErrorResult struct {
+		Ok        bool              `json:"ok"`
+		MsgId     string            `json:"msgId,omitempty"`
+		Msg       string            `json:"msg,omitempty"`
+		ErrorData map[string]string `json:"errorData,omitempty"`
+	}
 	Page struct {
 		HasMore bool `json:"hasMore"`
 		Total   int  `json:"total,omitempty"`
 	}
-	Result struct {
-		Ok        bool              `json:"ok"`
-		Data      interface{}       `json:"data,omitempty"`
-		MsgId     string            `json:"msgId,omitempty"`
-		Msg       string            `json:"msg,omitempty"`
-		ErrorData map[string]string `json:"errorData,omitempty"`
-		Page      Page              `json:"page,omitempty"`
-	}
 )
 
-func Fail(msg string) (res *Result) {
-	return &Result{Ok: false, Msg: msg}
+func Fail(msg string) (res interface{}) {
+	return &ErrorResult{Ok: false, Msg: msg}
 }
 
-func FailMsgId(msgId string) (res *Result) {
-	return &Result{Ok: false, MsgId: msgId}
+func FailMsgId(msgId string) (res interface{}) {
+	return &ErrorResult{Ok: false, MsgId: msgId}
 }
 
-func Success(data interface{}) (res *Result) {
-	return &Result{Ok: true, Data: data}
+func Success(data interface{}) (res interface{}) {
+	return &SimpleResult{Ok: true, Data: data}
 }
 
-func ResponseHasMore(data interface{}, hasMore bool) (res *Result) {
-	res = &Result{
+func ResponseHasMore(data interface{}, hasMore bool) (res interface{}) {
+	res = &PageResult{
 		Ok:   true,
 		Data: data,
 		Page: Page{HasMore: hasMore},
 	}
-
 	return res
 }
 
-func Response(date interface{}, svrErr *Err) (res *Result) {
+func ResponsePage(data interface{}, svrErr *Err, total int, hasMore bool) (res interface{}) {
 	if svrErr == nil {
-		res = &Result{
+		res = &PageResult{
+			Ok:   true,
+			Data: data,
+			Page: Page{
+				Total:   total,
+				HasMore: hasMore,
+			},
+		}
+	} else {
+		if svrErr.Data != nil {
+			return &ErrorResult{Ok: false, MsgId: svrErr.MsgId, ErrorData: svrErr.Data}
+		} else {
+			return &ErrorResult{Ok: false, MsgId: svrErr.MsgId}
+		}
+	}
+
+	return
+}
+
+func Response(date interface{}, svrErr *Err) (res interface{}) {
+	if svrErr == nil {
+		res = &SimpleResult{
 			Ok:   true,
 			Data: date,
 		}
 	} else {
 		if svrErr.Data != nil {
-			return &Result{Ok: false, MsgId: svrErr.MsgId, ErrorData: svrErr.Data}
+			return &ErrorResult{Ok: false, MsgId: svrErr.MsgId, ErrorData: svrErr.Data}
 		} else {
-			return &Result{Ok: false, MsgId: svrErr.MsgId}
+			return &ErrorResult{Ok: false, MsgId: svrErr.MsgId}
 		}
 	}
 
