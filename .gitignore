@@ -3,3 +3,5 @@ tmp/
 cuckoo-filter.data
 .DS_Store
 logs/
+
+config-prod.yml

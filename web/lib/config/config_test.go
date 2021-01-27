@@ -45,7 +45,7 @@ func TestOsLookUp(t *testing.T) {
 }
 
 func TestGetFromAcm(t *testing.T) {
-	res := getAcmConfig("token")
+	res := GetAcmConfig("link-preview-token")
 	assert.NotEmpty(t, res)
 }
 

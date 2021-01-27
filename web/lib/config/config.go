@@ -16,13 +16,20 @@ import (
 )
 
 const (
-	endpoint         = "acm.aliyun.com"
-	LinkPreviewToken = "link-preview-token"
-	GroupId          = "link-hub-go"
+	endpoint = "acm.aliyun.com"
+	DataId   = "app-config"
+	GroupId  = "link-hub-go"
 )
 
 func init() {
-	viper.AutomaticEnv()
+	viper.SetConfigName("config")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath("$HOME/.link")
+	viper.AddConfigPath(".")
+	err := viper.ReadInConfig() // Find and read the config file
+	if err != nil {             // Handle errors reading the config file
+		panic(fmt.Errorf("Fatal error config file: %s \n", err))
+	}
 	InitAcm()
 }
 
@@ -34,9 +41,9 @@ idea存在获取不到环境变量的问题，解决办法参考：
 viper会进行转换，环境变量必须是大写才能取到
 */
 func InitAcm() {
-	ak := GetString("ACM_AK")
-	sk := GetString("ACM_SK")
-	ns := GetString("ACM_NS")
+	ak := GetString("acm.ak")
+	sk := GetString("acm.sk")
+	ns := GetString("acm.ns")
 	if ak == "" || sk == "" {
 		log.Info("acm.ak acm.sk not config")
 		return
@@ -62,24 +69,22 @@ func InitAcm() {
 		return
 	}
 	client = configClient
-	initLinkPreviewToken()
 
+	initLinkPreviewToken()
 }
 
 func initLinkPreviewToken() {
 	err := client.ListenConfig(vo.ConfigParam{
-		DataId: LinkPreviewToken,
+		DataId: DataId,
 		Group:  GroupId,
 		OnChange: func(namespace, group, dataId, data string) {
 			fmt.Println("ListenConfig group:" + group + ", dataId:" + dataId + ", data:" + data)
-			viper.Set(LinkPreviewToken, data)
 		},
 	})
 	if err != nil {
 		log.Error("acm client Listen error", err.Error())
 	}
-	res := getAcmConfig(LinkPreviewToken)
-	viper.Set(LinkPreviewToken, res)
+
 }
 
 func Get(key string) interface{} {
@@ -90,16 +95,16 @@ func GetString(key string) string {
 	return viper.GetString(key)
 }
 
-func getAcmConfig(key string) string {
+func GetAcmConfig(key string) string {
 	if client == nil {
 		return ""
 	}
 	content, err := client.GetConfig(vo.ConfigParam{
 		DataId: key,
-		Group:  "link-hub-go"})
+		Group:  GroupId})
 
 	if err != nil {
-		log.Error("getAcmConfig Error", err.Error())
+		log.Error("GetAcmConfig Error", err.Error())
 	}
 	log.Info(content)
 	return content

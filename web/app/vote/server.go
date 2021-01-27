@@ -15,7 +15,7 @@ var (
 )
 
 func Router(e *echo.Echo) {
-	e.POST("/vote", vote, mymw.JWT())
+	e.POST("/api1/vote", vote, mymw.JWT())
 }
 
 func vote(e echo.Context) error {

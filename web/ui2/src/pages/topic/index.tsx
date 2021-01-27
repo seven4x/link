@@ -55,7 +55,7 @@ function TopicHome() {
 
     useEffect(() => {
         GetTopicDetail(topicId).then(res => {
-            setTopic(res.data)
+            setTopic(res.data || {})
         })
     }, [topicId])
     useEffect(() => {

@@ -21,12 +21,16 @@ var (
 )
 
 func Router(e *echo.Echo) {
-	e.GET("/wx/cb", wechatCallback)
-	g := e.Group("/account")
+
+	e.GET("/api1/wx/cb", wechatCallback)
+	g := e.Group("/api1/account")
 	g.POST("/login", login)
 	g.POST("/register", register)
 	g.GET("/get-my-code", generatorRegisterCode, mymw.JWT())
 	g.GET("/info", info, mymw.JWT())
+
+	ug := e.Group("/api1/user")
+	ug.GET("/marks/mvp", mvpUser)
 }
 
 func generatorRegisterCode(e echo.Context) error {

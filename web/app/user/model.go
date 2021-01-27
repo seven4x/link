@@ -26,3 +26,7 @@ type RegisterInfo struct {
 	UsedUserName string
 	UsedTime     time.Time
 }
+
+type UserVO struct {
+	Account
+}

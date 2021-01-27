@@ -29,7 +29,7 @@ var (
 验证明令： ab -n1000 -c100 http://localhost:1323/link/preview-token
 */
 func Router(e *echo.Echo) {
-	g := e.Group("/link")
+	g := e.Group("/api1/link")
 	g.POST("", createLink, mymw.JWT())
 	g.GET("", listLink)
 	g.POST("/actions/batch", batchImport, mymw.JWT())
@@ -53,7 +53,7 @@ func batchImport(e echo.Context) error {
 }
 
 func getPreviewToken(e echo.Context) error {
-	str := config.GetString(config.LinkPreviewToken)
+	str := config.GetString("link-preview-token")
 
 	_ = e.HTML(http.StatusOK, str)
 	return nil

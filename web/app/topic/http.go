@@ -25,7 +25,7 @@ const (
 
 // call by cmd
 func Router(e *echo.Echo) {
-	g := e.Group("/topic")
+	g := e.Group("/api1/topic")
 	g.POST("", createTopic, mymw.JWT())
 	g.GET("", searchTopic)
 	g.GET("/:id", topicDetail)

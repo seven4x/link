@@ -35,7 +35,7 @@ const routes = [
             },{
                 exact:true,
                 path: "/login",
-                component: React.lazy(() => import('./account/Login'))
+                component: React.lazy(() => import('./account/login'))
             }
         ]
     }

@@ -15,12 +15,8 @@ var engine *xorm.Engine
 
 func init() {
 	var err error
-	name := config.Get("APP_DB_NAME")
-	password := config.Get("APP_DB_PASSWORD")
-	host := config.Get("APP_DB_HOST")
-	db := config.Get("APP_DB_DATABASE")
-	sdn := fmt.Sprintf("postgres://%s:%s@%s/%s", name, password, host, db)
-	engine, err = xorm.NewPostgreSQL(sdn)
+
+	engine, err = xorm.NewPostgreSQL(buildDsn())
 	if err != nil {
 		log.Error(err.Error())
 		panic(err)
@@ -31,6 +27,15 @@ func init() {
 	if err != nil {
 		log.Error("engine-ping-failed:", err.Error())
 	}
+}
+
+func buildDsn() string {
+	name := config.Get("db.user")
+	password := config.Get("db.password")
+	host := config.Get("db.host")
+	db := config.Get("db.database")
+	sdn := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable", name, password, host, db)
+	return sdn
 }
 
 //调用时，p=bil
@@ -46,7 +51,7 @@ func SetMockDb(mockDb *sql.DB) {
 
 //参考：https://github.com/DATA-DOG/Go-txdb
 func RegisterMockDriver() {
-	txdb.Register("txdb", "postgres", "postgres://roach:Q7gc8rEdS@127.0.0.1:26257/link_hub")
+	txdb.Register("txdb", "postgres", buildDsn())
 	db, err := sql.Open("txdb", "identifier")
 	if err != nil {
 		log.Error(err)

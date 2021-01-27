@@ -1,4 +1,5 @@
-drop table account;
+
+drop table if exists account;
 CREATE TABLE IF NOT EXISTS "account"
 (
     "id"          SERIAL       NOT NULL primary key,
@@ -14,7 +15,7 @@ CREATE TABLE IF NOT EXISTS "account"
 insert into account
 values (9, 'seven4x', 'seven4x', '2d12ed02b04144390546484a6ad73b23','', 0, null, null, null);
 select * from account;
-drop table register_code;
+drop table if exists  register_code  ;
 create table if not exists "register_code"
 (
     "id"      Serial  not null primary key,
@@ -32,3 +33,4 @@ create table if not exists "register_info"
     used_user_name varchar(140),
     user_time      timestamp
 )
+

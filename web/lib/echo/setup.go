@@ -16,6 +16,7 @@ import (
 func NewEcho() (e *echo.Echo) {
 	// Echo instance
 	e = echo.New()
+
 	e.Validator = validator.New()
 	// Middleware
 	e.Use(middleware.Logger())

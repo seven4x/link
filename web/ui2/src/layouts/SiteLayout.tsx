@@ -7,7 +7,7 @@ import LocaleSwitch from "../components/LocaleSwitch/LocaleSwitch";
 import Profile from "../components/Profile/Profile";
 import styled from "styled-components";
 import {SelectProps} from "antd/es/select";
-import logo from '@/assets/logo.png'
+import logo from '~/assets/logo.png'
 import {GlobalContext} from "../App";
 import {SearchTopic} from '../pages/topic/service'
 import {useRequest} from 'ahooks'
@@ -149,9 +149,9 @@ const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
                                 </Select>
                             </Col>
                             <Col flex="none" xs={0} sm={12}>
-                                <LocaleSwitch defaultLocale="zh-CN" onLocaleChange={(locale) => {
-                                    globalContext.onLangChange(locale)
-                                }}/>
+                                {/*<LocaleSwitch defaultLocale="zh-CN" onLocaleChange={(locale) => {*/}
+                                {/*    globalContext.onLangChange(locale)*/}
+                                {/*}}/>*/}
 
 
                                 <Badge count={5}>
