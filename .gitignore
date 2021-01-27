@@ -1,3 +1,5 @@
 .idea/
 tmp/
 cuckoo-filter.data
+.DS_Store
+logs/
