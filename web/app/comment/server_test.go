@@ -1,7 +1,7 @@
 package comment
 
 import (
-	setup "github.com/Seven4X/link/web/library/echo"
+	setup "github.com/Seven4X/link/web/lib/echo"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"

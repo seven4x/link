@@ -7,7 +7,7 @@ package config
 
 import (
 	"fmt"
-	"github.com/Seven4X/link/web/library/log"
+	"github.com/Seven4X/link/web/lib/log"
 	"github.com/nacos-group/nacos-sdk-go/clients"
 	"github.com/nacos-group/nacos-sdk-go/clients/config_client"
 	"github.com/nacos-group/nacos-sdk-go/common/constant"

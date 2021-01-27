@@ -1,7 +1,7 @@
 package util
 
 import (
-	"github.com/Seven4X/link/web/library/log"
+	"github.com/Seven4X/link/web/lib/log"
 	cuckoo "github.com/seven4x/cuckoofilter"
 	"io/ioutil"
 )

@@ -1,8 +1,8 @@
 package vote
 
 import (
-	"github.com/Seven4X/link/web/library/api"
-	"github.com/Seven4X/link/web/library/api/messages"
+	"github.com/Seven4X/link/web/lib/api"
+	"github.com/Seven4X/link/web/lib/api/messages"
 )
 
 type Service struct {

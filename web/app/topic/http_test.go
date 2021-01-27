@@ -9,9 +9,9 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/Seven4X/link/web/library/api"
-	setup "github.com/Seven4X/link/web/library/echo"
-	mydb "github.com/Seven4X/link/web/library/store/db"
+	"github.com/Seven4X/link/web/lib/api"
+	setup "github.com/Seven4X/link/web/lib/echo"
+	mydb "github.com/Seven4X/link/web/lib/store/db"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
@@ -47,7 +47,7 @@ func TestCreateTopicSucc(t *testing.T) {
 	//4.Assertions
 	if assert.NoError(t, createTopic(c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
-		suc := api.Result{}
+		suc := api.SimpleResult{}
 		_ = json.Unmarshal(rec.Body.Bytes(), &suc)
 		println(rec.Body.String())
 		assert.Equal(t, 0, suc.Ok)
@@ -67,7 +67,7 @@ func TestCreateTopicFailed(t *testing.T) {
 	// Assertions
 	if assert.NoError(t, createTopic(c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
-		suc := api.Result{}
+		suc := api.SimpleResult{}
 		json.Unmarshal(rec.Body.Bytes(), &suc)
 		println(rec.Body.String())
 		assert.Equal(t, 1, suc.Ok)
@@ -88,7 +88,7 @@ func TestCreateTopicSuccUseTxdb(t *testing.T) {
 	//3.Assertions
 	if assert.NoError(t, createTopic(c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
-		suc := api.Result{}
+		suc := api.SimpleResult{}
 		_ = json.Unmarshal(rec.Body.Bytes(), &suc)
 		println(rec.Body.String())
 		assert.Equal(t, 0, suc.Ok)

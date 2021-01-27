@@ -1,10 +1,10 @@
 package vote
 
 import (
-	"github.com/Seven4X/link/web/library/api"
-	"github.com/Seven4X/link/web/library/api/messages"
-	"github.com/Seven4X/link/web/library/consts"
-	"github.com/Seven4X/link/web/library/echo/mymw"
+	"github.com/Seven4X/link/web/lib/api"
+	"github.com/Seven4X/link/web/lib/api/messages"
+	"github.com/Seven4X/link/web/lib/consts"
+	"github.com/Seven4X/link/web/lib/echo/mymw"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"net/http"

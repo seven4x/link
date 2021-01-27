@@ -1,9 +1,9 @@
 package setup
 
 import (
-	"github.com/Seven4X/link/web/library/config"
-	"github.com/Seven4X/link/web/library/echo/validator"
-	"github.com/Seven4X/link/web/library/log"
+	"github.com/Seven4X/link/web/lib/config"
+	"github.com/Seven4X/link/web/lib/echo/validator"
+	"github.com/Seven4X/link/web/lib/log"
 	adapter "github.com/alibaba/sentinel-golang/adapter/echo"
 	sentinel "github.com/alibaba/sentinel-golang/api"
 	"github.com/alibaba/sentinel-golang/ext/datasource"

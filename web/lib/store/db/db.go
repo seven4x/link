@@ -2,8 +2,10 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/DATA-DOG/go-txdb"
-	"github.com/Seven4X/link/web/library/log"
+	"github.com/Seven4X/link/web/lib/config"
+	"github.com/Seven4X/link/web/lib/log"
 	_ "github.com/lib/pq"
 	"github.com/xormplus/xorm"
 	"github.com/xormplus/xorm/names"
@@ -13,8 +15,12 @@ var engine *xorm.Engine
 
 func init() {
 	var err error
-	//todo   viper
-	engine, err = xorm.NewPostgreSQL("postgres://roach:Q7gc8rEdS@127.0.0.1:26257/link_hub")
+	name := config.Get("APP_DB_NAME")
+	password := config.Get("APP_DB_PASSWORD")
+	host := config.Get("APP_DB_HOST")
+	db := config.Get("APP_DB_DATABASE")
+	sdn := fmt.Sprintf("postgres://%s:%s@%s/%s", name, password, host, db)
+	engine, err = xorm.NewPostgreSQL(sdn)
 	if err != nil {
 		log.Error(err.Error())
 		panic(err)

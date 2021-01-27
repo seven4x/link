@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	t "github.com/Seven4X/link/web/app/topic"
-	"github.com/Seven4X/link/web/library/store/db"
+	"github.com/Seven4X/link/web/lib/store/db"
 	"github.com/emirpasic/gods/lists/arraylist"
 	"github.com/emirpasic/gods/stacks/arraystack"
 	"github.com/spf13/cobra"

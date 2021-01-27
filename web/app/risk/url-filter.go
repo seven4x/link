@@ -2,8 +2,8 @@ package risk
 
 import (
 	"bufio"
-	"github.com/Seven4X/link/web/library/log"
-	"github.com/Seven4X/link/web/library/util"
+	"github.com/Seven4X/link/web/lib/log"
+	"github.com/Seven4X/link/web/lib/util"
 	valid "github.com/asaskevich/govalidator"
 	"io"
 	"net"

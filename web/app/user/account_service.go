@@ -4,9 +4,9 @@ import (
 	"crypto/md5"
 	"errors"
 	"fmt"
-	"github.com/Seven4X/link/web/library/api"
-	"github.com/Seven4X/link/web/library/api/messages"
-	"github.com/Seven4X/link/web/library/echo/mymw"
+	"github.com/Seven4X/link/web/lib/api"
+	"github.com/Seven4X/link/web/lib/api/messages"
+	"github.com/Seven4X/link/web/lib/echo/mymw"
 	"math/rand"
 	"strings"
 )

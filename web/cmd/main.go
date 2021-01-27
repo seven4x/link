@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/Seven4X/link/web/app/comment"
 	"github.com/Seven4X/link/web/app/topic"
-	"github.com/Seven4X/link/web/library/util"
+	"github.com/Seven4X/link/web/lib/util"
 	"log"
 	"net/http"
 	"os"
@@ -14,7 +14,7 @@ import (
 	"github.com/Seven4X/link/web/app/link"
 	"github.com/Seven4X/link/web/app/user"
 	"github.com/Seven4X/link/web/app/vote"
-	setup "github.com/Seven4X/link/web/library/echo"
+	setup "github.com/Seven4X/link/web/lib/echo"
 	"github.com/labstack/echo/v4"
 )
 
