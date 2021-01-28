@@ -159,6 +159,14 @@ func wechatCallback(e echo.Context) error {
 func info(e echo.Context) error {
 	u := app.GetUser(e)
 	log.Info(u)
-	e.JSON(http.StatusOK, api.Success(u))
+	acc := Account{Id: u.Id}
+	svr.dao.Get(&acc)
+	info := AccountInfo{
+		Id:       u.Id,
+		Name:     u.Name,
+		NickName: acc.NickName,
+		Avatar:   acc.Avatar,
+	}
+	e.JSON(http.StatusOK, api.Success(info))
 	return nil
 }

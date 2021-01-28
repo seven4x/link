@@ -8,7 +8,7 @@ import (
 type Comment struct {
 	Id         int       `json:"id" xorm:"pk autoincr"`
 	LinkId     int       `json:"link_id"`
-	Context    string    `json:"context" xorm:"varchar(240)"`
+	Content    string    `json:"context" xorm:"context varchar(240)"`
 	Score      int       `json:"score" xorm:"default 0"`
 	Agree      int       `json:"agree"  xorm:"default 0"`
 	Disagree   int       `json:"disagree"  xorm:"default 0"`
@@ -20,6 +20,6 @@ type Comment struct {
 }
 
 type CommentUser struct {
-	Comment
+	Comment `xorm:"extends"`
 	Creator user.Account `xorm:"extends"`
 }

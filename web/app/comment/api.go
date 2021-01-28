@@ -22,7 +22,7 @@ type ListCommentRequest struct {
 type ListCommentResponse struct {
 	Id       int    `json:"id" `
 	LinkId   int    `json:"linkId"`
-	Context  string `json:"context" `
+	Content  string `json:"content" `
 	Score    int    `json:"score"  `
 	Agree    int    `json:"agree"  `
 	Disagree int    `json:"disagree"  `
@@ -33,10 +33,11 @@ type ListCommentResponse struct {
 }
 
 func BuildListCommentFromModel(model *CommentUser) (res *ListCommentResponse) {
+	model.Creator.Id = model.CreateBy
 	return &ListCommentResponse{
 		Id:         model.Id,
 		LinkId:     model.LinkId,
-		Context:    model.Context,
+		Content:    model.Content,
 		Score:      model.Score,
 		Agree:      model.Agree,
 		Disagree:   model.Disagree,

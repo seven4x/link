@@ -56,12 +56,14 @@ function TopicHome() {
     useEffect(() => {
         GetTopicDetail(topicId).then(res => {
             setTopic(res.data || {})
-        })
-    }, [topicId])
-    useEffect(() => {
-        ListMvpUser(topicId).then(res => {
-            if (res.ok) {
-                setMvps(res.data)
+            return res
+        }).then(detail => {
+            if (detail.data != null && detail.data.id != null) {
+                ListMvpUser(detail.data.id).then(res => {
+                    if (res.ok) {
+                        setMvps(res.data)
+                    }
+                })
             }
         })
     }, [topicId])

@@ -16,7 +16,7 @@ func NewDao() (dao *Dao) {
 	return
 }
 
-func (dao *Dao) GetUserVote(userId int, mtype rune, mid int) (rune, error) {
+func (dao *Dao) GetUserVote(userId int, mtype string, mid int) (int, error) {
 	var m UserVote
 	b, err := dao.Where("user_id=?", userId).And("type=?", mtype).And("id=?", mid).Cols("is_like").Get(&m)
 	if b {
@@ -52,43 +52,43 @@ func CreateUserVote(session *xorm.Session, uVote *UserVote) error {
 
 }
 
-func GetVoteInfo(session *xorm.Session, mtype rune, mid int) (VoteInfo, error) {
+func GetVoteInfo(session *xorm.Session, mtype string, mid int) (VoteInfo, error) {
 	var result VoteInfo
 
 	switch mtype {
-	case 't':
+	case "t":
 		_, err := session.SQL("select score,agree,disagree,id from topic where id=?", mid).Get(&result)
 		if err != nil {
 			log.Error(err.Error())
 		}
 		return result, err
-	case 'l':
+	case "l":
 		_, err := session.SQL("select score,agree,disagree,id from link where id=?", mid).Get(&result)
 		return result, err
-	case 'c':
+	case "c":
 		_, err := session.SQL("select score,agree,disagree,id from comment where id=?", mid).Get(&result)
 		return result, err
 	}
 	return result, nil
 }
 
-func UpdateVoteInfo(session *xorm.Session, info *VoteInfo, mtype rune) error {
+func UpdateVoteInfo(session *xorm.Session, info *VoteInfo, mtype string) error {
 
 	switch mtype {
-	case 't':
-		_, err := session.Exec("update topic set  score=?,agree=?,disagree=? where id=? ", info.Score, info.Agree, info.DisAgree, info.Id)
+	case "t":
+		_, err := session.Exec("update topic set  score=?,agree=?,disagree=? where id=? ", info.Score, info.Agree, info.Disagree, info.Id)
 		if err != nil {
 			log.Error(err.Error())
 			return err
 		}
-	case 'l':
-		_, err := session.Exec("update link set  score=?,agree=?,disagree=? where id=? ", info.Score, info.Agree, info.DisAgree, info.Id)
+	case "l":
+		_, err := session.Exec("update link set  score=?,agree=?,disagree=? where id=? ", info.Score, info.Agree, info.Disagree, info.Id)
 		if err != nil {
 			return err
 		}
 
-	case 'c':
-		_, err := session.Exec("update comment set  score=?,agree=?,disagree=? where id=? ", info.Score, info.Agree, info.DisAgree, info.Id)
+	case "c":
+		_, err := session.Exec("update comment set  score=?,agree=?,disagree=? where id=? ", info.Score, info.Agree, info.Disagree, info.Id)
 		if err != nil {
 			return err
 		}

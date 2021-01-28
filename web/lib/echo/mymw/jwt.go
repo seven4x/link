@@ -1,6 +1,7 @@
 package mymw
 
 import (
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -42,4 +43,34 @@ func JWT() echo.MiddlewareFunc {
 	}
 
 	return middleware.JWTWithConfig(config)
+}
+
+/**
+允许匿名访问的接口也需要感知到登陆人
+*/
+func Anonymous() echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			cookie, _ := c.Cookie("token")
+			if cookie == nil {
+				return next(c)
+			}
+			claims := &JwtCustomClaims{}
+			token, err := jwt.ParseWithClaims(cookie.Value, claims, keyFunc)
+			if err == nil && token != nil && token.Valid {
+				c.Set("user", token)
+				return next(c)
+			}
+
+			return next(c)
+		}
+	}
+}
+func keyFunc(t *jwt.Token) (interface{}, error) {
+	// Check the signing method
+	if t.Method.Alg() != "HS256" {
+		return nil, fmt.Errorf("unexpected jwt signing method=%v", t.Header["alg"])
+	}
+
+	return []byte(secret), nil
 }

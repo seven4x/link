@@ -86,7 +86,7 @@ const RelationTopic: React.FC<RelationTopicProps> = (props) => {
                         <List.Item>
                             <Card hoverable={true}
                                   onClick={() => {
-                                      history.push(`/topic/${item.id}`)
+                                      history.push(`/t/${item.id}`)
                                       console.log(item.name)
                                       setVisible(false)
                                   }}>{item.name}</Card>

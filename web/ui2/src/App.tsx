@@ -49,11 +49,7 @@ async function getLocale(lang: string): Promise<any> {
 
 
 function App() {
-    let [loginUser, setLoginUser] = useState<LoginUser | null>({
-        id: 1,
-        name: "三楼",
-        avatar: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-    })
+    let [loginUser, setLoginUser] = useState<LoginUser | null>(null)
     const [langState, setLangState] = useState({
         lang: 'zh-CN',
         messages: defaultConfig.messages,

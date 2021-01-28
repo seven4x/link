@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { Select } from "antd";
 import * as ls from "local-storage";
-import { searchTopicRequest as searchRequest } from "./service";
+import { searchTopicRequest as searchRequest } from "../service";
 const { Option, OptGroup } = Select;
 let timeout;
 let currentValue;

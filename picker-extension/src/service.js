@@ -1,4 +1,6 @@
-const Host = "http://localhost:1323";
+const HostPrefix = "http://localhost:9999"
+const Host = HostPrefix + "/api1";
+
 function postData(url, data) {
   // Default options are marked with *
   return fetch(url, {
@@ -28,6 +30,9 @@ export async function loginTest() {
   });
 }
 
-export async function searchTopicRequest(key){
-    return fetch(Host + "/topic?q="+key).then((res) => res.json());
+export async function searchTopicRequest(key) {
+  return fetch(Host + "/topic?q=" + key).then((res) => res.json());
 }
+
+export const config = {UrlPrefix: HostPrefix}
+

@@ -21,9 +21,9 @@ export interface LinkItemData {
     isLike?: number;
     title: string;
     url: string;
-    like: number;
-    dislike: number;
-    comment: number;
+    agree: number;
+    disagree: number;
+    commentCount: number;
     hotComment?: Poster
 
 }
@@ -38,9 +38,9 @@ export interface Poster {
 //评论
 export interface CommentData {
     id?: number
-    user: User
-    like: number
-    dislike: number
+    creator: User
+    agree: number
+    disagree: number
     isLike?: number
     createTime?: string
     content: string

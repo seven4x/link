@@ -11,7 +11,7 @@ type Dao struct {
 }
 
 var (
-	BaseColumn = []string{"link.id", "link.link", "link.title", "link.l_group", "link.tags", "link.agree", "link.disagree", "link.create_time"}
+	BaseColumn = []string{"link.id", "link.link", "link.title", "link.l_group", "link.tags", "link.agree", "link.disagree", "link.comment_cnt", "link.create_time"}
 )
 
 func NewDao() (dao *Dao) {
@@ -31,7 +31,7 @@ func (dao *Dao) ListLink(req *ListLinkRequest) (links []LinkUser, total int64, e
 	}
 	links = make([]LinkUser, 0)
 	err = dao.Table("link").
-		Cols(append([]string{"account.id", "account.name", "account.avatar"}, BaseColumn...)...).
+		Cols(append([]string{"account.nick_name", "account.avatar"}, BaseColumn...)...).
 		Join("left", "account", "account.id=link.create_by").
 		Where("link.topic_id=?", req.Tid).
 		And("link.id>?", req.Prev).
@@ -58,7 +58,7 @@ func (dao *Dao) ListLinkJoinUserVote(req *ListLinkRequest) (links []LinkUser, to
 		return nil, 0, err
 	}
 	err = dao.Table("link").
-		Cols(append([]string{"account.id", "account.name", "account.avatar", "user_vote.is_like"}, BaseColumn...)...).
+		Cols(append([]string{"account.id", "account.nick_name", "account.avatar", "user_vote.is_like"}, BaseColumn...)...).
 		Join("left", "account", "account.id=link.create_by").
 		Join("left", "user_vote", strconv.Itoa(req.UserId)+"=user_vote.user_id and user_vote.type='l' and user_vote.id=link.id").
 		Where("link.topic_id=?", req.Tid).

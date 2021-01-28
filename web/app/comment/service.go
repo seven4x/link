@@ -24,13 +24,14 @@ func (s *Service) Save(comment *Comment) (id int, err error) {
 func (s *Service) SaveNewComment(req *NewCommentRequest) (id int, errs *api.Err) {
 	comment := &Comment{
 		LinkId:   req.LinkId,
-		Context:  risk.SafeUserText(req.Content),
+		Content:  risk.SafeUserText(req.Content),
 		CreateBy: req.CreateBy,
 	}
 
 	if _, err := s.dao.InsertOne(comment); err != nil {
 		return -1, api.NewError(messages.GlobalErrorAboutDatabase)
 	}
+	s.dao.GrowCommentCnt(req.LinkId)
 	return comment.Id, nil
 }
 func (s *Service) ListHotCommentByLinkId(ids []interface{}) ([]CommentUser, error) {
@@ -53,6 +54,8 @@ func (s *Service) DeleteComment(linkId int, commentId int) (int64, error) {
 		Id:     commentId,
 		LinkId: linkId,
 	}
+	//暂不事物控制
 	affected, err := s.dao.Delete(comment)
+	s.dao.DisGrowCommentCnt(linkId)
 	return affected, err
 }

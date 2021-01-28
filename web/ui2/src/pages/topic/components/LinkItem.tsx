@@ -58,36 +58,48 @@ export const LinkItem: React.FC<LinkItemProps> = (props: LinkItemProps) => {
     let [commentShow, setCommentShow] = useState(false)
     const loginContext = useContext(GlobalContext)
 
-    const [likes, setLikes] = useState(link.isLike === 1 ? 1 : 0);
-    const [dislikes, setDislikes] = useState(link.isLike === 2 ? 1 : 0);
-    const [action, setAction] = useState<number | null>(link.isLike);
+    const [isLike, setIsLike] = useState<number | null>(link.isLike);
     const {data, loading, run} = useRequest(Vote, {manual: true, debounceInterval: 500})
 
     const onLike = (item: LinkItemData) => {
-        let t = (1 - likes)
-        setLikes(t);
-        setDislikes(0);
-        let a = t > 0 ? 1 : 0
-        setAction(a);
+        if (isLike === 1) {
+            link.agree = link.agree - 1
+        } else if (isLike === 2) {
+            link.agree = link.agree + 1
+            link.disagree = link.disagree - 1
+        } else if (isLike === 0) {
+            link.agree = link.agree + 1
+        }
+        setIsLike((v) => {
+            return v === 1 ? 0 : 1
+        });
         if (loginContext == null || loginContext.user == null) {
             console.log('not login ,can not vote ')
             return
         }
-        run('link', item.id, a).then(res => {
+        run('link', item.id, isLike === 1 ? 0 : 1).then(res => {
             console.log(res)
         })
     };
     const onDislike = (item: LinkItemData) => {
-        let t = 1 - dislikes
-        setLikes(0);
-        setDislikes(t);
-        let a = t > 0 ? 2 : 0
-        setAction(a);
+        if (isLike === 1) {
+            link.disagree = link.disagree + 1
+            link.agree = link.agree - 1
+        } else if (isLike === 2) {
+            link.disagree = link.disagree + 1
+        } else if (isLike === 0) {
+            link.disagree = link.disagree + 1
+        }
+        let newIsLike = isLike === 2 ? 0 : 2
+        setIsLike((v) => {
+            return v === 2 ? 0 : 2
+        });
+
         if (loginContext == null || loginContext.user == null) {
             console.log('not login ,can not vote ')
             return
         }
-        run('link', item.id, a).then(res => {
+        run('link', item.id, newIsLike).then(res => {
             console.log(res)
         })
     };
@@ -101,21 +113,21 @@ export const LinkItem: React.FC<LinkItemProps> = (props: LinkItemProps) => {
                 <Control onClick={() => {
                     onLike(link)
                 }}>
-                    {createElement((action === 1) ? LikeFilled : LikeOutlined)}
-                    <span className="comment-action">{link.like + likes}</span>
+                    {createElement((isLike === 1) ? LikeFilled : LikeOutlined)}
+                    <span className="comment-action">{link.agree}</span>
                 </Control>
                 <Control onClick={() => {
                     onDislike(link)
                 }}>
-                    {createElement((action === 2) ? DislikeFilled : DislikeOutlined)}
-                    <span className="comment-action">{link.dislike + dislikes}</span>
+                    {createElement((isLike === 2) ? DislikeFilled : DislikeOutlined)}
+                    <span className="comment-action">{link.disagree}</span>
                 </Control>
 
                 <Control onClick={() => {
                     console.log(commentShow)
                     setCommentShow(!commentShow)
                 }}>
-                    <Icon component={CommentIcon}/><span>{link.comment}</span>
+                    <Icon component={CommentIcon}/><span>{link.commentCount}</span>
                 </Control>
             </Controls>
             {

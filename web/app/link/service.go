@@ -41,23 +41,24 @@ func (s *Service) Save(link *Link) (id int, errs *api.Err) {
 		return -1, api.NewError(messages.LinkNotAllowDomain)
 	}
 
-	_, err := s.dao.Save(link)
-	if err != nil {
-		log.Error(err.Error())
-		return -1, api.NewError(messages.GlobalErrorAboutDatabase)
-	}
-	//后添加 cuckoo-filter 第一次如果保存失败，下次还能成功保存
-	success := s.filter.InsertUnique([]byte(strconv.Itoa(link.TopicId) + "_" + link.Link))
+	bytes := []byte(strconv.Itoa(link.TopicId) + "_" + link.Link)
+	success := s.filter.InsertUnique(bytes)
 	if !success {
 		return -1, api.NewError(messages.LinkRepeatInSameTopic)
 	}
+	_, err := s.dao.Save(link)
+	if err != nil {
+		log.Error(err.Error())
+		s.filter.Delete(bytes)
+		return -1, api.NewError(messages.GlobalErrorAboutDatabase)
+	}
 
-	comment := &comment.Comment{
+	cmt := &comment.Comment{
 		LinkId:   link.Id,
-		Context:  risk.SafeUserText(link.FirstComment),
+		Content:  risk.SafeUserText(link.FirstComment),
 		CreateBy: link.CreateBy,
 	}
-	_, err = s.commentSvr.Save(comment)
+	_, err = s.commentSvr.Save(cmt)
 	if err != nil {
 		log.Error(err.Error())
 	}
@@ -159,13 +160,13 @@ func (s *Service) fetchHotComment(ids []interface{}, links []*ListLinkResponse) 
 		return
 	}
 	hash := make(map[int]comment.CommentUser)
-	for _, comment := range commentList {
-		hash[comment.LinkId] = comment
+	for _, cmt := range commentList {
+		hash[cmt.LinkId] = cmt
 	}
 	for _, link := range links {
 		c, b := hash[link.Id]
 		if b {
-			link.HotComment = &HotComment{UserId: c.CreateBy, Context: c.Context, Avatar: c.Creator.Avatar}
+			link.HotComment = &HotComment{UserId: c.CreateBy, Content: c.Content, Avatar: c.Creator.Avatar}
 		}
 	}
 }

@@ -91,7 +91,10 @@ export async function ListLinks(topicId: number, page: number, filter: string, g
 }
 
 export async function AddComment(lid: number, comment: any) {
-    return request(`/link/${lid}/comment`, {method: "POST", data: comment})
+    let data = {
+       content:comment
+    }
+    return request(`/link/${lid}/comment`, {method: "POST", data})
 }
 
 export function ListComment(lid: number, prev: number, sortBy = 'hot') {
@@ -113,5 +116,5 @@ export function ListMvpUser(topicId: number) {
 }
 
 export async function Vote(type: string, id: number, action: number) {
-    return request("/vote", {method: "POST", data: {type, id, isLike: action}})
+    return request("/vote", {method: "POST", data: {typeCode: type, id: id, isLike: action}})
 }

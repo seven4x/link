@@ -23,7 +23,7 @@ const (
 func Router(e *echo.Echo) {
 	g := e.Group("/api1/link")
 	g.POST("/:lid/comment", postComment, mymw.JWT())
-	g.GET("/:lid/comment", listComment)
+	g.GET("/:lid/comment", listComment, mymw.Anonymous())
 	g.DELETE("/:lid/comment/:mid", deleteComment, mymw.JWT())
 }
 func postComment(e echo.Context) error {

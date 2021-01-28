@@ -32,4 +32,13 @@ create table hot_topic
     "create_time" timestamp    NULL,
     "update_time" timestamp    NULL,
     "delete_time" timestamp    NULL
+);
+
+create table if not exists "topic_alias"
+(
+    "alias" varchar(32) not null unique ,
+    "topic_id" serial not null
 )
+
+
+

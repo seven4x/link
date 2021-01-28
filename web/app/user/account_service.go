@@ -28,7 +28,7 @@ func (svr *Service) Login(l Login) (res *LoginResponse, err error) {
 		return nil, errors.New("非法登陆")
 	}
 	u := Account{UserName: l.Username}
-	if _, err := svr.dao.Table("user").Get(&u); err != nil {
+	if _, err := svr.dao.Get(&u); err != nil {
 		return nil, err
 	}
 	if u.Id == 0 {

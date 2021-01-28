@@ -53,6 +53,10 @@ const CommentList: React.FC<CommentListProps> = (props) => {
         if (divEl.current.scrollHeight > divEl.current.clientHeight) {
             setUseWin(false)
         }
+        if (!hasMore) {
+            console.log('no more,first load')
+            return
+        }
         console.info("useWin:" + useWin)
         run(linkId, prev, sortBy).then(r => {
             console.log(r)
@@ -117,7 +121,7 @@ const CommentList: React.FC<CommentListProps> = (props) => {
                     dataSource={allData}
                     renderItem={item => (
                         <li>
-                            <CommentItem item={item} linkId={linkId} afterDelete={afterDelete}/>
+                            <CommentItem data={item} linkId={linkId} afterDelete={afterDelete}/>
                         </li>
                     )}
                 >
@@ -127,7 +131,7 @@ const CommentList: React.FC<CommentListProps> = (props) => {
                         </div>
                     )}
                     {
-                        !hasMore && (<div style={{textAlign: "center"}}> no more </div>)
+                        !hasMore && (<div style={{textAlign: "center"}}> 没有更多了 </div>)
                     }
                 </List>
             </InfiniteScroll>

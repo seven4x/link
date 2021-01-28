@@ -1,16 +1,57 @@
-import React from 'react'
-import { Form, Input, Button, Checkbox } from 'antd';
+import React, {useContext} from 'react'
+import {Form, Input, Button, Checkbox, message} from 'antd';
+import styled from 'styled-components'
+import {
+  useHistory, useLocation
+} from "react-router-dom";
+import styles from './login.module.css'
+import {GlobalContext} from "../../App";
+import {GetUserInfo, Login as LoginRequest} from "./service";
+
+const Left = styled.div`
+
+`
+const Right = styled.div`
+  margin-top: 20px;
+  width: 50vw;
+`
+
 
 const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
+  labelCol: {span: 8},
+  wrapperCol: {span: 16},
 };
 const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
+  wrapperCol: {offset: 8, span: 16},
 };
 
 const Login = () => {
+  const globalContext = useContext(GlobalContext)
+  const setLoginUser = globalContext.login
+  let location = useLocation();
+  let history = useHistory();
+
+  // @ts-ignore
+  let { from } = location.state || {from: {pathname: "/"}};
+  console.log(from)
   const onFinish = (values: any) => {
+    LoginRequest(values).then(res => {
+      console.log(res)
+      if (res.ok) {
+        GetUserInfo().then(info => {
+          console.log(info)
+          if (info.ok) {
+            setLoginUser(info.data)
+            history.replace(from)
+          }
+        })
+      } else {
+        message.error("登陆失败，账号或密码错误")
+      }
+
+    }).catch(e => {
+      console.warn(e)
+    })
     console.log('Success:', values);
   };
 
@@ -19,39 +60,45 @@ const Login = () => {
   };
 
   return (
-    <Form
-      {...layout}
-      name="basic"
-      initialValues={{ remember: true }}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-    >
-      <Form.Item
-        label="Username"
-        name="username"
-        rules={[{ required: true, message: 'Please input your username!' }]}
-      >
-        <Input />
-      </Form.Item>
+      <div className={styles.container}>
+        <Left>
 
-      <Form.Item
-        label="Password"
-        name="password"
-        rules={[{ required: true, message: 'Please input your password!' }]}
-      >
-        <Input.Password />
-      </Form.Item>
+        </Left>
+        <Right>
+          <Form
+              {...layout}
+              name="basic"
+              initialValues={{remember: true}}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+          >
+            <Form.Item
+                label="账号"
+                name="username"
+                rules={[{required: true, message: 'Please input your username!'}]}
+            >
+              <Input/>
+            </Form.Item>
 
-      <Form.Item {...tailLayout} name="remember" valuePropName="checked">
-        <Checkbox>Remember me</Checkbox>
-      </Form.Item>
+            <Form.Item
+                label="密码"
+                name="password"
+                rules={[{required: true, message: 'Please input your password!'}]}
+            >
+              <Input.Password/>
+            </Form.Item>
 
-      <Form.Item {...tailLayout}>
-        <Button type="primary" htmlType="submit">
-          登陆
-        </Button>
-      </Form.Item>
-    </Form>
+
+            <Form.Item {...tailLayout}>
+              <Button type="primary" htmlType="submit">
+                登陆
+              </Button>
+            </Form.Item>
+          </Form>
+        </Right>
+
+      </div>
+
   );
 };
 

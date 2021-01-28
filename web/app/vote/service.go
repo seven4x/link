@@ -41,7 +41,7 @@ func NewService() *Service {
 func (s *Service) Vote(req *VoteRequest) (bool, *api.Err) {
 	//查投票记录
 	isLike, _ := s.dao.GetUserVote(req.CreateBy, req.Type, req.Id)
-	if isLike == req.IsLike || (isLike == -1 && req.IsLike == '0') {
+	if isLike == req.IsLike || (isLike == -1 && req.IsLike == 0) {
 		return true, nil
 	}
 
@@ -61,7 +61,7 @@ func (s *Service) Vote(req *VoteRequest) (bool, *api.Err) {
 	uVote := UserVote{
 		UserId: req.CreateBy,
 		Id:     req.Id,
-		Type:   req.Type,
+		Type:   string(req.Type),
 		IsLike: req.IsLike,
 	}
 	//更新是否投票记录
@@ -80,60 +80,60 @@ func (s *Service) Vote(req *VoteRequest) (bool, *api.Err) {
 	}
 
 	session.Commit()
-	return false, nil
+	return true, nil
 }
 
 func (s *Service) ListIsLike(ids []interface{}, userId int, mtype string) (liked []UserVote, err error) {
 	return s.dao.ListUserVoteByBusinessId(ids, userId, mtype)
 }
 
-func dualScore(info *VoteInfo, before rune, now rune) {
+func dualScore(info *VoteInfo, before int, now int) {
 	if before != -1 {
 		switch before {
-		case '1':
+		case 1:
 			switch now {
-			case '0':
+			case 0:
 				info.Score--
 				info.Agree--
 				break
-			case '2':
+			case 2:
 				info.Score = info.Score - 2
 				info.Agree--
-				info.DisAgree++
+				info.Disagree++
 				break
 			}
 			break
-		case '2':
+		case 2:
 			switch now {
-			case '0':
+			case 0:
 				info.Score++
-				info.DisAgree--
+				info.Disagree--
 				break
-			case '1':
+			case 1:
 				info.Score = info.Score + 2
 				info.Agree++
-				info.DisAgree--
+				info.Disagree--
 				break
 			}
-		case '0':
+		case 0:
 			switch now {
-			case '1':
+			case 1:
 				info.Score++
 				info.Agree++
-			case '2':
+			case 2:
 				info.Score--
-				info.DisAgree++
+				info.Disagree++
 			}
 		}
 	} else {
 		switch now {
-		case '1':
+		case 1:
 			info.Score++
 			info.Agree++
 			break
-		case '2':
+		case 2:
 			info.Score--
-			info.DisAgree++
+			info.Disagree++
 		}
 	}
 }

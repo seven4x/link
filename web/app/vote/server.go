@@ -26,6 +26,7 @@ func vote(e echo.Context) error {
 		e.JSON(http.StatusOK, api.Fail(err.Error()))
 		return nil
 	}
+	req.Type = string(req.TypeCode[0])
 	if err := e.Validate(req); err != nil {
 		e.JSON(http.StatusOK, api.Fail(err.Error()))
 		return nil

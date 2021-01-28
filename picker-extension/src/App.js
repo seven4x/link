@@ -1,15 +1,16 @@
 /*global chrome*/
 import React from "react";
-import { useState, useEffect } from "react";
+import {useState, useEffect} from "react";
 import ReactDOM from "react-dom";
 import "./App.css";
 import "antd/dist/antd.css"; // or 'antd/dist/antd.less'
-import { Input, Form, Button, Divider, message } from "antd";
-import EditableTagGroup from "./EditTagGroup";
-import SearchInput from "./SearchInput";
-import { getInfo, saveLink, loginTest } from "./service";
+import {Input, Form, Button, Divider, message} from "antd";
+import EditableTagGroup from "./comps/EditTagGroup";
+import SearchInput from "./comps/SearchInput";
+import {getInfo, saveLink, config} from "./service";
 
-const { TextArea } = Input;
+const {TextArea} = Input;
+const LoginUrl = config.UrlPrefix + "/login?from=chrome"
 
 function App() {
   const [form] = Form.useForm();
@@ -87,13 +88,7 @@ function App() {
   };
 
   const toLogin = () => {
-    loginTest()
-      .then((res) => {
-        if (res.ok) {
-          setIsLogin(true);
-        }
-      })
-      .catch((error) => console.error(error));
+    chrome.tabs.create({url: LoginUrl});
   };
 
   return (
@@ -116,9 +111,8 @@ function App() {
                 return newLink;
               });
             }}
-          ></SearchInput>
+          />
         </Form.Item>
-
         <Form.Item name="title" rules={[{ required: true, message: "标题" }]}>
           <TextArea placeholder="中国梦🇨🇳" autoSize />
         </Form.Item>
@@ -144,16 +138,21 @@ function App() {
         <Divider />
 
         <Form.Item>
-          <Button type="primary" htmlType="submit">
-            提交
-          </Button>
-          {!isLogin && (
-            <Button className="login-btn" onClick={toLogin}>
-              登陆
+          {isLogin
+            ? <Button type="primary" htmlType="submit">
+              保存
             </Button>
-          )}
+            : <Button className="login-btn" onClick={toLogin}>
+              登陆
+            </Button>}
         </Form.Item>
       </Form>
+
+      <Divider/>
+
+      <a href="#" onClick={() => {
+        chrome.tabs.create({url: config.UrlPrefix + "/"});
+      }}>首页</a>
     </div>
   );
 }

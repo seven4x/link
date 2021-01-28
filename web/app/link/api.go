@@ -14,7 +14,7 @@ type ListLinkResponse struct {
 	Group      string `json:"group"`
 	Score      int
 	CreateTime time.Time `json:"createTime"`
-	IsLike     rune      `json:"isLike"`
+	IsLike     int       `json:"isLike"`
 	HotComment *HotComment
 	CreateBy   *Creator
 	//评论数
@@ -24,7 +24,7 @@ type ListLinkResponse struct {
 
 type HotComment struct {
 	UserId  int
-	Context string
+	Content string
 	Avatar  string
 }
 type Creator struct {
@@ -47,7 +47,7 @@ func BuildLinkResponseOfModel(m *LinkUser) (res *ListLinkResponse) {
 		IsLike:       m.IsLike,
 		HotComment:   nil,
 		CreateBy:     nil,
-		CommentCount: 0,
+		CommentCount: m.CommentCnt,
 		ClickCount:   0,
 	}
 	res.CreateBy = &Creator{

@@ -15,7 +15,7 @@ const Editor = ({onChange, onSubmit, submitting, value}: any) => (
         </Form.Item>
         <Form.Item>
             <Button htmlType="submit" loading={submitting} onClick={onSubmit} type="primary">
-                Add Comment
+                留言
             </Button>
         </Form.Item>
     </>
@@ -51,7 +51,7 @@ const EditorWrapper: React.FC<CommentEditorProps> = (props) => {
                 let comment = {
                     id: res.data,
                     content: newComment,
-                    user: loginContext.user,
+                    creator: loginContext.user,
                     like: 0, dislike: 0, createTime: "now"
                 }
                 afterAdd(comment)

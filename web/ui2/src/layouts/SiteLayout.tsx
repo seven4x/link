@@ -114,7 +114,7 @@ const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
     const handleChange = (value: string, option: any) => {
         console.log('onSelect', value);
         console.log(option)
-        history.push(`/topic/${value}`)
+        history.push(`/t/${value}`)
     };
     return (
 
@@ -154,7 +154,7 @@ const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
                                 {/*}}/>*/}
 
 
-                                <Badge count={5}>
+                                <Badge>
                                     <Profile/>
                                 </Badge>
 

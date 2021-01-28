@@ -54,12 +54,12 @@ const LinkList: React.FC<LinkListProps> = ({topicId, filter}) => {
         //搞个假数据为了现实骨架
         let newList = [...new Array(count)].map(() => ({
             isLike: 0,
-            like: 0,
-            dislike: 0,
+            agree: 0,
+            disagree: 0,
             loading: true,
             title: "",
             url: "",
-            comment: 0,
+            commentCount: 0,
             hotComment: {avatar: "", context: "", uid: 0}
         }))
         setList(newList);

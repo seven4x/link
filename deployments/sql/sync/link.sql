@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS "link"
     "topic_id"    INTEGER            NULL,
     "score"       INTEGER            NULL default 0,
     "agree"       INTEGER            NULL default 0,
+    "comment_cnt" int                     default 0,
     "disagree"    INTEGER            NULL default 0,
     "create_time" TIMESTAMP          NULL,
     "update_time" TIMESTAMP          NULL,

@@ -33,7 +33,7 @@ const errorHandler = (error: { response: Response }): Response => {
         const errorText = codeMessage[response.status] || response.statusText;
         const { status, url } = response;
 
-        notification.error({
+        console.error({
             message: `请求错误 ${status}: ${url}`,
             description: errorText,
         });
@@ -49,7 +49,7 @@ const errorHandler = (error: { response: Response }): Response => {
 const request = extend({
     errorHandler, // 默认错误处理
     credentials: 'include', // 默认请求是否带上cookie
-    prefix: '/api'
+    prefix: '/api1'
 });
 
 export default request;

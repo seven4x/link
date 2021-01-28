@@ -22,7 +22,7 @@ const routes = [
         routes: [
             {
                 exact:true,
-                path: "/topic/:topicId",
+                path: "/t/:topicId",
                 component: React.lazy(() => import('./topic'))
             },
             {

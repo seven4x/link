@@ -9,6 +9,12 @@ type (
 		Username string
 		Password string
 	}
+	AccountInfo struct {
+		Id       int    `json:"id"`
+		Name     string `json:"name"`
+		NickName string `json:"nickName"`
+		Avatar   string `json:"avatar"`
+	}
 )
 
 type WechatUserInfo struct {
