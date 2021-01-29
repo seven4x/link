@@ -2,7 +2,7 @@ import React, {PropsWithChildren, useContext, useState} from 'react'
 import {Redirect, Route, Switch} from "react-router-dom";
 import NotFoundPage from "../components/404";
 import {RouteWithSubRoutes} from '../pages/routes'
-import {AutoComplete, Badge, Input, Layout, Row, Col, Divider, Button, Select} from "antd";
+import {AutoComplete, Badge, Input, Layout, Row, Col, Divider, Space, Select} from "antd";
 import LocaleSwitch from "../components/LocaleSwitch/LocaleSwitch";
 import Profile from "../components/Profile/Profile";
 import styled from "styled-components";
@@ -132,17 +132,17 @@ const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
                     <Col flex="auto">
                         <Row justify="space-between" wrap={false}>
                             <Col flex="auto" xs={0} sm={12}>
-                                <SearchOutlined style={{marginRight: ".25em"}}/>
+
 
                                 <Select
                                     showSearch
-                                    placeholder={"search topic here"}
+                                    placeholder={"搜索主题"}
                                     defaultActiveFirstOption={false}
                                     showArrow={false}
                                     filterOption={false}
                                     onSearch={handleSearch}
                                     onChange={handleChange}
-                                    notFoundContent={"🔍"}
+                                    notFoundContent={"🔍..."}
                                     style={{width: 200}}
                                 >
                                     {options}
@@ -176,7 +176,11 @@ const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
             </Switch>
 
             <FooterWrapper>
-                页脚
+                <Space split={<Divider type="vertical" />}>
+                    <a href="" target="_blank" >FAQ</a>
+                    <a href="" target="_blank" >联系站长</a>
+                </Space>
+
             </FooterWrapper>
         </Layout>
 

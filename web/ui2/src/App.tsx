@@ -10,6 +10,10 @@ import {ConfigProvider, Result, Button, BackTop} from 'antd'
 import zhCN from 'antd/lib/locale/zh_CN';
 import {Locale as AntLocale} from 'antd/lib/locale-provider';
 import routes, {RouteWithSubRoutes} from './pages/routes'
+import 'moment/locale/zh-cn';
+import moment from "moment";
+
+moment.locale('zh-cn');
 
 const Dev = React.lazy(() => import(/* webpackChunkName: "Dev" */'./utils/Dev'));
 

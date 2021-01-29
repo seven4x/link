@@ -120,7 +120,7 @@ const CommentList: React.FC<CommentListProps> = (props) => {
                     itemLayout="horizontal"
                     dataSource={allData}
                     renderItem={item => (
-                        <li>
+                        <li key={"cmt_list_li_"+item.id}>
                             <CommentItem data={item} linkId={linkId} afterDelete={afterDelete}/>
                         </li>
                     )}

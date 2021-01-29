@@ -52,7 +52,10 @@ const EditorWrapper: React.FC<CommentEditorProps> = (props) => {
                     id: res.data,
                     content: newComment,
                     creator: loginContext.user,
-                    like: 0, dislike: 0, createTime: "now"
+                    agree: 0,
+                    disagree: 0,
+                    createTime: Date.now()/1000,
+                    isLike: 0
                 }
                 afterAdd(comment)
 

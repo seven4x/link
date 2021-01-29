@@ -123,7 +123,7 @@ function TopicHome() {
                        trigger={null}
                        style={{backgroundColor: "#fff"}}
                 >
-                    世界动态，实时在线讨论
+
                 </Sider>
 
 
@@ -143,8 +143,8 @@ function TopicHome() {
 
             <FooterWrapper>
                 <Row align="middle">
-                    <Col flex="42px">
-                        MVP:
+                    <Col flex="142px">
+                        感谢:
                     </Col>
                     <Col flex="auto">
                         <Avatar.Group

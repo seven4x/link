@@ -30,7 +30,7 @@ export interface LinkItemData {
 
 export interface Poster {
     avatar: string
-    context: string
+    content: string
     uid: number
 }
 
@@ -42,6 +42,6 @@ export interface CommentData {
     agree: number
     disagree: number
     isLike?: number
-    createTime?: string
+    createTime: number
     content: string
 }

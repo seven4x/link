@@ -13,9 +13,9 @@ type ListLinkResponse struct {
 	Disagree   int    `json:"disagree"`
 	Group      string `json:"group"`
 	Score      int
-	CreateTime time.Time `json:"createTime"`
-	IsLike     int       `json:"isLike"`
-	HotComment *HotComment
+	CreateTime time.Time   `json:"createTime"`
+	IsLike     int         `json:"isLike"`
+	HotComment *HotComment `json:"hotComment"`
 	CreateBy   *Creator
 	//评论数
 	CommentCount int `json:"commentCount"`
@@ -23,9 +23,9 @@ type ListLinkResponse struct {
 }
 
 type HotComment struct {
-	UserId  int
-	Content string
-	Avatar  string
+	UserId  int    `json:"userId"`
+	Content string `json:"content"`
+	Avatar  string `json:"avatar"`
 }
 type Creator struct {
 	Name   string

@@ -86,7 +86,7 @@ export const LinkItem: React.FC<LinkItemProps> = (props: LinkItemProps) => {
             link.disagree = link.disagree + 1
             link.agree = link.agree - 1
         } else if (isLike === 2) {
-            link.disagree = link.disagree + 1
+            link.disagree = link.disagree - 1
         } else if (isLike === 0) {
             link.disagree = link.disagree + 1
         }
@@ -108,7 +108,7 @@ export const LinkItem: React.FC<LinkItemProps> = (props: LinkItemProps) => {
             <Title>
                 <Link href={link.url} target="_blank" rel="noreferrer noopener">{link.title}</Link>
             </Title>
-            <FireOutlined/><Content>{link.hotComment && link.hotComment.context}</Content>
+            <FireOutlined/><Content>{link.hotComment && link.hotComment.content}</Content>
             <Controls>
                 <Control onClick={() => {
                     onLike(link)

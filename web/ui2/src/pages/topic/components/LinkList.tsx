@@ -60,7 +60,7 @@ const LinkList: React.FC<LinkListProps> = ({topicId, filter}) => {
             title: "",
             url: "",
             commentCount: 0,
-            hotComment: {avatar: "", context: "", uid: 0}
+            hotComment: {avatar: "", content: "", uid: 0}
         }))
         setList(newList);
         setLoading(true)

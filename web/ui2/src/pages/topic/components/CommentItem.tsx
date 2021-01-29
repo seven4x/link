@@ -7,6 +7,7 @@ import {DeleteComment, Vote} from '../service'
 import {DeleteMessages} from '../../../utils/message-util'
 import {useFormatMessage} from "react-intl-hooks";
 import {useRequest} from "ahooks";
+import moment from 'moment';
 
 export interface CommentItemProps {
     linkId: number
@@ -50,7 +51,7 @@ const CommentItem: React.FC<CommentItemProps> = (props) => {
             item.disagree = item.disagree + 1
             item.agree = item.agree - 1
         } else if (isLike === 2) {
-            item.disagree = item.disagree + 1
+            item.disagree = item.disagree - 1
         } else if (isLike === 0) {
             item.disagree = item.disagree + 1
         }
@@ -82,19 +83,19 @@ const CommentItem: React.FC<CommentItemProps> = (props) => {
     }
     const getActions = (item: CommentData) => {
         return [
-            <Tooltip title="Like">
+            <Tooltip title="Like" key={"tooltip_like"+item.id}>
                                       <span onClick={() => {
                                           onLike(item)
                                       }}>
-                                        {createElement((isLike === 1) ? LikeFilled : LikeOutlined)}
+                                        {isLike === 1 ? <LikeFilled /> : <LikeOutlined />}
                                           <span className="comment-action">{item.agree}</span>
                                       </span>
             </Tooltip>,
-            <Tooltip title="Dislike">
+            <Tooltip title="Dislike" key={"tooltip_dislike"+item.id}>
                                   <span onClick={() => {
                                       onDislike(item)
                                   }}>
-                                    {React.createElement((isLike === 2) ? DislikeFilled : DislikeOutlined)}
+                                    {isLike === 2 ? <DislikeFilled /> : <DislikeOutlined />}
                                       <span className="comment-action">{item.disagree}</span>
                                   </span>
             </Tooltip>,
@@ -121,8 +122,12 @@ const CommentItem: React.FC<CommentItemProps> = (props) => {
             author={data.creator.name}
             avatar={data.creator.avatar}
             content={<p>{data.content}</p>}
-            datetime={data.createTime}
-            key={data.id}
+            datetime={
+                <Tooltip title={moment.unix(data.createTime).format('YYYY-MM-DD HH:mm:ss')}>
+                    <span>{moment.unix(data.createTime).fromNow()}</span>
+                </Tooltip>
+            }
+            key={"cmt"+data.id}
         />)
 }
 
