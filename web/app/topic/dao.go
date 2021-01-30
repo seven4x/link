@@ -94,6 +94,20 @@ func (dao *Dao) GetById(id int) (topic *Topic, err error) {
 	}
 }
 
+func (dao *Dao) GetByAlias(id string) (topic *Topic, err error) {
+	alias := &TopicAlias{Alias: id}
+	if _, err := dao.Get(alias); err != nil || alias.TopicId == 0 {
+		return nil, err
+	}
+	topic = &Topic{Id: alias.TopicId}
+	b, err := dao.Get(topic)
+	if b {
+		return topic, nil
+	} else {
+		return nil, nil
+	}
+}
+
 // 校验相同位置是否
 func (dao *Dao) FindByNameWithSameParent(name string, position int, refId int) (b bool, err error) {
 	topic := &Topic{}
@@ -148,11 +162,15 @@ func (dao *Dao) ListRelativeTopic(id int, position string, prev int) (topic []To
 
 func (dao *Dao) SearchTopic(keyword string, prev int, size int) (res []Topic, hasMore bool, err error) {
 	res = make([]Topic, 0)
-	err = dao.Table("topic").
-		Cols("name", "id").
+	err = dao.Table("topic_shadow").
+		Cols("name", "id", "short_code").
 		Where("id>?", prev).
 		And("name like ?", "%"+keyword+"%").Limit(size+1, 0).Find(&res)
-	if len(res) == 0 {
+	l := len(res)
+	if l == 0 {
+		return res, false, err
+	}
+	if l < size {
 		return res, false, err
 	}
 	return res[:len(res)-1], len(res) > size, err

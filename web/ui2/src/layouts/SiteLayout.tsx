@@ -1,65 +1,63 @@
 import React, {PropsWithChildren, useContext, useState} from 'react'
-import {Redirect, Route, Switch} from "react-router-dom";
+import {Redirect, Route, Switch, useHistory} from "react-router-dom";
 import NotFoundPage from "../components/404";
 import {RouteWithSubRoutes} from '../pages/routes'
-import {AutoComplete, Badge, Input, Layout, Row, Col, Divider, Space, Select} from "antd";
-import LocaleSwitch from "../components/LocaleSwitch/LocaleSwitch";
+import {Badge, Col, Divider, Layout, Row, Select, Space} from "antd";
 import Profile from "../components/Profile/Profile";
 import styled from "styled-components";
-import {SelectProps} from "antd/es/select";
 import logo from '~/assets/logo.png'
 import {GlobalContext} from "../App";
 import {SearchTopic} from '../pages/topic/service'
 import {useRequest} from 'ahooks'
-import {SearchOutlined} from '@ant-design/icons'
-import {useHistory} from 'react-router-dom'
 
 const {Header, Footer, Content, Sider} = Layout
 const {Option} = Select;
 
 
 const HeaderWrapper = styled(Header)`
-background: #fff;
-height:64px;
-position: relative;
-z-index: 10;
-max-width: 100%;
-box-shadow: 0 2px 8px #f0f1f2;
+  background: #fff;
+  height: 64px;
+  position: relative;
+  z-index: 10;
+  max-width: 100%;
+  box-shadow: 0 2px 8px #f0f1f2;
 `
 
 
 const Message = styled.a`
-width: 42px;
-height: 42px;
-border-radius: 2px;
-background: #eee;
-display: inline-block;
-vertical-align: middle;
+  width: 42px;
+  height: 42px;
+  border-radius: 2px;
+  background: #eee;
+  display: inline-block;
+  vertical-align: middle;
 `
 
 const Logo = styled.a`
-height: 64px;
-overflow: hidden;
-color: rgba(0,0,0,.85);
-font-size: 18px;
-line-height: 64px;
-white-space: nowrap;
-text-decoration: none;
-& img{
+  height: 64px;
+  overflow: hidden;
+  color: rgba(0, 0, 0, .85);
+  font-size: 18px;
+  line-height: 64px;
+  white-space: nowrap;
+  text-decoration: none;
+
+  & img {
     position: relative;
     top: -1.5px;
     height: 32px;
-}
+  }
 `
 
+const SelectOption = styled.div`
+  display: flex;
+  justify-content: space-between
+`
 
 const FooterWrapper = styled(Footer)`
-background-color: #F5F5F5;
-padding-left: 176px;
+  background-color: #F5F5F5;
+  padding-left: 176px;
 `
-
-
-
 
 
 const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
@@ -91,27 +89,23 @@ const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
         console.log(res)
         if (!res.ok || res.data == null || res.data.length === 0) {
             console.log('no data')
-            return []
+            return [<Option value="" key="novalue">无结果</Option>]
         }
         return res.data.map((item, idx) => {
             return <Option value={item.id} label={item.name} key={idx}>
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                    }}
-                >
-                        <span>
-                            {item.name}
-                        </span>
-                    <span> </span>
-                </div>
+                <SelectOption>
+                    <span>{item.name}</span>
+                    <span>{item.shortCode}</span>
+                </SelectOption>
             </Option>
         });
     };
 
 
     const handleChange = (value: string, option: any) => {
+        if (value == "") {
+            return
+        }
         console.log('onSelect', value);
         console.log(option)
         history.push(`/t/${value}`)
@@ -132,8 +126,6 @@ const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
                     <Col flex="auto">
                         <Row justify="space-between" wrap={false}>
                             <Col flex="auto" xs={0} sm={12}>
-
-
                                 <Select
                                     showSearch
                                     placeholder={"搜索主题"}
@@ -143,7 +135,7 @@ const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
                                     onSearch={handleSearch}
                                     onChange={handleChange}
                                     notFoundContent={"🔍..."}
-                                    style={{width: 200}}
+                                    style={{width: 400}}
                                 >
                                     {options}
                                 </Select>
@@ -176,9 +168,9 @@ const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
             </Switch>
 
             <FooterWrapper>
-                <Space split={<Divider type="vertical" />}>
-                    <a href="" target="_blank" >FAQ</a>
-                    <a href="" target="_blank" >联系站长</a>
+                <Space split={<Divider type="vertical"/>}>
+                    <a href="" target="_blank">FAQ</a>
+                    <a href="" target="_blank">联系站长</a>
                 </Space>
 
             </FooterWrapper>

@@ -27,18 +27,29 @@ create table if not exists "topic_rel"
 
 create table hot_topic
 (
-    id     int,
-    expire timestamp,
-    "create_time" timestamp    NULL,
-    "update_time" timestamp    NULL,
-    "delete_time" timestamp    NULL
+    id            int,
+    expire        timestamp,
+    "create_time" timestamp NULL,
+    "update_time" timestamp NULL,
+    "delete_time" timestamp NULL
 );
 
 create table if not exists "topic_alias"
 (
-    "alias" varchar(32) not null unique ,
+    "alias" varchar
+(
+    32
+) not null unique ,
     "topic_id" serial not null
-)
+    );
+
+create view topic_shadow as
+select name, id, short_code
+from topic
+union all
+select a.alias, a.topic_id, t.short_code
+from topic_alias a
+         inner join topic t on a.topic_id = t.id;
 
 
 

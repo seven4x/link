@@ -1,14 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import OrderableLinkList from "./components/OrderableLinkList";
-import {
-    Layout,
-    Drawer,
-    Row,
-    Col,
-    Avatar,
-    Tag
-} from "antd";
+import {Avatar, Col, Drawer, Layout, Row, Tag} from "antd";
 import styled from "styled-components";
 import {useFormatMessage} from "react-intl-hooks";
 import Icon from '@ant-design/icons';
@@ -42,11 +35,11 @@ const FooterWrapper = styled(Footer)`
 
 function TopicHome() {
     let {topicId} = useParams<any>();
-
+    let [isRealId, setIsRealId] = useState<boolean>(!isNaN(parseInt(topicId)))
     let [placement, setPlacement] = useState<any>("")
     let [visible, setVisible] = useState(false)
     let [selectedTag, setSelectedTag] = useState<string>("")
-    const [topic, setTopic] = useState<Topic>({id: topicId})
+    const [topic, setTopic] = useState<Topic>({})
     const [mvps, setMvps] = useState([])
 
     const t = useFormatMessage();
@@ -56,6 +49,7 @@ function TopicHome() {
     useEffect(() => {
         GetTopicDetail(topicId).then(res => {
             setTopic(res.data || {})
+            setIsRealId(true)
             return res
         }).then(detail => {
             if (detail.data != null && detail.data.id != null) {
@@ -114,8 +108,7 @@ function TopicHome() {
                         </Col>
                     </Row>
 
-
-                    <OrderableLinkList topicId={topicId}/>
+                    {isRealId && <OrderableLinkList topicId={topic.id}/>}
                 </ContentWrapper>
 
                 <Sider breakpoint="lg"
@@ -137,7 +130,7 @@ function TopicHome() {
                         setVisible(false)
                     }}
                 >
-                    <RelationTopic topicId={topicId} position={placement} setVisible={setVisible}/>
+                    {isRealId && <RelationTopic topicId={topic.id} position={placement} setVisible={setVisible}/>}
                 </Drawer>
             </Layout>
 

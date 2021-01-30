@@ -50,7 +50,8 @@ func BuildDetailFromModel(topic *Topic) (res *Detail) {
 type SnapShot struct {
 	Name string `json:"name"`
 	//之所以使用字符串是因为Go int64的表示范围会超过JavaScript中number的表示范围
-	Id string `json:"id"`
+	Id        string `json:"id"`
+	ShortCode string `json:"shortCode"`
 }
 
 func buildSimpleFromModel(topic *Topic) (res *SnapShot) {
@@ -58,8 +59,9 @@ func buildSimpleFromModel(topic *Topic) (res *SnapShot) {
 		return nil
 	}
 	res = &SnapShot{
-		Name: topic.Name,
-		Id:   strconv.Itoa(topic.Id),
+		Name:      topic.Name,
+		Id:        strconv.Itoa(topic.Id),
+		ShortCode: topic.ShortCode,
 	}
 
 	return

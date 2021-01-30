@@ -16,6 +16,7 @@ type Topic struct {
 	Score     int       `json:"score"`
 	Agree     int       `json:"agree"`
 	Disagree  int       `json:"disagree"`
+	ShortCode string    `json:"shortCode"`
 	CreatedAt time.Time `json:"createdAt" xorm:"create_time created"`
 	UpdateAt  time.Time `json:"updateAt" xorm:"update_time updated"`
 	DeletedAt time.Time `json:"-" xorm:"delete_time deleted"`
@@ -29,4 +30,9 @@ type TopicRel struct {
 	Predicate  string    `json:"predicate"`
 	CreateTime time.Time `json:"createTime" xorm:"create_time created"`
 	DeleteTime time.Time `json:"deleteTime" xorm:"update_time deleted"`
+}
+
+type TopicAlias struct {
+	Alias   string
+	TopicId int
 }

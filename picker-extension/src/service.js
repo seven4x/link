@@ -23,13 +23,6 @@ export async function saveLink(link) {
   return postData(Host + "/link", link);
 }
 
-export async function loginTest() {
-  return postData(Host + "/account/login", {
-    username: "seven4x",
-    password: "seven4x",
-  });
-}
-
 export async function searchTopicRequest(key) {
   return fetch(Host + "/topic?q=" + key).then((res) => res.json());
 }

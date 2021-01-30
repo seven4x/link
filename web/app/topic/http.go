@@ -99,16 +99,16 @@ func searchTopic(e echo.Context) error {
 }
 func topicDetail(e echo.Context) error {
 	id := e.Param("id")
+	var topic *Detail
 	if i, err := strconv.Atoi(id); err != nil {
-		_ = e.JSON(http.StatusOK, api.Fail("id must integer"))
+		topic, _ = svc.GetDetailByAlias(id)
 	} else {
-		topic, _ := svc.GetDetail(i)
-		if topic == nil {
-			return e.JSON(http.StatusOK, api.FailMsgId(messages.TopicNotFound))
-		}
-		return e.JSON(http.StatusOK, api.Success(topic))
+		topic, _ = svc.GetDetailById(i)
 	}
-	return nil
+	if topic == nil {
+		return e.JSON(http.StatusOK, api.FailMsgId(messages.TopicNotFound))
+	}
+	return e.JSON(http.StatusOK, api.Success(topic))
 }
 
 func hotTopic(e echo.Context) error {

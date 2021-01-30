@@ -54,14 +54,20 @@ func (service *Service) Save(topic *Topic, rel *TopicRel) (id int, svrError *api
 	return i, nil
 }
 
-func (service *Service) GetDetail(id int) (detail *Detail, err error) {
+func (service *Service) GetDetailById(id int) (detail *Detail, err error) {
 	topic, err := service.dao.GetById(id)
 	detail = BuildDetailFromModel(topic)
 	//todo 其他关联查询信息
 
 	return
 }
+func (service *Service) GetDetailByAlias(id string) (detail *Detail, err error) {
+	topic, err := service.dao.GetByAlias(id)
+	detail = BuildDetailFromModel(topic)
+	//todo 其他关联查询信息
 
+	return
+}
 func (service *Service) ListRelativeTopic(id int, position string, prev int) (topic []*SnapShot, e error) {
 	if topics, err := service.dao.ListRelativeTopic(id, position, prev); err == nil {
 		return ConvertModelToTopicSimple(topics), nil
@@ -76,8 +82,9 @@ func (service *Service) SearchTopic(keyword string, prev int, size int) (res []*
 	res = make([]*SnapShot, 0)
 	for _, t := range topics {
 		res = append(res, &SnapShot{
-			Name: t.Name,
-			Id:   strconv.Itoa(t.Id),
+			Name:      t.Name,
+			Id:        strconv.Itoa(t.Id),
+			ShortCode: t.ShortCode,
 		})
 	}
 	return res, hasMore, err
