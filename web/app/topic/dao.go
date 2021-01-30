@@ -3,7 +3,7 @@ package topic
 import (
 	"errors"
 	"github.com/Seven4X/link/web/lib/store/db"
-	"github.com/xormplus/xorm"
+	"xorm.io/xorm"
 )
 
 const (

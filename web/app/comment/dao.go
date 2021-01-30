@@ -3,9 +3,9 @@ package comment
 import (
 	"github.com/Seven4X/link/web/lib/log"
 	"github.com/Seven4X/link/web/lib/store/db"
-	"github.com/xormplus/builder"
-	"github.com/xormplus/xorm"
 	"strconv"
+	"xorm.io/builder"
+	"xorm.io/xorm"
 )
 
 type Dao struct {

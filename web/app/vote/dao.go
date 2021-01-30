@@ -3,7 +3,7 @@ package vote
 import (
 	"github.com/Seven4X/link/web/lib/log"
 	"github.com/Seven4X/link/web/lib/store/db"
-	"github.com/xormplus/xorm"
+	"xorm.io/xorm"
 )
 
 type Dao struct {

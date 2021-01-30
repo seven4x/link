@@ -3,8 +3,8 @@ package user
 import (
 	"errors"
 	"github.com/Seven4X/link/web/lib/store/db"
-	"github.com/xormplus/xorm"
 	"time"
+	"xorm.io/xorm"
 )
 
 type Dao struct {

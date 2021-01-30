@@ -2,8 +2,8 @@ package link
 
 import (
 	"github.com/Seven4X/link/web/lib/store/db"
-	"github.com/xormplus/xorm"
 	"strconv"
+	"xorm.io/xorm"
 )
 
 type Dao struct {

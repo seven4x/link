@@ -7,8 +7,8 @@ import (
 	"github.com/Seven4X/link/web/lib/config"
 	"github.com/Seven4X/link/web/lib/log"
 	_ "github.com/lib/pq"
-	"github.com/xormplus/xorm"
-	"github.com/xormplus/xorm/names"
+	"xorm.io/xorm"
+	"xorm.io/xorm/names"
 )
 
 var engine *xorm.Engine
@@ -16,7 +16,7 @@ var engine *xorm.Engine
 func init() {
 	var err error
 
-	engine, err = xorm.NewPostgreSQL(buildDsn())
+	engine, err = xorm.NewEngine("postgres", buildDsn())
 	if err != nil {
 		log.Error(err.Error())
 		panic(err)
