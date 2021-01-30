@@ -5,3 +5,5 @@ cuckoo-filter.data
 logs/
 
 config-prod.yml
+
+.eslintcache

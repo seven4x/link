@@ -62,6 +62,7 @@ export async function SearchTopic(q: string) {
 }
 
 export function AddLink(link: any) {
+    link.from = 1
     return request("/link", {method: "POST", data: link})
 }
 

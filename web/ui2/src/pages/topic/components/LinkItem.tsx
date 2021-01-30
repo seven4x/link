@@ -106,7 +106,7 @@ export const LinkItem: React.FC<LinkItemProps> = (props: LinkItemProps) => {
     return (
         <LinkItemWrapper>
             <Title>
-                <Link href={link.url} target="_blank" rel="noreferrer noopener">{link.title}</Link>
+                <Link href={link.link} target="_blank" rel="noreferrer noopener">{link.title}</Link>
             </Title>
             <FireOutlined/><Content>{link.hotComment && link.hotComment.content}</Content>
             <Controls>

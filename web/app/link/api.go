@@ -91,6 +91,7 @@ func (req *CreateLinkRequest) ToLink() (link *Link) {
 		Group:        req.Group,
 		Tags:         req.Tags,
 		FirstComment: req.Comment,
+		CommentCnt:   1,
 	}
 	return
 }

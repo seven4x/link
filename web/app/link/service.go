@@ -46,11 +46,18 @@ func (s *Service) Save(link *Link) (id int, errs *api.Err) {
 	if !success {
 		return -1, api.NewError(messages.LinkRepeatInSameTopic)
 	}
+	if link.FirstComment == "" {
+		link.CommentCnt = 0
+	}
 	_, err := s.dao.Save(link)
 	if err != nil {
 		log.Error(err.Error())
 		s.filter.Delete(bytes)
 		return -1, api.NewError(messages.GlobalErrorAboutDatabase)
+	}
+
+	if link.FirstComment == "" {
+		return link.Id, nil
 	}
 
 	cmt := &comment.Comment{

@@ -20,7 +20,7 @@ export interface LinkItemData {
     id?: number;
     isLike?: number;
     title: string;
-    url: string;
+    link: string;
     agree: number;
     disagree: number;
     commentCount: number;
