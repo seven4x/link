@@ -1,6 +1,7 @@
 package comment
 
 import (
+	"fmt"
 	"github.com/Seven4X/link/web/lib/log"
 	"github.com/Seven4X/link/web/lib/store/db"
 	"strconv"
@@ -17,15 +18,26 @@ func NewDao() (dao *Dao) {
 	return
 }
 
+const listHostCommentSql = `select c0.*,a.avatar,a.nick_name
+from comment c0
+left join account a on c0.create_by = a.id
+where c0.id in (
+    select max(c1.id) id
+    from comment c1
+             inner join (select c2.link_id, max(c2.agree) agree
+                         from comment c2
+                         where %s
+                           and c2.delete_time is null
+                           and c2.agree > 0
+                         group by c2.link_id) tmp on tmp.link_id = c1.link_id and tmp.agree = c1.agree
+    group by c1.link_id
+)`
+
 func (dao *Dao) ListHotCommentByLinkId(ids []interface{}) ([]CommentUser, error) {
 	res := make([]CommentUser, 0)
-	err := dao.Table("comment").
-		Cols("comment.context", "comment.create_time", "comment.link_id",
-			"account.avatar", "agree", "account.nick_name").
-		Join("left", "account", "account.id=comment.create_by").
-		Where(builder.In("comment.link_id", ids...)).
-		OrderBy("agree desc").Limit(1, 0).
-		Find(&res)
+	str, _, _ := builder.ToSQL(builder.In("c2.link_id", ids...))
+	sql := fmt.Sprintf(listHostCommentSql, str)
+	err := dao.SQL(sql, ids...).Find(&res)
 	return res, err
 }
 
