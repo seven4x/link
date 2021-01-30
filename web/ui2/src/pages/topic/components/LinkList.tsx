@@ -23,16 +23,20 @@ const LinkList: React.FC<LinkListProps> = ({topicId, filter}) => {
     //加载更多时不显示加载更多按钮
     const [loading, setLoading] = useState<boolean>(false)
     //本地数据缓存
-    const [data, setData] = useState<Map<number, Array<LinkItemData>>>(new Map())
+    const [data, setData] = useState<Map<string, Array<LinkItemData>>>(new Map())
     const [list, setList] = useState<Array<LinkItemData>>([])
     const [total, setTotal] = useState(0)
     const [page, setPage] = useState(0)
 
+    const getCacheKey = function (page) {
+        return "cache_" + topicId + "_p_" + page
+    }
     const getData = (page: number, callBack: any) => {
-        if (data.has(page)) {
+        let key = getCacheKey(page)
+        if (data.has(key)) {
             console.log('get from local ')
-            console.log(data.get(page))
-            callBack(data.get(page))
+            console.log(data.get(key))
+            callBack(data.get(key))
             return
         }
         ListLinks(topicId, page, filter).then((res) => {
@@ -44,7 +48,8 @@ const LinkList: React.FC<LinkListProps> = ({topicId, filter}) => {
         getData(1, (res: any) => {
             console.log(res);
             setInitLoading(false)
-            data.set(1, res)
+            let key = getCacheKey(page)
+            data.set(key, res)
             setList(res.data)
             setTotal(res.page && res.page.total)
         })
@@ -69,7 +74,8 @@ const LinkList: React.FC<LinkListProps> = ({topicId, filter}) => {
             let newData = res.data
             console.log(res);
             setLoading(false)
-            data.set(page, res)
+            let key = getCacheKey(page)
+            data.set(key, res)
             setList(newData)
         })
 

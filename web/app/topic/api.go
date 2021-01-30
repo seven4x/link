@@ -9,7 +9,8 @@ type CreateTopicRequest struct {
 	Predicate  string `json:"refDesc"`
 	Tags       string `json:"tags"`
 	Lang       string `json:"lang"`
-	Scope      int    `json:"scope" validate:"oneof=1 2 3"`
+	//1 公开编辑， 2个人 3 团队
+	Scope int `json:"scope" validate:"oneof=1 2 3"`
 }
 
 func (req *CreateTopicRequest) ConvertRequestToTopicModel() (topic *Topic, rel *TopicRel) {

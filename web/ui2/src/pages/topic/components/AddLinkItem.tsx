@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Button, Modal, Form, Input, Radio, Select} from "antd";
+import {Button, Modal, Form, Input, Radio, Select, Divider} from "antd";
 import {useFormatMessage} from 'react-intl-hooks'
 import {useKeyPress} from 'ahooks';
 import useClipboard from 'react-hook-clipboard'
@@ -135,6 +135,7 @@ const AddLinkItem: React.FC<AddLinkItemProps> = ({topicId, afterAdd}) => {
                                rules={[{max: 24}]}>
                         <Input placeholder="group"/>
                     </Form.Item>
+                    <Divider/>
                     <Form.Item label="tips">
                         <Form.Item noStyle>
                             {t({id: "topic.form.link-tip"})}

@@ -62,7 +62,7 @@ const RelationTopic: React.FC<RelationTopicProps> = (props) => {
 
     const responsive = useResponsive()
     let column = getColumn(position, responsive)
-    console.log(column)
+    // console.log(column)
 
     function handleInfiniteOnLoad() {
         run(topicId, position, prev).then(r => {

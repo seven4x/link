@@ -5,6 +5,7 @@ import {Topic} from "../model";
 import {AllPosition} from "../../../utils/const";
 import {SaveTopic} from '../service'
 import {SaveMessages} from '../../../utils/message-util'
+
 export interface AddTopicProps {
     topic: Topic,
 }
@@ -32,6 +33,14 @@ const AddTopic: React.FC<AddTopicProps> = (props) => {
             .then(values => {
                 console.log(values)
                 values.refId = topic.id
+                let posVal = 1;
+                AllPosition.forEach((v, i) => {
+                    if (v == values.position) {
+                        posVal = i + 1;
+                    }
+                })
+                values.position = posVal;
+                values.scope = 1
                 SaveTopic(values).then(res => {
                     if (res.ok) {
                         setVisible(false)
@@ -105,4 +114,4 @@ const AddTopic: React.FC<AddTopicProps> = (props) => {
     )
 }
 
-export default  React.memo(AddTopic)
+export default React.memo(AddTopic)
