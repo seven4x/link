@@ -1,14 +1,14 @@
+import React from "react";
 
-import React, { useState } from "react";
+import HotTopic from "~/pages/home/components/HotTopic";
 
 function SiteHome(){
     return (
         <div>
-                SiteHome 
+            <HotTopic/>
         </div>
     )
 }
-
 
 
 export default SiteHome;

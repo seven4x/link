@@ -32,11 +32,6 @@ func Router(e *echo.Echo) {
 	g := e.Group("/api1/link")
 	g.POST("", createLink, mymw.JWT())
 	g.GET("", listLink, mymw.Anonymous())
-	/**
-	没用middleware 取不到 登陆信息
-	解：前端根据登陆状态路由不同的地址，不好
-
-	*/
 	g.POST("/actions/batch", batchImport, mymw.JWT())
 	g.GET("/marks/hot", hotLink)
 	g.GET("/marks/newest", newestLink)

@@ -117,7 +117,9 @@ const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
                 <Row justify="space-between">
                     <Col flex="127px">
                         <h1>
-                            <Logo>
+                            <Logo onClick={() => {
+                                history.push("/")
+                            }}>
                                 <img src={logo} alt="logo"/>
                             </Logo>
 
