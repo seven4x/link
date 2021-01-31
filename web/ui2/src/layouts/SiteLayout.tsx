@@ -2,7 +2,7 @@ import React, {PropsWithChildren, useContext, useState} from 'react'
 import {Redirect, Route, Switch, useHistory} from "react-router-dom";
 import NotFoundPage from "../components/404";
 import {RouteWithSubRoutes} from '../pages/routes'
-import {Badge, Col, Divider, Layout, Row, Select, Space} from "antd";
+import {Col, Divider, Layout, Row, Select, Space} from "antd";
 import Profile from "../components/Profile/Profile";
 import styled from "styled-components";
 import logo from '~/assets/logo.png'
@@ -146,13 +146,7 @@ const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
                                 {/*<LocaleSwitch defaultLocale="zh-CN" onLocaleChange={(locale) => {*/}
                                 {/*    globalContext.onLangChange(locale)*/}
                                 {/*}}/>*/}
-
-
-                                <Badge>
-                                    <Profile/>
-                                </Badge>
-
-
+                                <Profile/>
                             </Col>
                         </Row>
 

@@ -10,3 +10,7 @@ export async function Login(data:any) {
 export async function GetUserInfo(){
     return request('/account/info')
 }
+
+export async function Logout() {
+    return request("/account/logout")
+}

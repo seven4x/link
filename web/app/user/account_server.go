@@ -25,6 +25,7 @@ func Router(e *echo.Echo) {
 	e.GET("/api1/wx/cb", wechatCallback)
 	g := e.Group("/api1/account")
 	g.POST("/login", login)
+	g.GET("/logout", logout)
 	g.POST("/register", register)
 	g.GET("/get-my-code", generatorRegisterCode, mymw.JWT())
 	g.GET("/info", info, mymw.JWT())
@@ -79,6 +80,16 @@ func login(e echo.Context) error {
 	}
 
 	return nil
+}
+
+func logout(e echo.Context) error {
+	cookie := new(http.Cookie)
+	cookie.Name = "token"
+	cookie.Path = "/"
+	cookie.MaxAge = -99
+
+	e.SetCookie(cookie)
+	return e.JSON(http.StatusOK, api.Success(true))
 }
 
 //https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Wechat_Login.html
