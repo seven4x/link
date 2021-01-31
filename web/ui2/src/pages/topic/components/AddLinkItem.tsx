@@ -1,9 +1,8 @@
 import React, {useState} from 'react'
-import {Button, Modal, Form, Input, Radio, Select, Divider} from "antd";
+import {Button, Divider, Form, Input, Modal} from "antd";
 import {useFormatMessage} from 'react-intl-hooks'
 import {useKeyPress} from 'ahooks';
 import useClipboard from 'react-hook-clipboard'
-import {AllPosition} from "../../../utils/const";
 import {AddLink, GetUrlPreviewView} from '../service'
 import {SaveMessages} from '../../../utils/message-util'
 import {LinkItemData} from "../model";
@@ -129,7 +128,7 @@ const AddLinkItem: React.FC<AddLinkItemProps> = ({topicId, afterAdd}) => {
 
                     <Form.Item label={t({id: "topic.form.link-comment"})} name="comment"
                                rules={[{max: 140}]}>
-                        <Input.TextArea autoSize/>
+                        <Input.TextArea autoSize={{minRows: 2}}/>
                     </Form.Item>
                     <Form.Item label={t({id: "topic.form.link-group"})} name="group"
                                rules={[{max: 24}]}>

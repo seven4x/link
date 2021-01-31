@@ -93,6 +93,7 @@ func searchTopic(e echo.Context) error {
 	prevInt, _ := strconv.Atoi(prev)
 	res, hasMore, err := svc.SearchTopic(keyword, prevInt, size)
 	if err != nil {
+		log.Error(err.Error())
 		return nil
 	}
 	return e.JSON(http.StatusOK, api.ResponseHasMore(res, hasMore))

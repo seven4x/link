@@ -162,7 +162,7 @@ func (dao *Dao) ListRelativeTopic(id int, position string, prev int) (topic []To
 
 func (dao *Dao) SearchTopic(keyword string, prev int, size int) (res []Topic, hasMore bool, err error) {
 	res = make([]Topic, 0)
-	err = dao.Table("topic_shadow").
+	err = dao.Table("topic_shadow").Unscoped().
 		Cols("name", "id", "short_code").
 		Where("id>?", prev).
 		And("name like ?", "%"+keyword+"%").Limit(size+1, 0).Find(&res)

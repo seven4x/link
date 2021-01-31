@@ -170,6 +170,7 @@ const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
             <FooterWrapper>
                 <Space split={<Divider type="vertical"/>}>
                     <a href="" target="_blank">FAQ</a>
+                    <a href="" target="_blank">安装Chrome插件</a>
                     <a href="" target="_blank">联系站长</a>
                 </Space>
 

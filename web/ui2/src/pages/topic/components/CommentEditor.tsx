@@ -11,7 +11,7 @@ const {TextArea} = Input;
 const Editor = ({onChange, onSubmit, submitting, value}: any) => (
     <>
         <Form.Item>
-            <TextArea rows={1} onChange={onChange} value={value} autoSize/>
+            <TextArea rows={1} onChange={onChange} value={value} autoSize={{minRows: 2}}/>
         </Form.Item>
         <Form.Item>
             <Button htmlType="submit" loading={submitting} onClick={onSubmit} type="primary">
@@ -21,11 +21,11 @@ const Editor = ({onChange, onSubmit, submitting, value}: any) => (
     </>
 );
 const Wrapper = styled.div`
-position:sticky;
-top: 0;
-bottom:0;
-z-index: 998;
-background-color: #ffffff;
+  position: sticky;
+  top: 0;
+  bottom: 0;
+  z-index: 998;
+  background-color: #ffffff;
 `
 
 interface CommentEditorProps {
@@ -54,7 +54,7 @@ const EditorWrapper: React.FC<CommentEditorProps> = (props) => {
                     creator: loginContext.user,
                     agree: 0,
                     disagree: 0,
-                    createTime: Date.now()/1000,
+                    createTime: Date.now() / 1000,
                     isLike: 0
                 }
                 afterAdd(comment)
