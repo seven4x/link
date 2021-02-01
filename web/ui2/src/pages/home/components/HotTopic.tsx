@@ -23,7 +23,7 @@ const HostTopic: React.FC = () => {
     }
 
     return (
-        <>
+        <Card title="热门主题" className={styles.title}>
 
             <Space className={styles.container}>
                 {
@@ -38,7 +38,7 @@ const HostTopic: React.FC = () => {
             </Space>
 
 
-        </>
+        </Card>
     )
 }
 

@@ -1,5 +1,6 @@
 .card {
     color: #69c0ff;
+    cursor: pointer;
 }
 
 
@@ -7,5 +8,8 @@
     display: flex !important;
     justify-content: center !important;
     align-items: center;
-    margin-top: 43vh;
+}
+
+.title {
+    font-size: 12px;
 }

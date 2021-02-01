@@ -53,9 +53,12 @@ const RelationTopic: React.FC<RelationTopicProps> = (props) => {
 
     useEffect(() => {
         if (position === "") {
+            console.warn("position is empty")
             return
         }
-        run(topicId, position, prev).then(r => {
+        setAllData([])
+        setPrev(0)
+        run(topicId, position, 0).then(r => {
             console.log(r)
         })
     }, [topicId, position])

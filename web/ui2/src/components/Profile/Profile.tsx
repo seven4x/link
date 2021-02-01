@@ -42,7 +42,7 @@ const Profile: React.FC<any> = (props) => {
             <Badge>
                 {
                     user == null
-                        ? <Link to={to}>登陆</Link>
+                        ? <Link to={to}>登录</Link>
                         : <div onClick={() => {
                             setShowPop(p => {
                                 return !p;

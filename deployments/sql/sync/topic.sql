@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS "topic"
 (
     "id"          SERIAL       NOT NULL primary key,
     "name"        VARCHAR(140) NULL,
+    "short_code" varchar(32) default '',
     "icon"        varchar(380) null,
     "scope"       smallint default 1,
     "tags"        VARCHAR(140) NULL,
