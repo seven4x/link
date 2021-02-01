@@ -5,9 +5,9 @@
     "description": "快速收集链接的工具",
     "browser_action": {
         "default_icon": {
-            "16": "logo192.png",
-            "24": "logo512.png",
-            "32": "logo512.png"
+            "16": "icon.png",
+            "24": "icon.png",
+            "32": "icon.png"
         },
         "default_title": "牛逼",
         "default_popup": "index.html"
