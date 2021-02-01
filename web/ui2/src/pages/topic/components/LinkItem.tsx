@@ -113,7 +113,7 @@ export const LinkItem: React.FC<LinkItemProps> = (props: LinkItemProps) => {
             <Title>
                 <Link href={link.link} target="_blank" rel="noreferrer noopener">{link.title}</Link>
             </Title>
-            <FireOutlined/><Content>{link.hotComment && link.hotComment.content}</Content>
+            {link.hotComment && link.hotComment.content && <> <FireOutlined/><Content>{link.hotComment.content}</Content></>}
             <Controls>
                 <Control onClick={() => {
                     onLike(link)

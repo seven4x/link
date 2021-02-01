@@ -23,15 +23,15 @@ const HostTopic: React.FC = () => {
     }
 
     return (
-        <Card title="热门主题" className={styles.title}>
+        <Card title="发现" className={styles.title}>
 
             <Space className={styles.container}>
                 {
                     data.map((item) =>
-                        <Card key={"card" + item.id} className={styles.card}>
-                            <span onClick={() => {
-                                toHot(item)
-                            }}>{item.name}</span>
+                        <Card key={"card" + item.id} className={styles.card} onClick={() => {
+                            toHot(item)
+                        }}>
+                            <span>{item.name}</span>
                         </Card>
                     )
                 }
