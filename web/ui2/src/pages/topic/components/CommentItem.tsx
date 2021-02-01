@@ -1,7 +1,7 @@
 import React, {createElement, useContext, useState} from 'react'
 import {GlobalContext} from "../../../App";
 import {CommentData} from "../model";
-import {Comment, Tooltip} from "antd";
+import {Avatar, Comment, Tooltip} from "antd";
 import {DislikeFilled, DislikeOutlined, LikeFilled, LikeOutlined} from "@ant-design/icons";
 import {DeleteComment, Vote} from '../service'
 import {DeleteMessages} from '../../../utils/message-util'
@@ -120,7 +120,7 @@ const CommentItem: React.FC<CommentItemProps> = (props) => {
         <Comment
             actions={getActions(data)}
             author={data.creator.name}
-            avatar={data.creator.avatar}
+            avatar={<Avatar src={data.creator.avatar}>{data.creator.userName}</Avatar>}
             content={<p>{data.content}</p>}
             datetime={
                 <Tooltip title={moment.unix(data.createTime).format('YYYY-MM-DD HH:mm:ss')}>

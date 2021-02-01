@@ -31,6 +31,6 @@ create table if not exists "register_info"
     create_by      int,
     used_by        int,
     used_user_name varchar(140),
-    user_time      timestamp
+    used_time      timestamp
 )
 

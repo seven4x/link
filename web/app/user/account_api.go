@@ -32,7 +32,7 @@ type WechatUserInfo struct {
 type RegisterRequest struct {
 	Code     string `validate:"required"`
 	LoginId  string `validate:"required,min=4,max=32"`
-	NickName string `validate:"required,min=2,max=32"`
+	NickName string `validate:"max=32"`
 	Password string `validate:"required,min=6"`
 	CreateBy int
 }

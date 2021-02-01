@@ -1,10 +1,11 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useContext, useEffect, useState} from "react";
 import styled from "styled-components";
 import {ListLinks} from "../service";
-import {List, Radio, Button, Skeleton} from "antd";
+import {List, Radio, Button, Skeleton, message} from "antd";
 import {LinkItem} from './LinkItem'
 import {LinkItemData} from '../model'
 import {useKeyPress} from "ahooks";
+import {GlobalContext} from "../../../App";
 
 
 const Container = styled.div`
@@ -18,6 +19,8 @@ interface LinkListProps {
 const count = 3;
 
 const LinkList: React.FC<LinkListProps> = ({topicId, filter}) => {
+    const loginContext = useContext(GlobalContext)
+    let loginUser = loginContext.user
     //初次加载 table的菊花
     const [initLoading, setInitLoading] = useState<boolean>(true)
     //加载更多时不显示加载更多按钮
@@ -93,6 +96,10 @@ const LinkList: React.FC<LinkListProps> = ({topicId, filter}) => {
                     showSizeChanger: false,
                     size: "small",
                     onChange: page => {
+                        if (page > 3 && loginUser == null) {
+                            message.info('请登录')
+                            return
+                        }
                         loadData(page)
                     },
                     total: total

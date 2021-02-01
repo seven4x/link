@@ -30,12 +30,16 @@ func (dao *Dao) ListLink(req *ListLinkRequest) (links []LinkUser, total int64, e
 		return nil, 0, err
 	}
 	links = make([]LinkUser, 0)
+	start := (req.Page - 1) * req.Size
+	if start < 0 {
+		start = 0
+	}
 	err = dao.Table("link").
 		Cols(append([]string{"account.nick_name", "account.avatar"}, BaseColumn...)...).
 		Join("left", "account", "account.id=link.create_by").
 		Where("link.topic_id=?", req.Tid).
 		And("link.id>?", req.Prev).
-		Limit(req.Size, 0).
+		Limit(req.Size, start).
 		Find(&links)
 	return links, total, err
 }

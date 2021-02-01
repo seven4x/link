@@ -8,6 +8,7 @@ import {GlobalContext} from "../../../App";
 import Icon from '@ant-design/icons';
 import {useRequest} from "ahooks";
 import {Vote} from "../service";
+import {Space} from "antd";
 
 const LinkItemWrapper = styled.div`
 padding-top: 0.2rem;
@@ -103,6 +104,10 @@ export const LinkItem: React.FC<LinkItemProps> = (props: LinkItemProps) => {
             console.log(res)
         })
     };
+    const getIcon = (l) => {
+        let u = new URL(l.link)
+        return u.origin + "/favicon.ico"
+    }
     return (
         <LinkItemWrapper>
             <Title>

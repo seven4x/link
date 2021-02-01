@@ -67,6 +67,9 @@ export function AddLink(link: any) {
 }
 
 export async function ListLinks(topicId: number, page: number, filter: string, group?: string) {
+    if (topicId == null) {
+        return Promise.resolve({data: [], ok: true})
+    }
     let url
     switch (filter) {
         case 'hot':

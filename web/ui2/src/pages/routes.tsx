@@ -36,6 +36,11 @@ const routes = [
                 exact:true,
                 path: "/login",
                 component: React.lazy(() => import('./account/login'))
+            },
+            {
+                exact:true,
+                path: "/register",
+                component: React.lazy(() => import('./account/register'))
             }
         ]
     }

@@ -7,10 +7,14 @@ export async function Login(data:any) {
 }
 
 
-export async function GetUserInfo(){
+export async function GetUserInfo() {
     return request('/account/info')
 }
 
 export async function Logout() {
     return request("/account/logout")
+}
+
+export async function RegisterRequest(data: any) {
+    return request('/account/register', {method: "POST", data})
 }

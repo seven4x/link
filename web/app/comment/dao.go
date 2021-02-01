@@ -43,7 +43,7 @@ func (dao *Dao) ListHotCommentByLinkId(ids []interface{}) ([]CommentUser, error)
 
 func (dao *Dao) ListComment(req *ListCommentRequest) (res []*CommentUser, hasMore bool, err error) {
 	res = make([]*CommentUser, 0)
-	cols := []string{"comment.*", "account.nick_name,account.avatar"}
+	cols := []string{"comment.*", "account.nick_name,account.avatar,account.user_name"}
 	if req.UserId != 0 {
 		cols = append(cols, "user_vote.is_like")
 	}

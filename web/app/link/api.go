@@ -60,6 +60,7 @@ func BuildLinkResponseOfModel(m *LinkUser) (res *ListLinkResponse) {
 
 type ListLinkRequest struct {
 	Prev   int
+	Page   int
 	Size   int
 	Tid    int `validate:"required"`
 	Group  string

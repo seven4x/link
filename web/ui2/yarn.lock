@@ -9115,7 +9115,7 @@ qs@~6.5.2:
   resolved "https://registry.npm.taobao.org/qs/download/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
   integrity sha1-yzroBuh0BERYTvFUzo7pjUA/PjY=
 
-query-string@*, query-string@^6.13.6, query-string@^6.9.0:
+query-string@*, query-string@^6.9.0:
   version "6.13.6"
   resolved "https://registry.npm.taobao.org/query-string/download/query-string-6.13.6.tgz#e5ac7c74f2a5da43fbca0b883b4f0bafba439966"
   integrity sha1-5ax8dPKl2kP7yguIO08Lr7pDmWY=
@@ -9131,6 +9131,15 @@ query-string@^4.1.0:
   dependencies:
     object-assign "^4.1.0"
     strict-uri-encode "^1.0.0"
+
+query-string@^6.13.8:
+  version "6.13.8"
+  resolved "https://registry.npm.alibaba-inc.com/query-string/download/query-string-6.13.8.tgz#8cf231759c85484da3cf05a851810d8e825c1159"
+  integrity sha1-jPIxdZyFSE2jzwWoUYENjoJcEVk=
+  dependencies:
+    decode-uri-component "^0.2.0"
+    split-on-first "^1.0.0"
+    strict-uri-encode "^2.0.0"
 
 querystring-es3@^0.2.0:
   version "0.2.1"

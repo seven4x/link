@@ -46,7 +46,7 @@ func (d *Dao) Register(rc *RegisterCode, req *RegisterRequest) error {
 		UsedUserName: req.LoginId,
 		UsedTime:     time.Now(),
 	}
-	if _, err := sess.InsertOne(ri); err != nil {
+	if _, err := sess.InsertOne(&ri); err != nil {
 		sess.Rollback()
 		return err
 	}

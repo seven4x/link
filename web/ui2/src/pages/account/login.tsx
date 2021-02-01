@@ -1,5 +1,5 @@
 import React, {useContext} from 'react'
-import {Form, Input, Button, Checkbox, message} from 'antd';
+import {Form, Input, Button, Checkbox, message, Space} from 'antd';
 import styled from 'styled-components'
 import {
   useHistory, useLocation
@@ -19,10 +19,10 @@ const Right = styled.div`
 
 const layout = {
   labelCol: {span: 8},
-  wrapperCol: {span: 16},
+  wrapperCol: {span: 10},
 };
 const tailLayout = {
-  wrapperCol: {offset: 8, span: 16},
+  wrapperCol: {offset: 8, span: 10},
 };
 
 const Login = () => {
@@ -75,7 +75,7 @@ const Login = () => {
             <Form.Item
                 label="账号"
                 name="username"
-                rules={[{required: true, message: 'Please input your username!'}]}
+                rules={[{required: true, }]}
             >
               <Input/>
             </Form.Item>
@@ -83,16 +83,23 @@ const Login = () => {
             <Form.Item
                 label="密码"
                 name="password"
-                rules={[{required: true, message: 'Please input your password!'}]}
+                rules={[{required: true,  }]}
             >
               <Input.Password/>
             </Form.Item>
 
 
             <Form.Item {...tailLayout}>
-              <Button type="primary" htmlType="submit">
-                登陆
-              </Button>
+              <Space>
+                <Button type="primary" htmlType="submit">
+                  登陆
+                </Button>
+                <Button onClick={()=>{
+                  history.push("/register")
+                }}>去注册</Button>
+              </Space>
+
+
             </Form.Item>
           </Form>
         </Right>
