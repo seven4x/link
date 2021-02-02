@@ -7,3 +7,6 @@ logs/
 config-prod.yml
 
 .eslintcache
+
+
+ui2/build

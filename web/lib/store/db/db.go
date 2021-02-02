@@ -6,7 +6,7 @@ import (
 	"github.com/DATA-DOG/go-txdb"
 	"github.com/Seven4X/link/web/lib/config"
 	"github.com/Seven4X/link/web/lib/log"
-	_ "github.com/lib/pq"
+	_ "github.com/mattn/go-sqlite3"
 	"xorm.io/xorm"
 	"xorm.io/xorm/names"
 )
@@ -16,7 +16,7 @@ var engine *xorm.Engine
 func init() {
 	var err error
 
-	engine, err = xorm.NewEngine("postgres", buildDsn())
+	engine, err = xorm.NewEngine("sqlite3", buildSqlite3Dsn())
 	if err != nil {
 		log.Error(err.Error())
 		panic(err)
@@ -27,6 +27,13 @@ func init() {
 	if err != nil {
 		log.Error("engine-ping-failed:", err.Error())
 	}
+}
+
+func buildSqlite3Dsn() string {
+	path := config.Get("sqlite3.path")
+
+	return fmt.Sprintf("file:%s?cache=shared", path)
+
 }
 
 func buildDsn() string {

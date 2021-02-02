@@ -16,9 +16,9 @@ require (
 	github.com/iancoleman/orderedmap v0.1.0
 	github.com/importcjj/sensitive v0.0.0-20200106142752-42d1c505be7b
 	github.com/labstack/echo/v4 v4.1.17
-	github.com/lib/pq v1.8.0
+	github.com/lib/pq v1.8.0 // indirect
 	github.com/magiconair/properties v1.8.1
-	github.com/mattn/go-sqlite3 v1.14.4 // indirect
+	github.com/mattn/go-sqlite3 v1.14.4
 	github.com/nacos-group/nacos-sdk-go v1.0.0
 	github.com/seven4x/cuckoofilter v0.0.0-20201118062419-d076a934a99e
 	github.com/spf13/cobra v1.1.1
