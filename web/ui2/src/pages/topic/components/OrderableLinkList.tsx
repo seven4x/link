@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useContext, useState} from 'react'
 import {Tabs} from 'antd';
 import {StickyContainer,Sticky} from 'react-sticky';
 import {AppleOutlined, AndroidOutlined} from '@ant-design/icons';
@@ -13,6 +13,7 @@ import {ReactComponent as NewIcon} from "../../../assets/icon/new.svg";
 import styled from 'styled-components'
 import Icon from '@ant-design/icons';
 import {useFormatMessage} from "react-intl-hooks";
+import {GlobalContext} from "../../../App";
 
 const {TabPane} = Tabs;
 
@@ -29,15 +30,18 @@ const OrderableLinkList: React.FC<any> = (props) => {
     let {topicId} = props
     const t = useFormatMessage()
     const [newLink, setNewLink] = useState(null)
+    const globalContext = useContext(GlobalContext)
+    const user = globalContext.user
     const afterAdd = (link: any) => {
         console.log('afterAdd')
         console.log(link)
         //todo 将link设到newLink LinkList useEffect添加到第一个
     }
-    const addLinkItemButton = <AddLinkItem topicId={topicId} afterAdd={afterAdd}/>
+    const AddLinkItemButton = <AddLinkItem topicId={topicId} afterAdd={afterAdd}/>
     return (
         <StickyContainer>
-            <Tabs defaultActiveKey="1" tabBarExtraContent={addLinkItemButton} renderTabBar={renderTabBar}>
+            <Tabs defaultActiveKey="1" tabBarExtraContent={user != null ? AddLinkItemButton : <></>}
+                  renderTabBar={renderTabBar}>
                 <TabPane
                     tab={<span><Icon component={AllIcon}/>{t({id: "topic.pane.all"})}</span>}
                     key="1"

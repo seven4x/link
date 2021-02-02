@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import OrderableLinkList from "./components/OrderableLinkList";
 import {Avatar, Col, Drawer, Layout, Row, Tag} from "antd";
@@ -12,6 +12,7 @@ import {Topic} from './model'
 import {AllPosition} from "../../utils/const";
 import RelationTopic from './components/RelationTopic'
 import {GetTopicDetail, ListMvpUser} from './service'
+import {GlobalContext} from "../../App";
 
 const {Footer, Content, Sider} = Layout
 const {CheckableTag} = Tag;
@@ -41,6 +42,8 @@ function TopicHome() {
     let [selectedTag, setSelectedTag] = useState<string>("")
     const [topic, setTopic] = useState<Topic>({})
     const [mvps, setMvps] = useState([])
+    const globalContext = useContext(GlobalContext)
+    const user = globalContext.user
 
     const t = useFormatMessage();
     const allTags = AllPosition
@@ -104,7 +107,7 @@ function TopicHome() {
                             </Row>
                         </Col>
                         <Col flex="63px">
-                            <AddTopic topic={topic}  />
+                            {user != null && <AddTopic topic={topic}/>}
                         </Col>
                     </Row>
 
