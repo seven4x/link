@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/Seven4X/link/web/app/comment"
 	"github.com/Seven4X/link/web/app/topic"
+	"github.com/Seven4X/link/web/lib/config"
 	"github.com/Seven4X/link/web/lib/util"
 	"log"
 	"net/http"
@@ -15,14 +16,16 @@ import (
 	"github.com/Seven4X/link/web/app/user"
 	"github.com/Seven4X/link/web/app/vote"
 	setup "github.com/Seven4X/link/web/lib/echo"
-	"github.com/labstack/echo/v4"
 )
 
 func main() {
 	e := setup.NewEcho()
-	// Routes
-	e.GET("/", hello)
-
+	//站点静态文件build输出目录
+	path := config.GetString("site.path")
+	e.File("/*", path+"/index.html")
+	e.Static("/static", path+"/static")
+	e.File("/favicon.ico", path+"/favicon.ico")
+	e.File("/manifest.json", path+"/manifest.json")
 	// 初始化模块
 	topic.Router(e)
 	user.Router(e)
@@ -51,7 +54,4 @@ func main() {
 	//
 	util.DumpCuckooFilter()
 	log.Printf("app shutdown")
-}
-func hello(c echo.Context) error {
-	return c.String(http.StatusOK, "develop ..")
 }

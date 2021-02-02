@@ -9,4 +9,4 @@ config-prod.yml
 .eslintcache
 
 
-ui2/build
+ui2/build/
