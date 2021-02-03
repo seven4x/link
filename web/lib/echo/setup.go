@@ -16,6 +16,7 @@ import (
 func NewEcho() (e *echo.Echo) {
 	// Echo instance
 	e = echo.New()
+	e.Pre(middleware.HTTPSRedirect())
 
 	e.Validator = validator.New()
 	// Middleware
