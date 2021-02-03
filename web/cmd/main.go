@@ -46,7 +46,7 @@ func main() {
 		close(idleConnsClosed)
 	}()
 
-	if err := e.Start(":1323"); err != http.ErrServerClosed {
+	if err := e.Start(":80"); err != http.ErrServerClosed {
 		// Error starting or closing listener:
 		e.Logger.Fatalf("HTTP server ListenAndServe: %v", err)
 	}
