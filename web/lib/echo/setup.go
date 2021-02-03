@@ -11,16 +11,20 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"net/http"
+	"strings"
 )
 
 func NewEcho() (e *echo.Echo) {
 	// Echo instance
 	e = echo.New()
 	e.Pre(middleware.HTTPSRedirect())
-
 	e.Validator = validator.New()
-	// Middleware
-	e.Use(middleware.Logger())
+	logConfig := middleware.LoggerConfig{}
+	// 忽略静态文件日志
+	logConfig.Skipper = func(e echo.Context) bool {
+		return strings.HasPrefix(e.Path(), "/static") || strings.HasPrefix(e.Path(), "/favicon.ico") || strings.HasPrefix(e.Path(), "/manifest.json")
+	}
+	e.Use(middleware.LoggerWithConfig(logConfig))
 	e.Use(middleware.Recover())
 
 	//sentinel参考：https://github.com/alibaba/sentinel-golang/tree/master/adapter/echo
