@@ -1,13 +1,25 @@
 const path = require('path');
+const {BundleAnalyzerPlugin} = require("webpack-bundle-analyzer");
 
-module.exports = function({ env }) {
+module.exports = function ({env}) {
+    console.log(env)
     return {
         webpack: {
             // 别名
             alias: {
-                '~':  path.resolve('src')
-            }
+                '~': path.resolve('src')
+            },
+            plugins: [
+                //打包分析
+                // new BundleAnalyzerPlugin(),
+            ],
+            externals: {
+                "react": ["https://unpkg.com/react@17/umd/react.development.js", "React"],
+                "react-dom": ["https://unpkg.com/react-dom@17/umd/react-dom.development.js", "ReactDOM"],
+                "antd": "antd"
+            },
         },
+
         devServer: {
             port: 9999, // 端口配置
             proxy: {

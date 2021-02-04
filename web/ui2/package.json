@@ -4,11 +4,6 @@
   "private": true,
   "dependencies": {
     "@ahooksjs/use-url-state": "^2.5.1",
-    "@craco/craco": "^5.7.0",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "@types/jest": "^24.0.0",
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
@@ -23,9 +18,7 @@
     "react-infinite-scroller": "^1.2.4",
     "react-intl-hooks": "^1.0.11",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.4",
     "react-sticky": "^6.0.3",
-    "styled-components": "^5.2.0",
     "typescript": "^3.8",
     "umi-request": "^1.3.5"
   },
@@ -49,5 +42,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "webpack-bundle-analyzer": "^4.4.0",
+    "@craco/craco": "^5.7.0",
+    "react-scripts": "3.4.4",
+    "styled-components": "^5.2.0"
   }
 }
