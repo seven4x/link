@@ -17,7 +17,6 @@ import (
 func NewEcho() (e *echo.Echo) {
 	// Echo instance
 	e = echo.New()
-	e.Pre(middleware.HTTPSRedirect())
 	e.Validator = validator.New()
 	logConfig := middleware.LoggerConfig{}
 	// 忽略静态文件日志

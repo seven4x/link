@@ -7,6 +7,7 @@ import (
 	"github.com/Seven4X/link/web/lib/config"
 	"github.com/Seven4X/link/web/lib/util"
 	"github.com/labstack/echo/v4"
+	"golang.org/x/crypto/acme/autocert"
 	"log"
 	"net/http"
 	"os"
@@ -51,7 +52,8 @@ func main() {
 	go func(c *echo.Echo) {
 		e.Logger.Fatal(e.Start(":80"))
 	}(e)
-	if err := e.StartTLS(":443", config.GetString("https.certFile"), config.GetString("https.keyFile")); err != http.ErrServerClosed {
+	e.AutoTLSManager.Cache = autocert.DirCache("/root/www/.cache")
+	if err := e.StartAutoTLS(":443"); err != http.ErrServerClosed {
 		// Error starting or closing listener:
 		e.Logger.Fatalf("HTTP server ListenAndServe: %v", err)
 	}
