@@ -6,6 +6,7 @@ import (
 	"github.com/Seven4X/link/web/app/topic"
 	"github.com/Seven4X/link/web/lib/config"
 	"github.com/Seven4X/link/web/lib/util"
+	"github.com/labstack/echo/v4"
 	"log"
 	"net/http"
 	"os"
@@ -26,6 +27,8 @@ func main() {
 	e.Static("/static", path+"/static")
 	e.File("/favicon.ico", path+"/favicon.ico")
 	e.File("/manifest.json", path+"/manifest.json")
+	//用于证书认证 https://letsencrypt.org/zh-cn/docs/challenge-types/
+	e.File("/.well-known/", path+"/.well-known/")
 	// 初始化模块
 	topic.Router(e)
 	user.Router(e)
@@ -45,7 +48,9 @@ func main() {
 		}
 		close(idleConnsClosed)
 	}()
-
+	go func(c *echo.Echo) {
+		e.Logger.Fatal(e.Start(":80"))
+	}(e)
 	if err := e.StartTLS(":443", config.GetString("https.certFile"), config.GetString("https.keyFile")); err != http.ErrServerClosed {
 		// Error starting or closing listener:
 		e.Logger.Fatalf("HTTP server ListenAndServe: %v", err)
