@@ -29,7 +29,7 @@ func main() {
 	e.File("/favicon.ico", path+"/favicon.ico")
 	e.File("/manifest.json", path+"/manifest.json")
 	//用于证书认证 https://letsencrypt.org/zh-cn/docs/challenge-types/
-	e.Static("/.well-known/acme-challenge", path+"/wellknown")
+	e.Static("/.well-known", path+"/wellknown")
 	// 初始化模块
 	topic.Router(e)
 	user.Router(e)
