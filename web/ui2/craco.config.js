@@ -11,7 +11,7 @@ module.exports = function ({env}) {
             },
             plugins: [
                 //打包分析
-                new BundleAnalyzerPlugin(),
+                // new BundleAnalyzerPlugin(),
             ],
             configure: (webpackConfig, {env, paths}) => {
                 webpackConfig.externals = {
