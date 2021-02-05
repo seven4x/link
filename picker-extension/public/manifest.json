@@ -17,10 +17,10 @@
         "persistent": false
     },
     "author": "seven4x",
-    "homepage_url": "http://bitseatech.com",
+    "homepage_url": "https://bitseatech.com",
     "minimum_chrome_version": "42",
     "permissions": ["tabs","<all_urls>"],
-    "update_url": "http://path/to/updateInfo.xml",
+    "update_url": "https://bitseatech.com/chrome-extension/updateInfo.xml",
     "version_name": "1.0",
     "content_security_policy": "script-src 'self' https://bitseatech.com; object-src 'self'"
 }

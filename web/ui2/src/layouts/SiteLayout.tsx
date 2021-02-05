@@ -165,9 +165,9 @@ const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
 
             <FooterWrapper>
                 <Space split={<Divider type="vertical"/>}>
-                    <a href="" target="_blank">FAQ</a>
-                    <a href="" target="_blank">安装Chrome插件</a>
-                    <a href="" target="_blank">联系站长</a>
+                    <a href="https://www.yuque.com/seven4x/qt0ld3" target="_blank" rel="noreferrer noopener">FAQ</a>
+                    <a href="https://www.yuque.com/docs/share/8488ee19-2c52-4a7d-be14-8ba0621103bc" target="_blank" rel="noreferrer noopener">安装Chrome插件</a>
+                    <a href="https://www.yuque.com/docs/share/ba4e7ee7-3f3c-4841-8e64-db4da6358b14" target="_blank" rel="noreferrer noopener">联系站长</a>
                 </Space>
 
             </FooterWrapper>

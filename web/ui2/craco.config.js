@@ -11,13 +11,17 @@ module.exports = function ({env}) {
             },
             plugins: [
                 //打包分析
-                // new BundleAnalyzerPlugin(),
+                new BundleAnalyzerPlugin(),
             ],
-            externals: {
-                "react": ["https://unpkg.com/react@17/umd/react.development.js", "React"],
-                "react-dom": ["https://unpkg.com/react-dom@17/umd/react-dom.development.js", "ReactDOM"],
-                "antd": "antd"
-            },
+            configure: (webpackConfig, {env, paths}) => {
+                webpackConfig.externals = {
+                    react: 'React',
+                    'react-dom': 'ReactDOM',
+                    "antd": "antd",
+                    "moment": "moment"
+                }
+                return webpackConfig;
+            }
         },
 
         devServer: {
