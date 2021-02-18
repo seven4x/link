@@ -9,8 +9,9 @@ config-prod.yml
 .eslintcache
 
 
-ui2/build/
+ui/build/
 
+node_modules/
 
 cache/
 

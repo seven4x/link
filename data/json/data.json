@@ -1,7 +1,0 @@
-{
-  "aliyunId": "1192389026102548",
-  "commandId": "handler-20210129251544-176",
-  "sense": "SCHEDULED",
-  "taskDbType": "check_by_aliyun_id",
-  "triggerType": "byAliyunId"
-}
