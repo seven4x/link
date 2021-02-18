@@ -1,7 +1,21 @@
 .container {
+    background-image: url("./bg.jpg");
+}
+
+.content {
+    min-height: calc(100vh - 22px);
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    background-image: url("./bg.jpg");
+}
+
+.beian {
+    text-align: center;
+    color: #CFCFCF;
+}
+
+.slogan {
+    text-align: center;
+    color: #CFCFCF;
+    margin-left: 45px;
 }
