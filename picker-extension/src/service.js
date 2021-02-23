@@ -1,4 +1,4 @@
-const HostPrefix = "http://bitseatech.com"
+const HostPrefix = "https://bitseatech.com"
 const Host = HostPrefix + "/api1";
 
 function postData(url, data) {

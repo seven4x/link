@@ -1,7 +1,7 @@
 import React, {createElement, useContext, useState} from "react";
 import styled from "styled-components";
 import {DislikeOutlined, LikeOutlined, FireOutlined, DislikeFilled, LikeFilled} from '@ant-design/icons'
-import {ReactComponent as CommentIcon} from "./comment.svg";
+import {ReactComponent as CommentIcon} from "./assets/comment.svg";
 import CommentList from "./CommentList";
 import {LinkItemData} from "../model";
 import {GlobalContext} from "../../../App";
