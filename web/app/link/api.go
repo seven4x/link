@@ -59,12 +59,14 @@ func BuildLinkResponseOfModel(m *LinkUser) (res *ListLinkResponse) {
 }
 
 type ListLinkRequest struct {
-	Prev   int
-	Page   int
-	Size   int
-	Tid    int `validate:"required"`
-	Group  string
-	UserId int
+	Prev     int
+	Page     int
+	Size     int
+	Tid      int `validate:"required"`
+	Group    string
+	UserId   int
+	OrderBy  string
+	FilterMy bool
 }
 
 type CreateLinkRequest struct {

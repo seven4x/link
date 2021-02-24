@@ -112,12 +112,6 @@ func (s *Service) listLinkJoin(req *ListLinkRequest) (res []*ListLinkResponse, t
 	return res, total, nil
 }
 
-func visit(links *[]LinkUser, f func(link LinkUser)) {
-	for _, link := range *links {
-		f(link)
-	}
-}
-
 /* 需要关联查询：
 创建人 头像，昵称
 热评，热评头像、昵称
@@ -160,6 +154,7 @@ func (s *Service) listLinkNoJoin(req *ListLinkRequest) (res []*ListLinkResponse,
 
 	return res, total, nil
 }
+
 func (s *Service) fetchHotComment(ids []interface{}, links []*ListLinkResponse) {
 
 	commentList, err := s.commentSvr.ListHotCommentByLinkId(ids)
@@ -190,6 +185,12 @@ func (s *Service) fetchIsLike(ids []interface{}, links []*ListLinkResponse, req 
 			}
 		}
 
+	}
+}
+
+func visit(links *[]LinkUser, f func(link LinkUser)) {
+	for _, link := range *links {
+		f(link)
 	}
 }
 

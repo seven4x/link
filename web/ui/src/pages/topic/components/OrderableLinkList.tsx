@@ -64,7 +64,7 @@ const OrderableLinkList: React.FC<any> = (props) => {
                     <LinkList topicId={topicId} filter="mine"/>
                 </TabPane>
                 <TabPane
-                    tab={<span><Icon component={GroupIcon}/>分组</span>}
+                    tab={<span><Icon component={GroupIcon}/>标签</span>}
                     key="5"
                 >
                     <LinkList topicId={topicId} filter="group"/>

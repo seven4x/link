@@ -9,7 +9,7 @@
   "topic.pane.hot": "最热",
   "topic.pane.newest": "最新",
   "topic.pane.mine": "我的",
-  "topic.pane.group": "分组",
+  "topic.pane.group": "标签",
   "topic.radio.top": "⬆️",
   "topic.radio.bottom": "⬇️",
   "topic.radio.left": "⬅️",
@@ -25,7 +25,7 @@
   "topic.form.link-url": "链接",
   "topic.form.link-title": "标题",
   "topic.form.link-comment": "荐语",
-  "topic.form.link-group": "分组",
+  "topic.form.link-group": "标签",
   "topic.form.link-tip": "📋剪贴板中有URL时，在当前页面ctrl+v快速添加",
   "topic.form.link-add-limit": "超过当天允许添加个数：{limitCount}"
 }

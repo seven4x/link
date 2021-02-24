@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Button, Modal, Form, Input, Select, Radio, message} from "antd";
+import {Button, Modal, Form, Input, Select, Radio} from "antd";
 import {useFormatMessage} from "react-intl-hooks";
 import {Topic} from "../model";
 import {AllPosition} from "~/utils/const";
@@ -86,7 +86,7 @@ const AddTopic: React.FC<AddTopicProps> = (props) => {
                 >
                     <Form.Item label={t({id: "topic.form.topic-name"})} name="name"
                                rules={[{required: true}]}>
-                        <Input placeholder="new topic name"/>
+                        <Input placeholder=""/>
                     </Form.Item>
                     <Form.Item label={t({id: "topic.form.topic-position"})} name="position">
                         <Radio.Group>

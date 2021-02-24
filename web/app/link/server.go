@@ -31,11 +31,25 @@ var (
 func Router(e *echo.Echo) {
 	g := e.Group("/api1/link")
 	g.POST("", createLink, mymw.JWT())
-	g.GET("", listLink, mymw.Anonymous())
+	g.GET("", func(e echo.Context) error {
+		return listLink(e, func(request *ListLinkRequest) {})
+	}, mymw.Anonymous())
 	g.POST("/actions/batch", batchImport, mymw.JWT())
-	g.GET("/marks/hot", hotLink)
-	g.GET("/marks/newest", newestLink)
-	g.GET("/marks/mine", mineLink, mymw.JWT())
+	g.GET("/marks/hot", func(e echo.Context) error {
+		return listLink(e, func(request *ListLinkRequest) {
+			request.OrderBy = "link.agree desc"
+		})
+	}, mymw.Anonymous())
+	g.GET("/marks/newest", func(e echo.Context) error {
+		return listLink(e, func(request *ListLinkRequest) {
+			request.OrderBy = "link.create_time desc"
+		})
+	}, mymw.Anonymous())
+	g.GET("/marks/mine", func(e echo.Context) error {
+		return listLink(e, func(request *ListLinkRequest) {
+			request.FilterMy = true
+		})
+	}, mymw.JWT())
 	g.GET("/marks/my", myAllPostLink, mymw.JWT())
 
 	g.GET("/preview-token", getPreviewToken)
@@ -84,7 +98,7 @@ func createLink(e echo.Context) error {
 	return nil
 }
 
-func listLink(e echo.Context) error {
+func listLink(e echo.Context, setupRequest func(request *ListLinkRequest)) error {
 	req := new(ListLinkRequest)
 	e.Bind(req)
 	if err := e.Validate(req); err != nil {
@@ -92,20 +106,12 @@ func listLink(e echo.Context) error {
 	}
 	uid := app.GetUserId(e)
 	req.UserId = uid
+	setupRequest(req)
 	res, total, err := svr.ListLink(req)
 	data := api.ResponsePage(res, err, total, len(res) > 0)
-	e.JSON(http.StatusOK, data)
-	return nil
+	return e.JSON(http.StatusOK, data)
 }
-func hotLink(context echo.Context) error {
-	return nil
-}
-func newestLink(context echo.Context) error {
-	return nil
-}
-func mineLink(context echo.Context) error {
-	return nil
-}
+
 func myAllPostLink(context echo.Context) error {
 	return nil
 }

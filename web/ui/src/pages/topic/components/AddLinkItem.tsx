@@ -1,10 +1,10 @@
 import React, {useState} from 'react'
-import {Button, Divider, Form, Input, Modal} from "antd";
+import {Button, Divider, Form, Input, Modal, Select} from "antd";
 import {useFormatMessage} from 'react-intl-hooks'
 import {useKeyPress} from 'ahooks';
 import useClipboard from 'react-hook-clipboard'
 import {AddLink, GetUrlPreviewView} from '../service'
-import {SaveMessages} from '../../../utils/message-util'
+import {SaveMessages} from '~/utils/message-util'
 import {LinkItemData} from "../model";
 
 function isUrl(url: string) {
@@ -28,6 +28,7 @@ const AddLinkItem: React.FC<AddLinkItemProps> = ({topicId, afterAdd}) => {
     const [visible, setVisible] = useState<boolean>(false)
     const [saving, setSaving] = useState<boolean>(false)
     const [prefix, setPrefix] = useState(null)
+    const children = [];
 
     let tmp = t({id: "topic.button.add-link"}).toString();
     const [title, setTitle] = useState<string>(tmp)
@@ -99,7 +100,9 @@ const AddLinkItem: React.FC<AddLinkItemProps> = ({topicId, afterAdd}) => {
     };
     //todo 当URL input变化时，重新设置title
 
-
+    function handleTagChange(value) {
+        console.log(`selected ${value}`);
+    }
     return (
         <>
             <Button onClick={showModal}>{t({id: "topic.button.add-link"})}</Button>
@@ -118,21 +121,23 @@ const AddLinkItem: React.FC<AddLinkItemProps> = ({topicId, afterAdd}) => {
                     <Form.Item label={t({id: "topic.form.link-url"})} name="url"
                                rules={[{required: true}, {type: "url"}]}
                     >
-                        <Input placeholder="url" type="url" prefix={prefix}/>
+                        <Input placeholder="https://" type="url" prefix={prefix}/>
                     </Form.Item>
 
                     <Form.Item label={t({id: "topic.form.link-title"})} name="title"
                                rules={[{required: true}]}>
-                        <Input placeholder="title"/>
+                        <Input placeholder=" "/>
                     </Form.Item>
 
                     <Form.Item label={t({id: "topic.form.link-comment"})} name="comment"
                                rules={[{max: 140}]}>
                         <Input.TextArea autoSize={{minRows: 2}}/>
                     </Form.Item>
-                    <Form.Item label={t({id: "topic.form.link-group"})} name="group"
-                               rules={[{max: 24}]}>
-                        <Input placeholder="group"/>
+                    <Form.Item label={t({id: "topic.form.link-group"})} name="group">
+                        <Select mode="tags" style={{width: '100%'}}  onChange={handleTagChange}   tokenSeparators={[',']}
+                                maxTagCount={10}>
+                            {children}
+                        </Select>
                     </Form.Item>
                     <Divider/>
                     <Form.Item label="tips">

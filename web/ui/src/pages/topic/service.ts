@@ -63,6 +63,9 @@ export async function SearchTopic(q: string) {
 
 export function AddLink(link: any) {
     link.from = 1
+    if (link.group != null) {
+        link.group = link.group.join(",")
+    }
     return request("/link", {method: "POST", data: link})
 }
 

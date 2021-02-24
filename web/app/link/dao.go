@@ -34,26 +34,21 @@ func (dao *Dao) ListLink(req *ListLinkRequest) (links []LinkUser, total int64, e
 	if start < 0 {
 		start = 0
 	}
-	err = dao.Table("link").
+	sess := dao.Table("link").
 		Cols(append([]string{"account.nick_name", "account.avatar"}, BaseColumn...)...).
 		Join("left", "account", "account.id=link.create_by").
 		Where("link.topic_id=?", req.Tid).
-		And("link.id>?", req.Prev).
+		And("link.id>?", req.Prev)
+	if req.FilterMy {
+		sess.And("link.create_by=?", req.UserId)
+	}
+	if req.OrderBy != "" {
+		sess.OrderBy(req.OrderBy)
+	}
+	err = sess.
 		Limit(req.Size, start).
 		Find(&links)
 	return links, total, err
-}
-func (dao *Dao) countLink(req *ListLinkRequest) (total int64, err error) {
-	link := Link{}
-	link.TopicId = req.Tid
-	total, err = dao.Table("link").
-		Where("id>?", req.Prev).Count(&link)
-	if err != nil {
-		return 0, err
-	} else {
-		return total, err
-	}
-
 }
 
 func (dao *Dao) ListLinkJoinUserVote(req *ListLinkRequest) (links []LinkUser, total int64, err error) {
@@ -70,4 +65,17 @@ func (dao *Dao) ListLinkJoinUserVote(req *ListLinkRequest) (links []LinkUser, to
 		Limit(req.Size, 0).
 		Find(&links)
 	return links, total, err
+}
+
+func (dao *Dao) countLink(req *ListLinkRequest) (total int64, err error) {
+	link := Link{}
+	link.TopicId = req.Tid
+	total, err = dao.Table("link").
+		Where("id>?", req.Prev).Count(&link)
+	if err != nil {
+		return 0, err
+	} else {
+		return total, err
+	}
+
 }
