@@ -6,7 +6,7 @@ tar -xf /root/app/package-front.tgz -C /root/app/front-end
 
 cd /root/app
 
-if [ --f pidfile.txt ]; then
+if [ pidfile.txt ]; then
     kill  `cat pidfile.txt`
 fi
 
