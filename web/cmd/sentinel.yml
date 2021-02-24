@@ -4,7 +4,7 @@ sentinel:
     name: sentinel-go-link
     type: 0
   log:
-    dir: "~/logs/csp"
+    dir: "logs/csp"
     pid: false
     metric:
       maxFileCount: 14
