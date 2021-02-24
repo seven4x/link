@@ -73,7 +73,7 @@ const AddLinkItem: React.FC<AddLinkItemProps> = ({topicId, afterAdd}) => {
         form.validateFields()
             .then(values => {
                 console.log(values)
-                values.topicId = topicId
+                values.topicId = topicId+""
                 AddLink(values).then(res => {
                     if (res.ok) {
                         setVisible(false)

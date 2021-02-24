@@ -23,7 +23,8 @@ create table if not exists "topic_rel"
     "create_by"   varchar(32) null,
     "predicate"   varchar(140),
     "create_time" timestamp   NULL,
-    "delete_time" timestamp   NULL
+    "delete_time" timestamp   NULL,
+    unique (aid,bid,position)
 );
 
 create table hot_topic

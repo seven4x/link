@@ -1,16 +1,13 @@
 import React, {useContext, useState} from 'react'
 import {Tabs} from 'antd';
 import {StickyContainer,Sticky} from 'react-sticky';
-import {AppleOutlined, AndroidOutlined} from '@ant-design/icons';
 import LinkList from "./LinkList";
-import {LinkItem} from "./LinkItem";
 import AddLinkItem from "./AddLinkItem";
 import {ReactComponent as AllIcon} from "../../../assets/icon/all.svg";
 import {ReactComponent as GroupIcon} from "../../../assets/icon/group.svg";
 import {ReactComponent as HotIcon} from "../../../assets/icon/hot.svg";
 import {ReactComponent as MineIcon} from "../../../assets/icon/mine.svg";
 import {ReactComponent as NewIcon} from "../../../assets/icon/new.svg";
-import styled from 'styled-components'
 import Icon from '@ant-design/icons';
 import {useFormatMessage} from "react-intl-hooks";
 import {GlobalContext} from "../../../App";
@@ -21,7 +18,7 @@ const renderTabBar = (props, DefaultTabBar) => (
     <Sticky  >
         {({ style }) => (
             <DefaultTabBar {...props} className="site-custom-tab-bar"
-                           style={{...style, backgroundColor: "#fff", zIndex: 999}}/>
+                           style={{...style, backgroundColor: "#fff", zIndex: 998}}/>
         )}
     </Sticky>
 );

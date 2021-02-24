@@ -2,9 +2,9 @@ import React, {useState} from 'react'
 import {Button, Modal, Form, Input, Select, Radio, message} from "antd";
 import {useFormatMessage} from "react-intl-hooks";
 import {Topic} from "../model";
-import {AllPosition} from "../../../utils/const";
+import {AllPosition} from "~/utils/const";
 import {SaveTopic} from '../service'
-import {SaveMessages} from '../../../utils/message-util'
+import {SaveMessages} from '~/utils/message-util'
 
 export interface AddTopicProps {
     topic: Topic,

@@ -15,14 +15,14 @@ const (
 						  and (b.aid = ? or b.bid = ?)
 						  and a.name = ?`
 	//下级 右
-	ListTopic = `select a.id,a.name
+	ListTopic = `select a.id,a.name,a.short_code
 					from topic a
 							 left join topic_rel b on a.id = b.bid
 					where b.aid= ?
 					  and b.position= ?
 					  and a.id > ?`
 	// 上级 左
-	RevertListTopic = `select a.id,a.name
+	RevertListTopic = `select a.id,a.name,a.short_code
 						from topic a
 								 left join topic_rel b on a.id = b.aid
 						where b.bid= ?

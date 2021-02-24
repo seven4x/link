@@ -1,13 +1,13 @@
 import React, {PropsWithChildren, useContext, useState} from 'react'
 import {Redirect, Route, Switch, useHistory} from "react-router-dom";
 import NotFoundPage from "../components/404";
-import {RouteWithSubRoutes} from '../pages/routes'
+import {RouteWithSubRoutes} from '~/pages/routes'
 import {Col, Divider, Layout, Row, Select, Space} from "antd";
 import Profile from "../components/Profile/Profile";
 import styled from "styled-components";
 import logo from '~/assets/logo.png'
 import {GlobalContext} from "../App";
-import {SearchTopic} from '../pages/topic/service'
+import {SearchTopic} from '~/pages/topic/service'
 import {useRequest} from 'ahooks'
 
 const {Header, Footer, Content, Sider} = Layout
@@ -60,9 +60,12 @@ const FooterWrapper = styled(Footer)`
 `
 
 
+
+
 const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
     const globalContext = useContext(GlobalContext)
     let {routes} = props
+
     const [options, setOptions] = useState<Array<any>>([]);
     const {data, loading, run} = useRequest(SearchTopic, {
         manual: true, debounceInterval: 500,
@@ -110,6 +113,8 @@ const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
         console.log(option)
         history.push(`/t/${value}`)
     };
+
+
     return (
 
         <Layout>
@@ -125,12 +130,13 @@ const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
 
                         </h1>
                     </Col>
+
                     <Col flex="auto">
                         <Row justify="space-between" wrap={false}>
-                            <Col flex="auto" xs={0} sm={12}>
+                            <Col flex="auto" xs={0} sm={8}>
                                 <Select
                                     showSearch
-                                    placeholder={"搜索主题"}
+                                    placeholder={"搜主题"}
                                     defaultActiveFirstOption={false}
                                     showArrow={false}
                                     filterOption={false}
@@ -141,7 +147,11 @@ const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
                                 >
                                     {options}
                                 </Select>
+
+
                             </Col>
+
+
                             <Col flex="none" xs={0} sm={12}>
                                 {/*<LocaleSwitch defaultLocale="zh-CN" onLocaleChange={(locale) => {*/}
                                 {/*    globalContext.onLangChange(locale)*/}

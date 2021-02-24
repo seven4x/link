@@ -7,6 +7,9 @@
       ],
       "~/pages/*": [
         "./src/pages/*"
+      ],
+      "~/comps/*": [
+        "./src/components/*"
       ]
     }
   }

@@ -9,10 +9,11 @@ import {ReactComponent as TopicIcon} from "../../assets/icon/topic.svg";
 import {ReactComponent as RelationIcon} from "../../assets/icon/relation.svg";
 import AddTopic from "./components/AddTopic";
 import {Topic} from './model'
-import {AllPosition} from "../../utils/const";
+import {AllPosition} from "~/utils/const";
 import RelationTopic from './components/RelationTopic'
 import {GetTopicDetail, ListMvpUser} from './service'
 import {GlobalContext} from "../../App";
+import TopicTree from "../../components/TopicTree/index";
 
 const {Footer, Content, Sider} = Layout
 const {CheckableTag} = Tag;
@@ -119,7 +120,7 @@ function TopicHome() {
                        trigger={null}
                        style={{backgroundColor: "#fff"}}
                 >
-
+                    <TopicTree/>
                 </Sider>
 
 
