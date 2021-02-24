@@ -83,7 +83,7 @@ function TopicHome() {
                             <Icon component={TopicIcon}/> {t({id: "topic.label.current-topic"})}:&nbsp;&nbsp;
                         </Col>
                         <Col flex="auto">
-                            {topic.name}
+                           <b> {topic.name}</b> &nbsp;&nbsp;  {topic.shortCode}
                         </Col>
                     </Row>
 

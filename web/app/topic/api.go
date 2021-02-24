@@ -32,6 +32,7 @@ type Detail struct {
 	Id         int    `json:"id"`
 	Icon       string `json:"icon"`
 	CreateUser string `json:"createUser"`
+	ShortCode  string `json:"shortCode"`
 }
 
 func BuildDetailFromModel(topic *Topic) (res *Detail) {
@@ -39,9 +40,10 @@ func BuildDetailFromModel(topic *Topic) (res *Detail) {
 		return nil
 	}
 	res = &Detail{
-		Name: topic.Name,
-		Id:   topic.Id,
-		Icon: topic.Icon,
+		Name:      topic.Name,
+		Id:        topic.Id,
+		Icon:      topic.Icon,
+		ShortCode: topic.ShortCode,
 	}
 
 	return

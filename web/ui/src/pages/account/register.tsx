@@ -45,7 +45,7 @@ const Register: React.FC = () => {
                       onFinish={onFinish}
                 >
                     <Form.Item label="邀请码" name="code" rules={[{required: true}]}>
-                        <Input/>
+                        <Input placeholder="seven4x"/>
                     </Form.Item>
                     <Form.Item label="登录账号" name="loginId" rules={[{required: true, min: 4,max:32}]}>
                         <Input/>

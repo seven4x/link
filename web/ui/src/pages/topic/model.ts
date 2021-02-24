@@ -4,6 +4,7 @@ export interface Topic {
     name?: string
     id?: number
     icon?: string
+    shortCode?:string
 }
 
 export interface NewTopic{
