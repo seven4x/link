@@ -95,7 +95,7 @@ func (service *Service) SearchTopic(keyword string, prev int, size int) (res []*
 func (service *Service) ListHotTopic() (res []SnapShot, err error) {
 	topics := make([]SnapShot, 0)
 	err = service.dao.Table("hot_topic").
-		Cols("topic.name", "topic.id", "topic.short_code").
+		Distinct("topic.name", "topic.id", "topic.short_code").
 		Join("inner", "topic", "topic.id=hot_topic.id").
 		Where("expire>?", time.Now()).
 		Limit(10, 0).Find(&topics)

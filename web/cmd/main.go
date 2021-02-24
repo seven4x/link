@@ -2,9 +2,6 @@ package main
 
 import (
 	"context"
-	"github.com/Seven4X/link/web/app/comment"
-	"github.com/Seven4X/link/web/app/topic"
-	"github.com/Seven4X/link/web/lib/config"
 	"github.com/Seven4X/link/web/lib/util"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/acme/autocert"
@@ -14,28 +11,13 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/Seven4X/link/web/app/link"
-	"github.com/Seven4X/link/web/app/user"
-	"github.com/Seven4X/link/web/app/vote"
-	setup "github.com/Seven4X/link/web/lib/echo"
+	setup "github.com/Seven4X/link/web/lib/setup"
 )
 
 func main() {
-	e := setup.NewEcho()
-	//站点静态文件build输出目录
-	path := config.GetString("site.path")
-	e.File("/*", path+"/index.html")
-	e.Static("/static", path+"/static")
-	e.File("/favicon.ico", path+"/favicon.ico")
-	e.File("/manifest.json", path+"/manifest.json")
-	//用于证书认证 https://letsencrypt.org/zh-cn/docs/challenge-types/
-	e.Static("/.well-known", path+"/wellknown")
-	// 初始化模块
-	topic.Router(e)
-	user.Router(e)
-	link.Router(e)
-	vote.Router(e)
-	comment.Router(e)
+	e := setup.SetupEcho()
+
+	c := setup.StartJob()
 
 	idleConnsClosed := make(chan struct{})
 	go func() {
@@ -47,6 +29,8 @@ func main() {
 			// Error from closing listeners, or context timeout:
 			log.Printf("HTTP server Shutdown: %v", err)
 		}
+		c.Stop()
+		util.DumpCuckooFilter()
 		close(idleConnsClosed)
 	}()
 	go func(c *echo.Echo) {
@@ -59,6 +43,5 @@ func main() {
 	}
 	<-idleConnsClosed
 	//
-	util.DumpCuckooFilter()
 	log.Printf("app shutdown")
 }

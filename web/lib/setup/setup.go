@@ -1,20 +1,28 @@
 package setup
 
 import (
+	"github.com/Seven4X/link/web/app/comment"
+	"github.com/Seven4X/link/web/app/job"
+	"github.com/Seven4X/link/web/app/link"
+	"github.com/Seven4X/link/web/app/topic"
+	"github.com/Seven4X/link/web/app/user"
+	"github.com/Seven4X/link/web/app/vote"
 	"github.com/Seven4X/link/web/lib/config"
-	"github.com/Seven4X/link/web/lib/echo/validator"
 	"github.com/Seven4X/link/web/lib/log"
+	"github.com/Seven4X/link/web/lib/setup/validator"
+	"github.com/Seven4X/link/web/lib/util"
 	adapter "github.com/alibaba/sentinel-golang/adapter/echo"
 	sentinel "github.com/alibaba/sentinel-golang/api"
 	"github.com/alibaba/sentinel-golang/ext/datasource"
 	"github.com/alibaba/sentinel-golang/ext/datasource/nacos"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/robfig/cron/v3"
 	"net/http"
 	"strings"
 )
 
-func NewEcho() (e *echo.Echo) {
+func SetupEcho() (e *echo.Echo) {
 	// Echo instance
 	e = echo.New()
 	e.Validator = validator.New()
@@ -55,6 +63,8 @@ func NewEcho() (e *echo.Echo) {
 	)
 
 	e.HTTPErrorHandler = customHTTPErrorHandler
+
+	initRouter(e)
 	return e
 }
 func customHTTPErrorHandler(err error, c echo.Context) {
@@ -89,4 +99,40 @@ func initSentinel() {
 		log.Warnf("Fail to initialize nacos data source client, err: %+v", err)
 		return
 	}
+}
+
+func initRouter(e *echo.Echo) {
+	//站点静态文件build输出目录
+	path := config.GetString("site.path")
+	e.File("/*", path+"/index.html")
+	e.Static("/static", path+"/static")
+	e.File("/favicon.ico", path+"/favicon.ico")
+	e.File("/manifest.json", path+"/manifest.json")
+	//用于证书认证 https://letsencrypt.org/zh-cn/docs/challenge-types/
+	e.Static("/.well-known", path+"/wellknown")
+	// 初始化模块
+	topic.Router(e)
+	user.Router(e)
+	link.Router(e)
+	vote.Router(e)
+	comment.Router(e)
+}
+
+func StartJob() *cron.Cron {
+	c := cron.New()
+	c.AddFunc("@midnight", func() {
+		err := job.RefreshHotTopic()
+		if err != nil {
+			log.Error(err.Error())
+		}
+	})
+	c.AddFunc("@hourly", func() {
+		util.DumpCuckooFilter()
+	})
+	//c.AddFunc("@every 10s", func() {
+	//	log.Info("活")
+	//})
+	c.Start()
+
+	return c
 }

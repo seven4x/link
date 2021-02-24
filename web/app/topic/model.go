@@ -36,3 +36,13 @@ type TopicAlias struct {
 	Alias   string
 	TopicId int
 }
+
+type (
+	HotTopic struct {
+		Id         int
+		Expire     time.Time
+		CreateTime time.Time
+		UpdateTime time.Time
+		DeleteTime time.Time
+	}
+)

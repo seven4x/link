@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/Seven4X/link/web/lib/api"
 	"github.com/Seven4X/link/web/lib/api/messages"
-	"github.com/Seven4X/link/web/lib/echo/mymw"
+	"github.com/Seven4X/link/web/lib/setup/mymw"
 	"math/rand"
 	"strings"
 )

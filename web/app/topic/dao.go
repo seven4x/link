@@ -1,8 +1,11 @@
 package topic
 
 import (
+	"encoding/json"
 	"errors"
+	"github.com/Seven4X/link/web/lib/log"
 	"github.com/Seven4X/link/web/lib/store/db"
+	"time"
 	"xorm.io/xorm"
 )
 
@@ -175,4 +178,15 @@ func (dao *Dao) SearchTopic(keyword string, prev int, size int) (res []Topic, ha
 	}
 	return res[:len(res)-1], len(res) > size, err
 
+}
+
+func (dao *Dao) ListHotTopic(limit int, start, end time.Time) (res []int, err error) {
+	res = make([]int, 0)
+	err = dao.SQL(`select topic_id
+		from link
+		where create_time between ? and ?
+		group by topic_id limit ?`, start, end, limit).Find(&res)
+	str, _ := json.Marshal(res)
+	log.Infof("%s~%s,hot_topic:%s", start.String(), end.String(), str)
+	return res, err
 }

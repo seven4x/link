@@ -17,6 +17,9 @@ func init() {
 func Infow(msg string, keysAndValues ...interface{}) {
 	sugar.Infow(msg, keysAndValues...)
 }
+func Infof(msg string, keysAndValues ...interface{}) {
+	sugar.Infof(msg, keysAndValues...)
+}
 
 func Debug(args ...interface{}) {
 	sugar.Debug(args)
