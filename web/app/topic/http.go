@@ -4,6 +4,7 @@ web层：route配置，参数解析，校验
 package topic
 
 import (
+	"github.com/Seven4X/link/web/app"
 	"github.com/Seven4X/link/web/lib/api"
 	"github.com/Seven4X/link/web/lib/api/messages"
 	"github.com/Seven4X/link/web/lib/consts"
@@ -33,7 +34,21 @@ func Router(e *echo.Echo) {
 	g.GET("/marks/random", randomTopic)
 	g.GET("/marks/recent", recentTopic)
 	g.GET("/:tid/related/:position", relativeTopic)
+	g.GET("/actions/delete/:id", removeTopic, mymw.JWT())
+}
 
+func removeTopic(e echo.Context) error {
+	uid := app.GetUserId(e)
+	if uid == 0 {
+		return e.String(http.StatusBadRequest, "not allow")
+	}
+	id := e.Param("id")
+	topic := new(Topic)
+	res, err := svc.dao.ID(id).Unscoped().Delete(topic)
+	if err != nil {
+		return e.String(http.StatusInternalServerError, err.Error())
+	}
+	return e.String(http.StatusOK, strconv.Itoa(int(res)))
 }
 
 /*

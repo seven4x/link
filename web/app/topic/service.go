@@ -25,7 +25,6 @@ func NewService() (s *Service) {
 3.检查是否重复
 */
 func (service *Service) Save(topic *Topic, rel *TopicRel) (id int, svrError *api.Err) {
-	//todo 单用户创建频次限
 
 	if topic.Lang == "zh" {
 		var b, s = risk.IsAllowText(topic.Name)

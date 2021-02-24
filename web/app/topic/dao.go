@@ -3,6 +3,7 @@ package topic
 import (
 	"encoding/json"
 	"errors"
+	"github.com/Seven4X/link/web/lib/consts"
 	"github.com/Seven4X/link/web/lib/log"
 	"github.com/Seven4X/link/web/lib/store/db"
 	"time"
@@ -50,6 +51,7 @@ func (dao *Dao) Save(topic *Topic, rel *TopicRel) (i int, err error) {
 	id, err := dao.Transaction(func(session *xorm.Session) (interface{}, error) {
 		_, err := session.InsertOne(topic)
 		if err != nil {
+			session.Rollback()
 			return 0, err
 		}
 		relId := rel.Aid
@@ -72,9 +74,32 @@ func (dao *Dao) Save(topic *Topic, rel *TopicRel) (i int, err error) {
 			rel.Bid = id
 			break
 		}
+
+		// 插入表单提交的关系
 		rel.Position = convertPositionValue(rel.Position)
+		// 如果添加相邻关系，同时需要添加一个上下关系
+		if rel.Position == 2 {
+			parent := new(TopicRel)
+			_, err := session.SQL("select aid from topic_rel where bid=? and position=1", relId).Get(parent)
+			notAllow := parent.Aid == 0 && topic.CreateBy != consts.AdminId
+			if !notAllow {
+				relB := TopicRel{
+					Aid:        parent.Aid,
+					Bid:        id,
+					Position:   1,
+					CreateBy:   rel.CreateBy,
+					Predicate:  "",
+					CreateTime: rel.CreateTime,
+				}
+				if _, err = session.InsertOne(relB); err != nil {
+					session.Rollback()
+					return 0, err
+				}
+			}
+		}
 
 		if _, err = session.InsertOne(rel); err != nil {
+			session.Rollback()
 			return 0, err
 		}
 		return id, nil

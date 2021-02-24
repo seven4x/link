@@ -23,8 +23,8 @@ type Topic struct {
 }
 
 type TopicRel struct {
-	Aid        int       `json:"aid"`
-	Bid        int       `json:"bid"`
+	Aid        int       `json:"aid"`      // 上 左
+	Bid        int       `json:"bid"`      // 下 右
 	Position   int       `json:"position"` //1 上下 2 左右
 	CreateBy   int       `json:"createBy"`
 	Predicate  string    `json:"predicate"`

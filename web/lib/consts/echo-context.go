@@ -1,7 +1,8 @@
 package consts
 
 const (
-	User = "user"
+	User    = "user"
+	AdminId = 9
 )
 
 type PostFrom int

@@ -4,6 +4,7 @@ import "encoding/json"
 
 type Err struct {
 	MsgId string
+	Msg   string
 	Data  map[string]string
 }
 
@@ -14,6 +15,11 @@ func (e *Err) Error() string {
 func NewError(msgId string) *Err {
 	return &Err{
 		MsgId: msgId,
+	}
+}
+func NewMsgError(msg string) *Err {
+	return &Err{
+		Msg: msg,
 	}
 }
 
