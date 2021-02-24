@@ -11,5 +11,6 @@ if [ pidfile.txt ]; then
 fi
 
 
-nohup ./link 2>&1 > log.txt & echo $! > pidfile.txt
+nohup ./link 2>&1 > log.txt &
+echo $! > pidfile.txt
 
