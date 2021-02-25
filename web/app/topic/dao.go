@@ -145,11 +145,9 @@ func (dao *Dao) FindByNameWithSameParent(name string, position int, refId int) (
 
 func convertPositionValue(position int) int {
 	switch position {
-	case 1:
-	case 2:
+	case 1, 2:
 		return 1
-	case 3:
-	case 4:
+	case 3, 4:
 		return 2
 	}
 	return 1
