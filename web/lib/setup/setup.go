@@ -20,6 +20,7 @@ import (
 	"github.com/robfig/cron/v3"
 	"net/http"
 	"strings"
+	"time"
 )
 
 func SetupEcho() (e *echo.Echo) {
@@ -119,7 +120,8 @@ func initRouter(e *echo.Echo) {
 }
 
 func StartJob() *cron.Cron {
-	c := cron.New()
+	local, _ := time.LoadLocation("Local")
+	c := cron.New(cron.WithLocation(local))
 	c.AddFunc("@midnight", func() {
 		err := job.RefreshHotTopic()
 		if err != nil {
