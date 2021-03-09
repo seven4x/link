@@ -78,11 +78,13 @@ function Share() {
             if (!res.ok) {
                 if (res.msgId == "link.repeat-in-same-topic") {
                     message.info("投稿成功❤️.");
+                    window.close()
                 } else {
                     message.error("保存失败：" + res.msgId + "|" + res.msg);
                 }
             } else {
                 message.info("投稿成功❤️");
+                window.close()
             }
         });
     };
