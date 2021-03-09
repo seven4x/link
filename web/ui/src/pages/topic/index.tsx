@@ -54,6 +54,7 @@ function TopicHome() {
         GetTopicDetail(topicId).then(res => {
             setTopic(res.data || {})
             setIsRealId(true)
+            document.title = (res.data?.name || "未知") +" 破茧♥"
             return res
         }).then(detail => {
             if (detail.data != null && detail.data.id != null) {
