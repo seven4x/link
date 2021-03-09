@@ -58,7 +58,7 @@ const AddLinkItemV2: React.FC = () => {
           location.href = r ;
       };
     setTimeout(x, 0);
-  })(document, screen, encodeURIComponent, 500, 460);`
+  })(document, screen, encodeURIComponent, 720, 500);`
                         }
                            onClick={() => {
                                alert('请把这个按钮拖到你的浏览器书签栏');
