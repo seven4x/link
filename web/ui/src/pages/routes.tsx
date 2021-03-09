@@ -29,16 +29,16 @@ const routes = [
                 path: "/account",
                 component: React.lazy(() => import('./account')),
             }, {
-                exact:true,
+                exact: true,
                 path: "/space",
                 component: React.lazy(() => import('./space')),
-            },{
-                exact:true,
+            }, {
+                exact: true,
                 path: "/login",
                 component: React.lazy(() => import('./account/login'))
             },
             {
-                exact:true,
+                exact: true,
                 path: "/register",
                 component: React.lazy(() => import('./account/register'))
             }

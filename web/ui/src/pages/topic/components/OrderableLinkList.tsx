@@ -1,8 +1,8 @@
-import React, {useContext, useState} from 'react'
+import React, {useContext} from 'react'
 import {Tabs} from 'antd';
 import {StickyContainer,Sticky} from 'react-sticky';
 import LinkList from "./LinkList";
-import AddLinkItem from "./AddLinkItem";
+import AddLinkItemV2 from "./AddLinkItemV2";
 import {ReactComponent as AllIcon} from "../../../assets/icon/all.svg";
 import {ReactComponent as GroupIcon} from "../../../assets/icon/group.svg";
 import {ReactComponent as HotIcon} from "../../../assets/icon/hot.svg";
@@ -26,15 +26,10 @@ const renderTabBar = (props, DefaultTabBar) => (
 const OrderableLinkList: React.FC<any> = (props) => {
     let {topicId} = props
     const t = useFormatMessage()
-    const [newLink, setNewLink] = useState(null)
     const globalContext = useContext(GlobalContext)
     const user = globalContext.user
-    const afterAdd = (link: any) => {
-        console.log('afterAdd')
-        console.log(link)
-        //todo 将link设到newLink LinkList useEffect添加到第一个
-    }
-    const AddLinkItemButton = <AddLinkItem topicId={topicId} afterAdd={afterAdd}/>
+
+    const AddLinkItemButton = <AddLinkItemV2/>
     return (
         <StickyContainer>
             <Tabs defaultActiveKey="1" tabBarExtraContent={user != null ? AddLinkItemButton : <></>}

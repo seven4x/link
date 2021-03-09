@@ -1,5 +1,6 @@
 import React, {useState, Suspense} from 'react';
 import SiteHome from './pages/home'
+import Share from './pages/share'
 import './App.css';
 import 'antd/dist/antd.css';
 import {IntlProvider} from 'react-intl-hooks';
@@ -84,7 +85,9 @@ function App() {
                                 <Route exact path="/">
                                     <SiteHome/>
                                 </Route>
-
+                                <Route exact path="/share">
+                                    <Share/>
+                                </Route>
                                 {routes.map((route, i) => (
                                     <RouteWithSubRoutes key={i} {...route} />
                                 ))}
