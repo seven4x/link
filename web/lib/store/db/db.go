@@ -7,6 +7,7 @@ import (
 	"github.com/Seven4X/link/web/lib/config"
 	"github.com/Seven4X/link/web/lib/log"
 	_ "github.com/mattn/go-sqlite3"
+	"time"
 	"xorm.io/xorm"
 	"xorm.io/xorm/names"
 )
@@ -21,6 +22,8 @@ func init() {
 		log.Error(err.Error())
 		panic(err)
 	}
+	engine.DatabaseTZ = time.Local
+	engine.TZLocation = time.Local
 	engine.ShowSQL(true)
 	names.NewPrefixMapper(names.SnakeMapper{}, "t_")
 	err = engine.Ping()
