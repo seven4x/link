@@ -92,7 +92,12 @@ export async function ListLinks(topicId: number, page: number, filter: string, g
             tid: topicId,
             page,
             group
-        }
+        },
+        headers: {
+            "Cache-Control": "max-age=1800"
+        },
+        useCache: true,
+        ttl: 1800
     })
 
 }

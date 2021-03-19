@@ -1,14 +1,11 @@
 import React, { useContext, useEffect, useState} from "react";
-import styled from "styled-components";
 import {ListLinks} from "../service";
 import {List,   Skeleton, message} from "antd";
 import {LinkItem} from './LinkItem'
 import {LinkItemData} from '../model'
 import {GlobalContext} from "../../../App";
+import useUrlState from '@ahooksjs/use-url-state';
 
-
-const Container = styled.div`
-`
 
 interface LinkListProps {
     topicId: number
@@ -24,40 +21,16 @@ const LinkList: React.FC<LinkListProps> = ({topicId, filter}) => {
     const [initLoading, setInitLoading] = useState<boolean>(true)
     //加载更多时不显示加载更多按钮
     const [loading, setLoading] = useState<boolean>(false)
-    //本地数据缓存
-    const [data, setData] = useState<Map<string, Array<LinkItemData>>>(new Map())
     const [list, setList] = useState<Array<LinkItemData>>([])
     const [total, setTotal] = useState(0)
-    const [page, setPage] = useState(0)
+    const [page, setPage] = useUrlState({p: 1})
 
-    const getCacheKey = function (page) {
-        return "cache_" + topicId + "_p_" + page
-    }
-    const getData = (page: number, callBack: any) => {
-        let key = getCacheKey(page)
-        if (data.has(key)) {
-            console.log('get from local ')
-            console.log(data.get(key))
-            callBack(data.get(key))
-            return
-        }
-        ListLinks(topicId, page, filter).then((res) => {
-            callBack(res)
-        });
-    }
     //初始化
     useEffect(() => {
-        getData(1, (res: any) => {
-            console.log(res);
-            setInitLoading(false)
-            let key = getCacheKey(page)
-            data.set(key, res)
-            setList(res.data)
-            setTotal(res.page && res.page.total)
-        })
-    }, [topicId]);
+        loadData()
+    }, [topicId, page?.p]);
 
-    const loadData = (page: number) => {
+    const loadData = () => {
         //搞个假数据为了现实骨架
         let newList = [...new Array(count)].map(() => ({
             isLike: 0,
@@ -71,21 +44,19 @@ const LinkList: React.FC<LinkListProps> = ({topicId, filter}) => {
         }))
         setList(newList);
         setLoading(true)
-        setPage(page)
-        getData(page, (res: any) => {
+        ListLinks(topicId,Number(page?.p), filter).then((res) => {
             let newData = res.data
             console.log(res);
             setLoading(false)
-            let key = getCacheKey(page)
-            data.set(key, res)
+            setInitLoading(false)
             setList(newData)
-        })
-
+            setTotal(res.page && res.page.total)
+        });
 
     };
 
     return (
-        <Container>
+        <div>
             <List
                 loading={initLoading}
                 itemLayout="horizontal"
@@ -94,12 +65,13 @@ const LinkList: React.FC<LinkListProps> = ({topicId, filter}) => {
                     hideOnSinglePage: true,
                     showSizeChanger: false,
                     size: "small",
+                    current: Number(page?.p),
                     onChange: page => {
                         if (page > 3 && loginUser == null) {
-                            message.info('请登录')
+                            message.info('请登录,查看更多')
                             return
                         }
-                        loadData(page)
+                        setPage((s) => ({p: page}))
                     },
                     total: total
                 }}
@@ -111,7 +83,7 @@ const LinkList: React.FC<LinkListProps> = ({topicId, filter}) => {
                     </List.Item>
                 )}
             />
-        </Container>
+        </div>
     );
 };
 
