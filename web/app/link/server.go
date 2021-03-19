@@ -109,6 +109,7 @@ func listLink(e echo.Context, setupRequest func(request *ListLinkRequest)) error
 	setupRequest(req)
 	res, total, err := svr.ListLink(req)
 	data := api.ResponsePage(res, err, total, len(res) > 0)
+	e.Response().Header().Add("Cache-Control", "max-age=1800")
 	return e.JSON(http.StatusOK, data)
 }
 
