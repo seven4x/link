@@ -120,7 +120,7 @@ const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
         <Layout>
             <HeaderWrapper>
                 <Row justify="space-between">
-                    <Col flex="127px">
+                    <Col  xs={0} sm={2}>
                         <h1>
                             <Logo onClick={() => {
                                 history.push("/")
@@ -133,7 +133,7 @@ const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
 
                     <Col flex="auto">
                         <Row justify="space-between" wrap={false}>
-                            <Col flex="auto" xs={0} sm={8}>
+                            <Col  xs={20} sm={6}>
                                 <Select
                                     showSearch
                                     placeholder={"搜主题"}
@@ -143,7 +143,7 @@ const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
                                     onSearch={handleSearch}
                                     onChange={handleChange}
                                     notFoundContent={"🔍..."}
-                                    style={{width: 400}}
+                                    style={{width: "100%"}}
                                 >
                                     {options}
                                 </Select>
@@ -152,7 +152,7 @@ const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
                             </Col>
 
 
-                            <Col flex="none" xs={0} sm={12}>
+                            <Col flex="none" xs={4} sm={12}>
                                 {/*<LocaleSwitch defaultLocale="zh-CN" onLocaleChange={(locale) => {*/}
                                 {/*    globalContext.onLangChange(locale)*/}
                                 {/*}}/>*/}
