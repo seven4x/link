@@ -1,4 +1,4 @@
-package mymw
+package middleware
 
 import (
 	"fmt"

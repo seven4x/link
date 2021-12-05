@@ -1,7 +1,7 @@
 package link
 
 import (
-	"github.com/Seven4X/link/web/lib/store/db"
+	"github.com/Seven4X/link/web/app/store"
 	"strconv"
 	"xorm.io/xorm"
 )
@@ -15,7 +15,7 @@ var (
 )
 
 func NewDao() (dao *Dao) {
-	dao = &Dao{db.NewDb()}
+	dao = &Dao{store.NewDb()}
 	return
 }
 

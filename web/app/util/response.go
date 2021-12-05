@@ -1,4 +1,4 @@
-package api
+package util
 
 type (
 	SimpleResult struct {

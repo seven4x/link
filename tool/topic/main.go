@@ -4,8 +4,8 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"github.com/Seven4X/link/web/app/store"
 	t "github.com/Seven4X/link/web/app/topic"
-	"github.com/Seven4X/link/web/lib/store/db"
 	"github.com/emirpasic/gods/lists/arraylist"
 	"github.com/emirpasic/gods/stacks/arraystack"
 	"github.com/spf13/cobra"
@@ -131,7 +131,7 @@ func saveALl(root *Topic) {
 }
 
 var (
-	engine = db.NewDb()
+	engine = store.NewDb()
 )
 
 func saveTopic(topic *t.Topic) error {

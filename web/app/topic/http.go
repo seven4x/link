@@ -4,12 +4,9 @@ web层：route配置，参数解析，校验
 package topic
 
 import (
-	"github.com/Seven4X/link/web/app"
-	"github.com/Seven4X/link/web/lib/api"
-	"github.com/Seven4X/link/web/lib/api/messages"
-	"github.com/Seven4X/link/web/lib/consts"
-	"github.com/Seven4X/link/web/lib/log"
-	"github.com/Seven4X/link/web/lib/setup/mymw"
+	"github.com/Seven4X/link/web/app/messages"
+	"github.com/Seven4X/link/web/app/middleware"
+	"github.com/Seven4X/link/web/app/util"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"net/http"
@@ -27,18 +24,18 @@ const (
 // call by cmd
 func Router(e *echo.Echo) {
 	g := e.Group("/api1/topic")
-	g.POST("", createTopic, mymw.JWT())
+	g.POST("", createTopic, middleware.JWT())
 	g.GET("", searchTopic)
 	g.GET("/:id", topicDetail)
 	g.GET("/marks/hot", hotTopic)
 	g.GET("/marks/random", randomTopic)
 	g.GET("/marks/recent", recentTopic)
 	g.GET("/:tid/related/:position", relativeTopic)
-	g.GET("/actions/delete/:id", removeTopic, mymw.JWT())
+	g.GET("/actions/delete/:id", removeTopic, middleware.JWT())
 }
 
 func removeTopic(e echo.Context) error {
-	uid := app.GetUserId(e)
+	uid := util.GetUserId(e)
 	if uid == 0 {
 		return e.String(http.StatusBadRequest, "not allow")
 	}
@@ -64,13 +61,13 @@ func createTopic(e echo.Context) error {
 	req := new(CreateTopicRequest)
 	//1.解析
 	if err := e.Bind(req); err != nil {
-		_ = e.JSON(http.StatusOK, api.Fail(err.Error()))
-		log.Info(err.Error())
+		_ = e.JSON(http.StatusOK, util.Fail(err.Error()))
+		util.Info(err.Error())
 		return nil
 	}
 	//2.校验
 	if err := e.Validate(req); err != nil {
-		_ = e.JSON(http.StatusOK, api.Fail(err.Error()))
+		_ = e.JSON(http.StatusOK, util.Fail(err.Error()))
 		return nil
 	}
 
@@ -80,24 +77,24 @@ func createTopic(e echo.Context) error {
 	//_ = gconv.Struct(req, topic)
 	//简单对象在Request对象中定义转化方法
 	topic, rel := req.ConvertRequestToTopicModel()
-	u := e.Get(consts.User)
+	u := e.Get(util.User)
 	if u == nil {
-		e.JSON(http.StatusOK, api.FailMsgId(messages.GlobalActionMustLogin))
+		e.JSON(http.StatusOK, util.FailMsgId(messages.GlobalActionMustLogin))
 		return nil
 	}
 	user := u.(*jwt.Token)
-	claims := user.Claims.(*mymw.JwtCustomClaims)
+	claims := user.Claims.(*middleware.JwtCustomClaims)
 	topic.CreateBy = claims.Id
 	//4.处理
 	id, svrErr := svc.Save(topic, rel)
-	_ = e.JSON(http.StatusOK, api.Response(id, svrErr))
+	_ = e.JSON(http.StatusOK, util.Response(id, svrErr))
 	return nil
 }
 
 func searchTopic(e echo.Context) error {
 	keyword := e.QueryParam("q")
 	if keyword == "" {
-		e.JSON(http.StatusBadRequest, api.FailMsgId(messages.GlobalParamWrong))
+		e.JSON(http.StatusBadRequest, util.FailMsgId(messages.GlobalParamWrong))
 		return nil
 	}
 	prev := e.QueryParam("prev")
@@ -108,10 +105,10 @@ func searchTopic(e echo.Context) error {
 	prevInt, _ := strconv.Atoi(prev)
 	res, hasMore, err := svc.SearchTopic(keyword, prevInt, size)
 	if err != nil {
-		log.Error(err.Error())
+		util.Error(err.Error())
 		return nil
 	}
-	return e.JSON(http.StatusOK, api.ResponseHasMore(res, hasMore))
+	return e.JSON(http.StatusOK, util.ResponseHasMore(res, hasMore))
 }
 func topicDetail(e echo.Context) error {
 	id := e.Param("id")
@@ -122,9 +119,9 @@ func topicDetail(e echo.Context) error {
 		topic, _ = svc.GetDetailById(i)
 	}
 	if topic == nil {
-		return e.JSON(http.StatusOK, api.FailMsgId(messages.TopicNotFound))
+		return e.JSON(http.StatusOK, util.FailMsgId(messages.TopicNotFound))
 	}
-	return e.JSON(http.StatusOK, api.Success(topic))
+	return e.JSON(http.StatusOK, util.Success(topic))
 }
 
 func hotTopic(e echo.Context) error {
@@ -132,7 +129,7 @@ func hotTopic(e echo.Context) error {
 	if err != nil {
 		return err
 	}
-	e.JSON(http.StatusOK, api.Response(res, nil))
+	e.JSON(http.StatusOK, util.Response(res, nil))
 	return nil
 }
 func randomTopic(e echo.Context) error {
@@ -144,7 +141,7 @@ func recentTopic(e echo.Context) error {
 func relativeTopic(e echo.Context) error {
 	tid := e.Param("tid")
 	if id, err := strconv.Atoi(tid); err != nil {
-		return e.JSON(http.StatusOK, api.Fail("param wrong"))
+		return e.JSON(http.StatusOK, util.Fail("param wrong"))
 	} else {
 		position := e.Param("position")
 		prev := e.QueryParam("prev")
@@ -154,7 +151,7 @@ func relativeTopic(e echo.Context) error {
 		}
 		topics, err := svc.ListRelativeTopic(id, position, prevInt)
 		if err == nil {
-			return e.JSON(http.StatusOK, api.ResponseHasMore(topics, len(topics) > 0))
+			return e.JSON(http.StatusOK, util.ResponseHasMore(topics, len(topics) > 0))
 		} else {
 			return err
 		}

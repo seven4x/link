@@ -1,6 +1,6 @@
 module github.com/Seven4X/link
 
-go 1.17
+go 1.15
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.0
@@ -26,7 +26,6 @@ require (
 	github.com/stretchr/testify v1.6.1
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.16.0
-	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a
 	golang.org/x/sys v0.0.0-20201009025420-dfb3f7c4e634 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 	xorm.io/builder v0.3.7

@@ -2,22 +2,19 @@ package main
 
 import (
 	"context"
-	"github.com/Seven4X/link/web/lib/util"
+	"github.com/Seven4X/link/web/app"
+	"github.com/Seven4X/link/web/app/util"
 	"github.com/labstack/echo/v4"
-	"golang.org/x/crypto/acme/autocert"
 	"log"
-	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
-
-	setup "github.com/Seven4X/link/web/lib/setup"
 )
 
 func main() {
-	e := setup.SetupEcho()
+	e := app.SetupEcho()
 
-	c := setup.StartJob()
+	c := app.StartJob()
 
 	idleConnsClosed := make(chan struct{})
 	go func() {
@@ -34,13 +31,13 @@ func main() {
 		close(idleConnsClosed)
 	}()
 	go func(c *echo.Echo) {
-		e.Logger.Fatal(e.Start(":80"))
+		e.Logger.Fatal(e.Start(":8080"))
 	}(e)
-	e.AutoTLSManager.Cache = autocert.DirCache("/root/www/.cache")
-	if err := e.StartAutoTLS(":443"); err != http.ErrServerClosed {
-		// Error starting or closing listener:
-		e.Logger.Fatalf("HTTP server ListenAndServe: %v", err)
-	}
+	//e.AutoTLSManager.Cache = autocert.DirCache("/root/www/.cache")
+	//if err := e.StartAutoTLS(":443"); err != http.ErrServerClosed {
+	//	// Error starting or closing listener:
+	//	e.Logger.Fatalf("HTTP server ListenAndServe: %v", err)
+	//}
 	<-idleConnsClosed
 	//
 	log.Printf("app shutdown")

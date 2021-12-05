@@ -3,7 +3,7 @@
 https://github.com/spf13/viper
 https://help.aliyun.com/document_detail/130146.html?spm=5176.acm.0.dexternal.28824a9bRqym6y
 */
-package config
+package util
 
 import (
 	"fmt"

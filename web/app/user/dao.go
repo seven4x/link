@@ -2,7 +2,7 @@ package user
 
 import (
 	"errors"
-	"github.com/Seven4X/link/web/lib/store/db"
+	"github.com/Seven4X/link/web/app/store"
 	"time"
 	"xorm.io/xorm"
 )
@@ -57,6 +57,6 @@ func (d *Dao) Register(rc *RegisterCode, req *RegisterRequest) error {
 }
 
 func NewDao() (dao *Dao) {
-	dao = &Dao{db.NewDb()}
+	dao = &Dao{store.NewDb()}
 	return
 }

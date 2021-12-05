@@ -1,7 +1,7 @@
 package comment
 
 import (
-	setup "github.com/Seven4X/link/web/lib/setup"
+	"github.com/Seven4X/link/web/app"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
@@ -10,7 +10,7 @@ import (
 
 //https://echo.labstack.com/guide/testing
 func TestServer_ListComment(t *testing.T) {
-	e := setup.SetupEcho()
+	e := app.SetupEcho()
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	rec := httptest.NewRecorder()
 	context := e.NewContext(req, rec)

@@ -2,7 +2,7 @@ package job
 
 import (
 	"github.com/Seven4X/link/web/app/topic"
-	"github.com/Seven4X/link/web/lib/log"
+	"github.com/Seven4X/link/web/app/util"
 	"time"
 )
 
@@ -16,10 +16,10 @@ func RefreshHotTopic() error {
 	d2 := now.Add(d)
 	res, err := dao.ListHotTopic(10, d2, now)
 	if err != nil {
-		log.Error(err.Error())
+		util.Error(err.Error())
 	}
 	if len(res) == 0 {
-		log.Info("no hot topic found.")
+		util.Info("no hot topic found.")
 		return nil
 	}
 

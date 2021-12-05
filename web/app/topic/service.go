@@ -1,10 +1,9 @@
 package topic
 
 import (
+	"github.com/Seven4X/link/web/app/messages"
 	"github.com/Seven4X/link/web/app/risk"
-	"github.com/Seven4X/link/web/lib/api"
-	"github.com/Seven4X/link/web/lib/api/messages"
-	"github.com/Seven4X/link/web/lib/log"
+	"github.com/Seven4X/link/web/app/util"
 	"strconv"
 	"time"
 )
@@ -24,32 +23,32 @@ func NewService() (s *Service) {
 2.检查关联topic是否存在
 3.检查是否重复
 */
-func (service *Service) Save(topic *Topic, rel *TopicRel) (id int, svrError *api.Err) {
+func (service *Service) Save(topic *Topic, rel *TopicRel) (id int, svrError *util.Err) {
 
 	if topic.Lang == "zh" {
 		var b, s = risk.IsAllowText(topic.Name)
 		if !b {
-			log.Infow("topic-save-not-allow", "keyword", s)
-			return -1, api.NewError(messages.TopicContentNotAllowed)
+			util.Infow("topic-save-not-allow", "keyword", s)
+			return -1, util.NewError(messages.TopicContentNotAllowed)
 		}
 	}
 	if rel.Aid == 0 {
-		return -1, api.NewError(messages.TopicRootNotAllowed)
+		return -1, util.NewError(messages.TopicRootNotAllowed)
 	}
 	has, err := service.dao.ExistById(rel.Aid)
 	if err != nil || !has {
-		return -1, api.NewError(messages.TopicRefTopicNoExist)
+		return -1, util.NewError(messages.TopicRefTopicNoExist)
 	}
 	has, err = service.dao.FindByNameWithSameParent(topic.Name, rel.Position, rel.Aid)
 	if err != nil || !has {
-		return -1, api.NewError(messages.TopicRepeatInSamePosition)
+		return -1, util.NewError(messages.TopicRepeatInSamePosition)
 	}
 
 	i, err := service.dao.Save(topic, rel)
 	if err != nil {
-		return -1, api.NewError(messages.TopicBackendDatabaseError)
+		return -1, util.NewError(messages.TopicBackendDatabaseError)
 	}
-	log.Infow("save-new-topic", "uid", topic.CreateBy, "aid", rel.Aid, "name", topic.Name)
+	util.Infow("save-new-topic", "uid", topic.CreateBy, "aid", rel.Aid, "name", topic.Name)
 	return i, nil
 }
 

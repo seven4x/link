@@ -1,12 +1,9 @@
 package link
 
 import (
-	"github.com/Seven4X/link/web/app"
-	"github.com/Seven4X/link/web/lib/api"
-	"github.com/Seven4X/link/web/lib/api/messages"
-	"github.com/Seven4X/link/web/lib/config"
-	"github.com/Seven4X/link/web/lib/consts"
-	"github.com/Seven4X/link/web/lib/setup/mymw"
+	"github.com/Seven4X/link/web/app/messages"
+	"github.com/Seven4X/link/web/app/middleware"
+	"github.com/Seven4X/link/web/app/util"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"net/http"
@@ -30,27 +27,27 @@ var (
 */
 func Router(e *echo.Echo) {
 	g := e.Group("/api1/link")
-	g.POST("", createLink, mymw.JWT())
+	g.POST("", createLink, middleware.JWT())
 	g.GET("", func(e echo.Context) error {
 		return listLink(e, func(request *ListLinkRequest) {})
-	}, mymw.Anonymous())
-	g.POST("/actions/batch", batchImport, mymw.JWT())
+	}, middleware.Anonymous())
+	g.POST("/actions/batch", batchImport, middleware.JWT())
 	g.GET("/marks/hot", func(e echo.Context) error {
 		return listLink(e, func(request *ListLinkRequest) {
 			request.OrderBy = "link.agree desc"
 		})
-	}, mymw.Anonymous())
+	}, middleware.Anonymous())
 	g.GET("/marks/newest", func(e echo.Context) error {
 		return listLink(e, func(request *ListLinkRequest) {
 			request.OrderBy = "link.create_time desc"
 		})
-	}, mymw.Anonymous())
+	}, middleware.Anonymous())
 	g.GET("/marks/mine", func(e echo.Context) error {
 		return listLink(e, func(request *ListLinkRequest) {
 			request.FilterMy = true
 		})
-	}, mymw.JWT())
-	g.GET("/marks/my", myAllPostLink, mymw.JWT())
+	}, middleware.JWT())
+	g.GET("/marks/my", myAllPostLink, middleware.JWT())
 
 	g.GET("/preview-token", getPreviewToken)
 }
@@ -67,7 +64,7 @@ func batchImport(e echo.Context) error {
 }
 
 func getPreviewToken(e echo.Context) error {
-	str := config.GetString("link-preview-token")
+	str := util.GetString("link-preview-token")
 
 	_ = e.HTML(http.StatusOK, str)
 	return nil
@@ -76,24 +73,24 @@ func getPreviewToken(e echo.Context) error {
 func createLink(e echo.Context) error {
 	req := new(CreateLinkRequest)
 	if err := e.Bind(req); err != nil {
-		e.JSON(http.StatusOK, api.Fail(err.Error()))
+		e.JSON(http.StatusOK, util.Fail(err.Error()))
 		return nil
 	}
 	if err := e.Validate(req); err != nil {
-		e.JSON(http.StatusOK, api.Fail(err.Error()))
+		e.JSON(http.StatusOK, util.Fail(err.Error()))
 		return nil
 	}
-	u := e.Get(consts.User)
+	u := e.Get(util.User)
 	if u == nil {
-		e.JSON(http.StatusOK, api.FailMsgId(messages.GlobalActionMustLogin))
+		e.JSON(http.StatusOK, util.FailMsgId(messages.GlobalActionMustLogin))
 		return nil
 	}
 	user := u.(*jwt.Token)
-	claims := user.Claims.(*mymw.JwtCustomClaims)
+	claims := user.Claims.(*middleware.JwtCustomClaims)
 	link := req.ToLink()
 	link.CreateBy = claims.Id
 	id, err := svr.Save(link)
-	_ = e.JSON(http.StatusOK, api.Response(id, err))
+	_ = e.JSON(http.StatusOK, util.Response(id, err))
 
 	return nil
 }
@@ -104,11 +101,11 @@ func listLink(e echo.Context, setupRequest func(request *ListLinkRequest)) error
 	if err := e.Validate(req); err != nil {
 		return err
 	}
-	uid := app.GetUserId(e)
+	uid := util.GetUserId(e)
 	req.UserId = uid
 	setupRequest(req)
 	res, total, err := svr.ListLink(req)
-	data := api.ResponsePage(res, err, total, len(res) > 0)
+	data := util.ResponsePage(res, err, total, len(res) > 0)
 	e.Response().Header().Add("Cache-Control", "max-age=1800")
 	return e.JSON(http.StatusOK, data)
 }

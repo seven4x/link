@@ -1,11 +1,10 @@
-package db
+package store
 
 import (
 	"database/sql"
 	"fmt"
 	"github.com/DATA-DOG/go-txdb"
-	"github.com/Seven4X/link/web/lib/config"
-	"github.com/Seven4X/link/web/lib/log"
+	"github.com/Seven4X/link/web/app/util"
 	_ "github.com/mattn/go-sqlite3"
 	"time"
 	"xorm.io/xorm"
@@ -19,7 +18,7 @@ func init() {
 
 	engine, err = xorm.NewEngine("sqlite3", buildSqlite3Dsn())
 	if err != nil {
-		log.Error(err.Error())
+		util.Error(err.Error())
 		panic(err)
 	}
 	engine.DatabaseTZ = time.Local
@@ -28,22 +27,22 @@ func init() {
 	names.NewPrefixMapper(names.SnakeMapper{}, "t_")
 	err = engine.Ping()
 	if err != nil {
-		log.Error("engine-ping-failed:", err.Error())
+		util.Error("engine-ping-failed:", err.Error())
 	}
 }
 
 func buildSqlite3Dsn() string {
-	path := config.Get("sqlite3.path")
+	path := util.Get("sqlite3.path")
 
 	return fmt.Sprintf("file:%s?cache=shared", path)
 
 }
 
 func buildDsn() string {
-	name := config.Get("db.user")
-	password := config.Get("db.password")
-	host := config.Get("db.host")
-	db := config.Get("db.database")
+	name := util.Get("db.user")
+	password := util.Get("db.password")
+	host := util.Get("db.host")
+	db := util.Get("db.database")
 	sdn := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable", name, password, host, db)
 	return sdn
 }
@@ -64,7 +63,7 @@ func RegisterMockDriver() {
 	txdb.Register("txdb", "postgres", buildDsn())
 	db, err := sql.Open("txdb", "identifier")
 	if err != nil {
-		log.Error(err)
+		util.Error(err)
 	}
 	engine.DB().DB = db
 }

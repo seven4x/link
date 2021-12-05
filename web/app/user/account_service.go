@@ -4,9 +4,9 @@ import (
 	"crypto/md5"
 	"errors"
 	"fmt"
-	"github.com/Seven4X/link/web/lib/api"
-	"github.com/Seven4X/link/web/lib/api/messages"
-	"github.com/Seven4X/link/web/lib/setup/mymw"
+	"github.com/Seven4X/link/web/app/messages"
+	"github.com/Seven4X/link/web/app/middleware"
+	"github.com/Seven4X/link/web/app/util"
 	"math/rand"
 	"strings"
 )
@@ -37,7 +37,7 @@ func (svr *Service) Login(l Login) (res *LoginResponse, err error) {
 	if u.Password != md5password(l.Password) {
 		return nil, errors.New("密码错误")
 	}
-	token, claims, err := mymw.BuildToken(l.Username, u.Id)
+	token, claims, err := middleware.BuildToken(l.Username, u.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -53,19 +53,19 @@ func md5password(originPwd string) string {
 	return pwd
 }
 
-func (svr *Service) Register(req *RegisterRequest) (b bool, err *api.Err) {
+func (svr *Service) Register(req *RegisterRequest) (b bool, err *util.Err) {
 	if ri, err := svr.dao.GetRegisterInfoByCode(req.Code); err != nil {
-		return false, api.NewError(messages.REGISTER_CODE_ERROR)
+		return false, util.NewError(messages.REGISTER_CODE_ERROR)
 	} else {
 		u := Account{UserName: req.LoginId}
 		svr.dao.Get(&u)
 		if u.Id != 0 {
-			return false, api.NewError(messages.REGISTER_NAME_REPEAT)
+			return false, util.NewError(messages.REGISTER_NAME_REPEAT)
 		}
 
 		req.Password = md5password(req.Password)
 		if err := svr.dao.Register(ri, req); err != nil {
-			return false, api.NewError(err.Error())
+			return false, util.NewError(err.Error())
 		}
 
 	}

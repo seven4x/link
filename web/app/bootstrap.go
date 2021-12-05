@@ -1,16 +1,14 @@
-package setup
+package app
 
 import (
 	"github.com/Seven4X/link/web/app/comment"
 	"github.com/Seven4X/link/web/app/job"
 	"github.com/Seven4X/link/web/app/link"
+	mymd "github.com/Seven4X/link/web/app/middleware"
 	"github.com/Seven4X/link/web/app/topic"
 	"github.com/Seven4X/link/web/app/user"
+	"github.com/Seven4X/link/web/app/util"
 	"github.com/Seven4X/link/web/app/vote"
-	"github.com/Seven4X/link/web/lib/config"
-	"github.com/Seven4X/link/web/lib/log"
-	"github.com/Seven4X/link/web/lib/setup/validator"
-	"github.com/Seven4X/link/web/lib/util"
 	adapter "github.com/alibaba/sentinel-golang/adapter/echo"
 	sentinel "github.com/alibaba/sentinel-golang/api"
 	"github.com/labstack/echo/v4"
@@ -24,7 +22,7 @@ import (
 func SetupEcho() (e *echo.Echo) {
 	// Echo instance
 	e = echo.New()
-	e.Validator = validator.New()
+	e.Validator = mymd.New()
 	logConfig := middleware.LoggerConfig{}
 	// 忽略静态文件日志
 	logConfig.Skipper = func(e echo.Context) bool {
@@ -82,14 +80,14 @@ func initSentinel() {
 	err := sentinel.InitDefault()
 	if err != nil {
 		// 初始化 Sentinel 失败
-		log.Error("initSentinel-error", err.Error())
+		util.Error("initSentinel-error", err.Error())
 	}
 
 }
 
 func initRouter(e *echo.Echo) {
 	//站点静态文件build输出目录
-	path := config.GetString("site.path")
+	path := util.GetString("site.path")
 	e.File("/*", path+"/index.html")
 	e.Static("/static", path+"/static")
 	e.File("/favicon.ico", path+"/favicon.ico")
@@ -110,7 +108,7 @@ func StartJob() *cron.Cron {
 	c.AddFunc("@midnight", func() {
 		err := job.RefreshHotTopic()
 		if err != nil {
-			log.Error(err.Error())
+			util.Error(err.Error())
 		}
 	})
 	c.AddFunc("@hourly", func() {

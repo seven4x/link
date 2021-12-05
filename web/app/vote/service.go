@@ -1,8 +1,8 @@
 package vote
 
 import (
-	"github.com/Seven4X/link/web/lib/api"
-	"github.com/Seven4X/link/web/lib/api/messages"
+	"github.com/Seven4X/link/web/app/messages"
+	"github.com/Seven4X/link/web/app/util"
 )
 
 type Service struct {
@@ -38,7 +38,7 @@ func NewService() *Service {
       3，投反对票，更新成2，累计投票 -1，反对+1
 
 */
-func (s *Service) Vote(req *VoteRequest) (bool, *api.Err) {
+func (s *Service) Vote(req *VoteRequest) (bool, *util.Err) {
 	//查投票记录
 	isLike, _ := s.dao.GetUserVote(req.CreateBy, req.Type, req.Id)
 	if isLike == req.IsLike || (isLike == -1 && req.IsLike == 0) {
@@ -56,7 +56,7 @@ func (s *Service) Vote(req *VoteRequest) (bool, *api.Err) {
 	err := UpdateVoteInfo(session, &voteInfo, req.Type)
 	if err != nil {
 		session.Rollback()
-		return false, api.NewError(messages.GlobalErrorAboutDatabase)
+		return false, util.NewError(messages.GlobalErrorAboutDatabase)
 	}
 	uVote := UserVote{
 		UserId: req.CreateBy,
@@ -69,13 +69,13 @@ func (s *Service) Vote(req *VoteRequest) (bool, *api.Err) {
 		err := CreateUserVote(session, &uVote)
 		if err != nil {
 			session.Rollback()
-			return false, api.NewError(messages.GlobalErrorAboutDatabase)
+			return false, util.NewError(messages.GlobalErrorAboutDatabase)
 		}
 	} else {
 		err := UpdateUserVote(session, &uVote)
 		if err != nil {
 			session.Rollback()
-			return false, api.NewError(messages.GlobalErrorAboutDatabase)
+			return false, util.NewError(messages.GlobalErrorAboutDatabase)
 		}
 	}
 
