@@ -3,9 +3,8 @@ package topic
 import (
 	"encoding/json"
 	"errors"
-	"github.com/Seven4X/link/web/lib/consts"
-	"github.com/Seven4X/link/web/lib/log"
-	"github.com/Seven4X/link/web/lib/store/db"
+	"github.com/Seven4X/link/web/app/store"
+	"github.com/Seven4X/link/web/app/util"
 	"time"
 	"xorm.io/xorm"
 )
@@ -41,7 +40,7 @@ type Dao struct {
 
 func NewDao() (dao *Dao) {
 	dao = &Dao{
-		Engine: db.NewDb(),
+		Engine: store.NewDb(),
 	}
 	return
 }
@@ -81,7 +80,7 @@ func (dao *Dao) Save(topic *Topic, rel *TopicRel) (i int, err error) {
 		if rel.Position == 2 {
 			parent := new(TopicRel)
 			_, err := session.SQL("select aid from topic_rel where bid=? and position=1", relId).Get(parent)
-			notAllow := parent.Aid == 0 && topic.CreateBy != consts.AdminId
+			notAllow := parent.Aid == 0 && topic.CreateBy != util.AdminId
 			if !notAllow {
 				relB := TopicRel{
 					Aid:        parent.Aid,
@@ -210,6 +209,6 @@ func (dao *Dao) ListHotTopic(limit int, start, end time.Time) (res []int, err er
 		where create_time between ? and ?
 		group by topic_id limit ?`, start, end, limit).Find(&res)
 	str, _ := json.Marshal(res)
-	log.Infof("%s~%s,hot_topic:%s", start.String(), end.String(), str)
+	util.Infof("%s~%s,hot_topic:%s", start.String(), end.String(), str)
 	return res, err
 }

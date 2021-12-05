@@ -1,8 +1,8 @@
 package vote
 
 import (
-	"github.com/Seven4X/link/web/lib/log"
-	"github.com/Seven4X/link/web/lib/store/db"
+	"github.com/Seven4X/link/web/app/store"
+	"github.com/Seven4X/link/web/app/util"
 	"xorm.io/xorm"
 )
 
@@ -11,7 +11,7 @@ type Dao struct {
 }
 
 func NewDao() (dao *Dao) {
-	dao = &Dao{db.NewDb()}
+	dao = &Dao{store.NewDb()}
 	dao.NewSession()
 	return
 }
@@ -41,7 +41,7 @@ func (dao *Dao) ListUserVoteByBusinessId(ids []interface{}, userId int, mtype st
 func CreateUserVote(session *xorm.Session, uVote *UserVote) error {
 	id, err := session.InsertOne(uVote)
 	if err != nil {
-		log.Errorw("CreateUserVote",
+		util.Errorw("CreateUserVote",
 			"uid", uVote.UserId,
 			"id", uVote.Id,
 			"type", uVote.Type,
@@ -59,7 +59,7 @@ func GetVoteInfo(session *xorm.Session, mtype string, mid int) (VoteInfo, error)
 	case "t":
 		_, err := session.SQL("select score,agree,disagree,id from topic where id=?", mid).Get(&result)
 		if err != nil {
-			log.Error(err.Error())
+			util.Error(err.Error())
 		}
 		return result, err
 	case "l":
@@ -78,7 +78,7 @@ func UpdateVoteInfo(session *xorm.Session, info *VoteInfo, mtype string) error {
 	case "t":
 		_, err := session.Exec("update topic set  score=?,agree=?,disagree=? where id=? ", info.Score, info.Agree, info.Disagree, info.Id)
 		if err != nil {
-			log.Error(err.Error())
+			util.Error(err.Error())
 			return err
 		}
 	case "l":
@@ -99,7 +99,7 @@ func UpdateVoteInfo(session *xorm.Session, info *VoteInfo, mtype string) error {
 func UpdateUserVote(session *xorm.Session, vote *UserVote) error {
 	_, err := session.Exec("update user_vote set is_like=? where user_id=? and type=? and id=?", vote.IsLike, vote.UserId, vote.Type, vote.Id)
 	if err != nil {
-		log.Error(err.Error())
+		util.Error(err.Error())
 		return err
 	}
 	return nil

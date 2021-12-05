@@ -8,7 +8,7 @@ import (
 )
 
 func TestStringFormat(t *testing.T) {
-	url := "https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code"
+	url := "https://common.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code"
 	fmt.Printf(url, appid, secret, "abc")
 	println(url)
 	assert.NotNil(t, url)

@@ -1,4 +1,4 @@
-package consts
+package util
 
 const (
 	User    = "user"
@@ -11,3 +11,5 @@ const (
 	Web    PostFrom = 1
 	Chrome PostFrom = 2
 )
+
+type Id int

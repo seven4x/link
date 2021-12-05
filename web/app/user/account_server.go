@@ -3,10 +3,8 @@ package user
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Seven4X/link/web/app"
-	"github.com/Seven4X/link/web/lib/api"
-	"github.com/Seven4X/link/web/lib/log"
-	"github.com/Seven4X/link/web/lib/setup/mymw"
+	"github.com/Seven4X/link/web/app/middleware"
+	"github.com/Seven4X/link/web/app/util"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"io/ioutil"
@@ -27,8 +25,8 @@ func Router(e *echo.Echo) {
 	g.POST("/login", login)
 	g.GET("/logout", logout)
 	g.POST("/register", register)
-	g.GET("/get-my-code", generatorRegisterCode, mymw.JWT())
-	g.GET("/info", info, mymw.JWT())
+	g.GET("/get-my-code", generatorRegisterCode, middleware.JWT())
+	g.GET("/info", info, middleware.JWT())
 
 	ug := e.Group("/api1/user")
 	ug.GET("/marks/mvp", mvpUser)
@@ -37,15 +35,15 @@ func Router(e *echo.Echo) {
 func generatorRegisterCode(e echo.Context) error {
 	user := e.Get("user").(*jwt.Token)
 	if user == nil {
-		e.JSON(http.StatusOK, api.Fail("need login"))
+		e.JSON(http.StatusOK, util.Fail("need login"))
 		return nil
 	}
-	claims := user.Claims.(*mymw.JwtCustomClaims)
+	claims := user.Claims.(*middleware.JwtCustomClaims)
 
 	if code, err := svr.GeneratorRegisterCode(claims.Id); err != nil {
-		return e.JSON(http.StatusInternalServerError, api.Fail(err.Error()))
+		return e.JSON(http.StatusInternalServerError, util.Fail(err.Error()))
 	} else {
-		return e.JSON(http.StatusOK, api.Success(code))
+		return e.JSON(http.StatusOK, util.Success(code))
 	}
 	return nil
 }
@@ -57,13 +55,13 @@ func register(e echo.Context) error {
 		return err
 	}
 	res, err := svr.Register(req)
-	return e.JSON(http.StatusOK, api.Response(res, err))
+	return e.JSON(http.StatusOK, util.Response(res, err))
 }
 
 func login(e echo.Context) error {
 	req := &Login{}
 	if err := e.Bind(req); err != nil {
-		e.JSON(http.StatusOK, api.Fail(err.Error()))
+		e.JSON(http.StatusOK, util.Fail(err.Error()))
 		return nil
 	}
 
@@ -74,9 +72,9 @@ func login(e echo.Context) error {
 		cookie.Expires = time.Unix(data.ExpireAt, 0)
 		cookie.Path = "/"
 		e.SetCookie(cookie)
-		e.JSON(http.StatusOK, api.Success(data))
+		e.JSON(http.StatusOK, util.Success(data))
 	} else {
-		e.JSON(http.StatusOK, api.Fail(err.Error()))
+		e.JSON(http.StatusOK, util.Fail(err.Error()))
 	}
 
 	return nil
@@ -89,28 +87,28 @@ func logout(e echo.Context) error {
 	cookie.MaxAge = -99
 
 	e.SetCookie(cookie)
-	return e.JSON(http.StatusOK, api.Success(true))
+	return e.JSON(http.StatusOK, util.Success(true))
 }
 
 //https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Wechat_Login.html
 func wechatCallback(e echo.Context) error {
 	code := e.QueryParam("code")
 	if code == "" {
-		log.Error("wechatCallback token is empty")
+		util.Error("wechatCallback token is empty")
 		return nil
 	}
-	url := "https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code"
+	url := "https://common.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code"
 	fmt.Printf(url, appid, secret, code)
 	resp, err := http.Get(url)
 	defer resp.Body.Close()
 	if err != nil {
-		log.Error(err.Error())
-		log.Error("wechatCallback oauth2 error")
+		util.Error(err.Error())
+		util.Error("wechatCallback oauth2 error")
 		return nil
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Error(err.Error())
+		util.Error(err.Error())
 	}
 	/*
 		{
@@ -127,19 +125,19 @@ func wechatCallback(e echo.Context) error {
 	token, b := m["access_token"]
 	openId, _ := m["openid"]
 	if !b || openId == "" {
-		log.Error("GetAccessToken")
-		log.Info(string(body))
+		util.Error("GetAccessToken")
+		util.Info(string(body))
 		return nil
 	}
 	e.JSON(http.StatusOK, "ok")
 	go func() {
-		url = "https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s"
+		url = "https://common.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s"
 		fmt.Printf(url, token, openId)
 		infoResp, err := http.Get(url)
 		defer infoResp.Body.Close()
 		body, err = ioutil.ReadAll(resp.Body)
 		if err != nil {
-			log.Error(err.Error())
+			util.Error(err.Error())
 		}
 		/*
 			{
@@ -168,8 +166,8 @@ func wechatCallback(e echo.Context) error {
 }
 
 func info(e echo.Context) error {
-	u := app.GetUser(e)
-	log.Info(u)
+	u := util.GetUser(e)
+	util.Info(u)
 	acc := Account{Id: u.Id}
 	svr.dao.Get(&acc)
 	info := AccountInfo{
@@ -178,6 +176,6 @@ func info(e echo.Context) error {
 		NickName: acc.NickName,
 		Avatar:   acc.Avatar,
 	}
-	e.JSON(http.StatusOK, api.Success(info))
+	e.JSON(http.StatusOK, util.Success(info))
 	return nil
 }

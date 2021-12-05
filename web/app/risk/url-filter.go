@@ -2,8 +2,7 @@ package risk
 
 import (
 	"bufio"
-	"github.com/Seven4X/link/web/lib/log"
-	"github.com/Seven4X/link/web/lib/util"
+	"github.com/Seven4X/link/web/app/util"
 	valid "github.com/asaskevich/govalidator"
 	"io"
 	"net"
@@ -29,8 +28,8 @@ func initFilter() {
 	}
 	rsp, err := c.Get(BlackUrlListRepo)
 	if err != nil {
-		log.Error("初始化URL黑名单错误")
-		log.Error(err.Error())
+		util.Error("初始化URL黑名单错误")
+		util.Error(err.Error())
 		return
 	}
 	defer rsp.Body.Close()
@@ -44,7 +43,7 @@ func load(rd io.Reader) {
 		line, _, err := buf.ReadLine()
 		if err != nil {
 			if err != io.EOF {
-				log.Error("Read URL黑名单错误")
+				util.Error("Read URL黑名单错误")
 			}
 			break
 		}
@@ -54,7 +53,7 @@ func load(rd io.Reader) {
 			i++
 		}
 	}
-	log.Infow("Add_BlackUrl", "size", i)
+	util.Infow("Add_BlackUrl", "size", i)
 }
 
 func IsAllowUrl(str string) bool {
@@ -80,7 +79,7 @@ func isUrl(str string) (bool bool, host string) {
 	}
 	u, err := url.Parse(strTemp)
 	if err != nil {
-		log.Info(err.Error())
+		util.Info(err.Error())
 		return false, ""
 	}
 

@@ -1,9 +1,9 @@
 package comment
 
 import (
+	"github.com/Seven4X/link/web/app/messages"
 	"github.com/Seven4X/link/web/app/risk"
-	"github.com/Seven4X/link/web/lib/api"
-	"github.com/Seven4X/link/web/lib/api/messages"
+	"github.com/Seven4X/link/web/app/util"
 )
 
 type Service struct {
@@ -21,7 +21,7 @@ func (s *Service) Save(comment *Comment) (id int, err error) {
 	return comment.Id, err
 }
 
-func (s *Service) SaveNewComment(req *NewCommentRequest) (id int, errs *api.Err) {
+func (s *Service) SaveNewComment(req *NewCommentRequest) (id int, errs *util.Err) {
 	comment := &Comment{
 		LinkId:   req.LinkId,
 		Content:  risk.SafeUserText(req.Content),
@@ -29,7 +29,7 @@ func (s *Service) SaveNewComment(req *NewCommentRequest) (id int, errs *api.Err)
 	}
 
 	if _, err := s.dao.InsertOne(comment); err != nil {
-		return -1, api.NewError(messages.GlobalErrorAboutDatabase)
+		return -1, util.NewError(messages.GlobalErrorAboutDatabase)
 	}
 	s.dao.GrowCommentCnt(req.LinkId)
 	return comment.Id, nil

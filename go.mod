@@ -19,7 +19,6 @@ require (
 	github.com/lib/pq v1.8.0 // indirect
 	github.com/magiconair/properties v1.8.1
 	github.com/mattn/go-sqlite3 v1.14.4
-	github.com/nacos-group/nacos-sdk-go v1.0.0
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/seven4x/cuckoofilter v0.0.0-20201118062419-d076a934a99e
 	github.com/spf13/cobra v1.1.1
@@ -27,7 +26,6 @@ require (
 	github.com/stretchr/testify v1.6.1
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.16.0
-	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a
 	golang.org/x/sys v0.0.0-20201009025420-dfb3f7c4e634 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 	xorm.io/builder v0.3.7

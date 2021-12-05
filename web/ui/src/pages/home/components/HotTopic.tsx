@@ -23,7 +23,7 @@ const HostTopic: React.FC = () => {
     }
 
     return (
-        <Card title="发现" className={styles.title}>
+        <Card title="今日主题" className={styles.title}>
 
             <Space className={styles.container}>
                 {
