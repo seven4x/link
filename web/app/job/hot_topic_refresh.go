@@ -10,11 +10,11 @@ func RefreshHotTopic() error {
 	dao := topic.NewDao()
 	now := time.Now()
 	d, _ := time.ParseDuration("-48h")
-	expireD, _ := time.ParseDuration("24h")
+	expireD, _ := time.ParseDuration("52h")
 	expireTime := now.Add(expireD)
 
 	d2 := now.Add(d)
-	res, err := dao.ListHotTopic(3, d2, now)
+	res, err := dao.ListHotTopic(10, d2, now)
 	if err != nil {
 		log.Error(err.Error())
 	}

@@ -1,6 +1,6 @@
 module github.com/Seven4X/link
 
-go 1.15
+go 1.17
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.0
@@ -19,7 +19,6 @@ require (
 	github.com/lib/pq v1.8.0 // indirect
 	github.com/magiconair/properties v1.8.1
 	github.com/mattn/go-sqlite3 v1.14.4
-	github.com/nacos-group/nacos-sdk-go v1.0.0
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/seven4x/cuckoofilter v0.0.0-20201118062419-d076a934a99e
 	github.com/spf13/cobra v1.1.1

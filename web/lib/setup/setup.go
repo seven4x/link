@@ -13,8 +13,6 @@ import (
 	"github.com/Seven4X/link/web/lib/util"
 	adapter "github.com/alibaba/sentinel-golang/adapter/echo"
 	sentinel "github.com/alibaba/sentinel-golang/api"
-	"github.com/alibaba/sentinel-golang/ext/datasource"
-	"github.com/alibaba/sentinel-golang/ext/datasource/nacos"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/robfig/cron/v3"
@@ -86,20 +84,7 @@ func initSentinel() {
 		// 初始化 Sentinel 失败
 		log.Error("initSentinel-error", err.Error())
 	}
-	//从acm加载配置
-	//rule配置参考flow.rule
-	h := datasource.NewFlowRulesHandler(datasource.FlowRuleJsonArrayParser)
-	client := config.GetAcmClient()
-	nds, err := nacos.NewNacosDataSource(client, "link-hub-go", "flow", h)
-	if err != nil {
-		log.Warnf("Fail to create nacos data source client, err: %+v", err)
-		return
-	}
-	err = nds.Initialize()
-	if err != nil {
-		log.Warnf("Fail to initialize nacos data source client, err: %+v", err)
-		return
-	}
+
 }
 
 func initRouter(e *echo.Echo) {
