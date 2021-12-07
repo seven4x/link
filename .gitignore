@@ -9,7 +9,7 @@ config-prod.yml
 .eslintcache
 
 
-ui/build/
+web/ui/build/
 
 node_modules/
 
