@@ -86,14 +86,7 @@ func initSentinel() {
 }
 
 func initRouter(e *echo.Echo) {
-	//站点静态文件build输出目录
-	path := util.GetString("site.path")
-	e.File("/*", path+"/index.html")
-	e.Static("/static", path+"/static")
-	e.File("/favicon.ico", path+"/favicon.ico")
-	e.File("/manifest.json", path+"/manifest.json")
-	//用于证书认证 https://letsencrypt.org/zh-cn/docs/challenge-types/
-	e.Static("/.well-known", path+"/wellknown")
+
 	// 初始化模块
 	topic.Router(e)
 	user.Router(e)

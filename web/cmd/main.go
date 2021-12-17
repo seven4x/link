@@ -31,13 +31,9 @@ func main() {
 		close(idleConnsClosed)
 	}()
 	go func(c *echo.Echo) {
-		e.Logger.Fatal(e.Start(":8080"))
+		e.Logger.Fatal(e.Start(":8081"))
 	}(e)
-	//e.AutoTLSManager.Cache = autocert.DirCache("/root/www/.cache")
-	//if err := e.StartAutoTLS(":443"); err != http.ErrServerClosed {
-	//	// Error starting or closing listener:
-	//	e.Logger.Fatalf("HTTP server ListenAndServe: %v", err)
-	//}
+
 	<-idleConnsClosed
 	//
 	log.Printf("app shutdown")
