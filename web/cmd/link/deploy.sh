@@ -2,17 +2,19 @@
 
 
 pwd
+cd /root/app/butterfly/deploy_tmp
+# restart bd
+ps -ef | grep link | grep -v grep | cut -c 9-15  | xargs kill
+rm -rf ../bd/*
+tar -xf package-backend.tgz  -C ../bd
 
-rm -rf /root/app/front-end/*
-tar -xf /root/app/package/package-front.tgz -C /root/app/front-end
+# replace front
+rm -rf ../www/*
+tar -xf package-front.tgz -C ../www
 
-if [ /root/app/backend/pidfile.txt ]; then
-    kill  `cat /root/app/backend/pidfile.txt`
-fi
-
-tar -xvf package/package-backend.tgz -C /root/app/backend
-
-cd /root/app/backend
-
+#start bd
+cd ../bd
 nohup ./link 2>&1 > log.txt &
 echo $! > pidfile.txt
+
+echo "success"
