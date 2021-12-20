@@ -33,7 +33,7 @@ type Creator struct {
 	Avatar string
 }
 
-func BuildLinkResponseOfModel(m *LinkUser) (res *ListLinkResponse) {
+func BuildLinkResponseOfModel(m *WithUser) (res *ListLinkResponse) {
 
 	res = &ListLinkResponse{
 		Id:           m.Id,
@@ -97,4 +97,12 @@ func (req *CreateLinkRequest) ToLink() (link *Link) {
 		CommentCnt:   1,
 	}
 	return
+}
+
+type RecentVO struct {
+	Title      string
+	Id         int
+	Url        string
+	Tags       string
+	CreateTime time.Time
 }

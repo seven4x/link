@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
-import OrderableLinkList from "./components/OrderableLinkList";
 import {Avatar, Col, Drawer, Layout, Row, Tag} from "antd";
 import styled from "styled-components";
 import {useFormatMessage} from "react-intl-hooks";
@@ -8,12 +7,13 @@ import Icon from '@ant-design/icons';
 import {ReactComponent as TopicIcon} from "../../assets/icon/topic.svg";
 import {ReactComponent as RelationIcon} from "../../assets/icon/relation.svg";
 import AddTopic from "./components/AddTopic";
-import {Topic} from './model'
-import {AllPosition} from "~/utils/const";
-import RelationTopic from './components/RelationTopic'
-import {GetTopicDetail, ListMvpUser} from './service'
-import {GlobalContext} from "../../App";
+import OrderableLinkList from "./components/OrderableLinkList";
+import RelationTopic from "./components/RelationTopic"
 import TopicTree from "../../components/TopicTree/index";
+import {Topic} from './model';
+import {AllPosition} from "~/utils/const";
+import {GetTopicDetail, ListMvpUser} from './service';
+import {GlobalContext} from "../../App";
 
 const {Footer, Content, Sider} = Layout
 const {CheckableTag} = Tag;
@@ -54,7 +54,7 @@ function TopicHome() {
         GetTopicDetail(topicId).then(res => {
             setTopic(res.data || {})
             setIsRealId(true)
-            document.title = (res.data?.name || "未知") +" 破茧♥"
+            document.title = (res.data?.name || "未知") + " 破茧♥"
             return res
         }).then(detail => {
             if (detail.data != null && detail.data.id != null) {
@@ -84,7 +84,7 @@ function TopicHome() {
                             <Icon component={TopicIcon}/> {t({id: "topic.label.current-topic"})}:&nbsp;&nbsp;
                         </Col>
                         <Col flex="auto">
-                           <b> {topic.name}</b> &nbsp;&nbsp;  {topic.shortCode}
+                            <b> {topic.name}</b> &nbsp;&nbsp;  {topic.shortCode}
                         </Col>
                     </Row>
 

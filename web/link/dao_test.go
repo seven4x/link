@@ -35,3 +35,12 @@ func TestCountLink(t *testing.T) {
 
 	assert.True(t, total > 0)
 }
+
+func TestDao_GetRecentLinks(t *testing.T) {
+	dao := NewDao()
+
+	res, err := dao.GetRecentLinks(12)
+	assert.Nil(t, err)
+	assert.NotNil(t, res)
+	assert.Equal(t, 10, len(res))
+}

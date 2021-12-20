@@ -45,7 +45,7 @@ func JWT() echo.MiddlewareFunc {
 	return middleware.JWTWithConfig(config)
 }
 
-/**
+/*Anonymous
 允许匿名访问的接口也需要感知到登陆人
 */
 func Anonymous() echo.MiddlewareFunc {

@@ -13,3 +13,8 @@
 .title {
     font-size: 12px;
 }
+
+.recent {
+    margin-right: 20px;
+    float: right;
+}

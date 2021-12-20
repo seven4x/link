@@ -4,6 +4,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"github.com/seven4x/link/web/messages"
+	"strconv"
 
 	"github.com/seven4x/link/web/middleware"
 	"github.com/seven4x/link/web/util"
@@ -14,7 +15,7 @@ var (
 	svr = NewService()
 )
 
-/*
+/*Router
 流控配置
 [{
     "resource":"GET:/link/preview-token",
@@ -51,6 +52,28 @@ func Router(e *echo.Echo) {
 	g.GET("/marks/my", myAllPostLink, middleware.JWT())
 
 	g.GET("/preview-token", getPreviewToken)
+
+	g.GET("/recent", getRecentLinks)
+}
+
+func getRecentLinks(context echo.Context) error {
+	prev := context.QueryParam("prev")
+	prevI, _ := strconv.Atoi(prev)
+	res, err := svr.GetRecentLinks(prevI)
+	nextId := 0
+	if len(res) > 0 {
+		nextId = res[len(res)-1].Id
+	}
+	vos := make([]RecentVO, 0)
+	for _, l := range res {
+		v := RecentVO{l.Title, l.Id, l.Link, l.Tags, l.CreateAt}
+		vos = append(vos, v)
+	}
+	context.JSON(200, struct {
+		Data   []RecentVO
+		NextId int
+	}{vos, nextId})
+	return err
 }
 
 // 解析URL中所有 a标签中的超链接保存

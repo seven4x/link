@@ -37,7 +37,7 @@ module.exports = function ({env}) {
                     }
                 },
                 '/api1': {
-                    target: 'https://bitseatech.com',
+                    target: 'http://localhost:8088',
                     ws: false, // websocket
                     changeOrigin: true, //是否跨域
                     secure: false,  // 如果是https接口，需要配置这个参数

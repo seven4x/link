@@ -25,7 +25,7 @@ type Link struct {
 	IsLike       int       `xorm:"<-"`
 }
 
-type LinkUser struct {
+type WithUser struct {
 	Link    `xorm:"extends"`
 	Creator user.Account `xorm:"extends "`
 }

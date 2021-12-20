@@ -24,12 +24,12 @@ func (dao *Dao) Save(link *Link) (i int, err error) {
 	return link.Id, err
 }
 
-func (dao *Dao) ListLink(req *ListLinkRequest) (links []LinkUser, total int64, err error) {
+func (dao *Dao) ListLink(req *ListLinkRequest) (links []WithUser, total int64, err error) {
 	total, err = dao.countLink(req)
 	if total < 1 {
 		return nil, 0, err
 	}
-	links = make([]LinkUser, 0)
+	links = make([]WithUser, 0)
 	start := (req.Page - 1) * req.Size
 	if start < 0 {
 		start = 0
@@ -45,13 +45,11 @@ func (dao *Dao) ListLink(req *ListLinkRequest) (links []LinkUser, total int64, e
 	if req.OrderBy != "" {
 		sess.OrderBy(req.OrderBy)
 	}
-	err = sess.
-		Limit(req.Size, start).
-		Find(&links)
+	err = sess.Limit(req.Size, start).Find(&links)
 	return links, total, err
 }
 
-func (dao *Dao) ListLinkJoinUserVote(req *ListLinkRequest) (links []LinkUser, total int64, err error) {
+func (dao *Dao) ListLinkJoinUserVote(req *ListLinkRequest) (links []WithUser, total int64, err error) {
 	total, err = dao.countLink(req)
 	if total < 1 {
 		return nil, 0, err
@@ -78,4 +76,14 @@ func (dao *Dao) countLink(req *ListLinkRequest) (total int64, err error) {
 		return total, err
 	}
 
+}
+
+func (dao *Dao) GetRecentLinks(prev int) ([]Link, error) {
+	res := make([]Link, 0)
+	sql := "SELECT ID,link,title,tags,create_time FROM LINK WHERE id < ? ORDER BY id DESC  limit 20"
+	if prev == 0 {
+		sql = "SELECT ID,link,title,tags,create_time FROM LINK   ORDER BY id DESC  limit 20"
+	}
+	err := dao.SQL(sql, prev).Find(&res)
+	return res, err
 }

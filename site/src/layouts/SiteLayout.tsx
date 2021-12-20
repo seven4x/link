@@ -60,8 +60,6 @@ const FooterWrapper = styled(Footer)`
 `
 
 
-
-
 const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
     const globalContext = useContext(GlobalContext)
     let {routes} = props
@@ -120,7 +118,7 @@ const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
         <Layout>
             <HeaderWrapper>
                 <Row justify="space-between">
-                    <Col  xs={0} sm={2}>
+                    <Col xs={0} sm={2}>
                         <h1>
                             <Logo onClick={() => {
                                 history.push("/")
@@ -133,7 +131,7 @@ const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
 
                     <Col flex="auto">
                         <Row justify="space-between" wrap={false}>
-                            <Col  xs={20} sm={6}>
+                            <Col xs={20} sm={6}>
                                 <Select
                                     showSearch
                                     placeholder={"搜主题"}
@@ -175,8 +173,7 @@ const SiteLayout: React.FC<PropsWithChildren<any>> = (props) => {
 
             <FooterWrapper>
                 <Space split={<Divider type="vertical"/>}>
-                    <a href="https://www.yuque.com/seven4x/qt0ld3" target="_blank" rel="noreferrer noopener">常见问题</a>
-                    <a href="https://www.yuque.com/docs/share/ba4e7ee7-3f3c-4841-8e64-db4da6358b14" target="_blank" rel="noreferrer noopener">提建议</a>
+                    <a href="https://blog.bitseatech.com" target="_blank" rel="noreferrer noopener">关于本站</a>
                 </Space>
 
             </FooterWrapper>

@@ -28,7 +28,7 @@ func NewService() (s *Service) {
 	return
 }
 
-/*
+/*Save
 1.黑名单检查
 2.当前主题重复检查，重复是不添加返回原ID
 3.保存关联评论
@@ -80,7 +80,7 @@ func (s *Service) ListLink(req *ListLinkRequest) (res []*ListLinkResponse, total
 //两种查询方法需要用基准测一下哪个快
 func (s *Service) listLinkJoin(req *ListLinkRequest) (res []*ListLinkResponse, total int64, errs *util.Err) {
 	req.Size = 10
-	var links []LinkUser
+	var links []WithUser
 	var err error
 
 	if req.UserId == 0 {
@@ -92,7 +92,7 @@ func (s *Service) listLinkJoin(req *ListLinkRequest) (res []*ListLinkResponse, t
 		util.Error(err.Error())
 	}
 	res = make([]*ListLinkResponse, 0)
-	visit(&links, func(m LinkUser) {
+	visit(&links, func(m WithUser) {
 		link := BuildLinkResponseOfModel(&m)
 		res = append(res, link)
 	})
@@ -117,7 +117,7 @@ func (s *Service) listLinkJoin(req *ListLinkRequest) (res []*ListLinkResponse, t
 */
 func (s *Service) listLinkNoJoin(req *ListLinkRequest) (res []*ListLinkResponse, total int64, errs *util.Err) {
 	req.Size = 10
-	var links []LinkUser
+	var links []WithUser
 	var err error
 	links, total, err = s.dao.ListLink(req)
 	if err != nil {
@@ -125,7 +125,7 @@ func (s *Service) listLinkNoJoin(req *ListLinkRequest) (res []*ListLinkResponse,
 	}
 
 	res = make([]*ListLinkResponse, 0)
-	visit(&links, func(m LinkUser) {
+	visit(&links, func(m WithUser) {
 		link := BuildLinkResponseOfModel(&m)
 		res = append(res, link)
 	})
@@ -186,13 +186,17 @@ func (s *Service) fetchIsLike(ids []interface{}, links []*ListLinkResponse, req 
 	}
 }
 
-func visit(links *[]LinkUser, f func(link LinkUser)) {
+func (s *Service) GetRecentLinks(prev int) (links []Link, err error) {
+	return s.dao.GetRecentLinks(prev)
+}
+
+func visit(links *[]WithUser, f func(link WithUser)) {
 	for _, link := range *links {
 		f(link)
 	}
 }
 
-func getLinkIds(links *[]LinkUser) []interface{} {
+func getLinkIds(links *[]WithUser) []interface{} {
 	linkIds := make([]interface{}, 0)
 	for _, link := range *links {
 		linkIds = append(linkIds, link.Id)

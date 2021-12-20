@@ -23,8 +23,8 @@ const HostTopic: React.FC = () => {
     }
 
     return (
-        <Card title="今日主题" className={styles.title}>
-
+        <Card title={<> 推荐的主题 <a href="/recent" className={styles.recent}> 🔥🔥🔥点我查看最新内容🔥🔥🔥</a> </>}
+              className={styles.title}>
             <Space className={styles.container}>
                 {
                     data.map((item) =>

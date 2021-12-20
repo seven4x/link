@@ -1,8 +1,9 @@
 import React from "react";
 
-import HotTopic from "~/pages/home/components/HotTopic";
+import HotTopic from "./components/HotTopic";
 import styles from './index.module.css'
-function SiteHome(){
+
+function SiteHome() {
     return (
         <div className={styles.container}>
             <div className={styles.content}>
