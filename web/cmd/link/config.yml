@@ -1,0 +1,7 @@
+
+db:
+  user: postgres
+  password: linkhub2333
+  database: link_hub
+  host: 127.0.0.1:5432
+
