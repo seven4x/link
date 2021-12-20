@@ -6,7 +6,6 @@ require (
 	github.com/alibaba/sentinel-golang v0.6.1
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.18
 	github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/emirpasic/gods v1.12.0
 	github.com/go-playground/validator/v10 v10.4.0
 	github.com/iancoleman/orderedmap v0.1.0
@@ -26,6 +25,7 @@ require (
 
 require (
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/golang/snappy v0.0.2 // indirect
 	github.com/labstack/gommon v0.3.1 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect

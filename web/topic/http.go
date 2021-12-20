@@ -4,7 +4,7 @@ web层：route配置，参数解析，校验
 package topic
 
 import (
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"github.com/seven4x/link/web/messages"
 	"github.com/seven4x/link/web/middleware"

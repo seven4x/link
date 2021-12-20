@@ -1,7 +1,7 @@
 package link
 
 import (
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"github.com/seven4x/link/web/messages"
 	"strconv"
