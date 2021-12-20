@@ -59,10 +59,10 @@ func BuildLinkResponseOfModel(m *WithUser) (res *ListLinkResponse) {
 }
 
 type ListLinkRequest struct {
-	Prev     int
+	Prev     int `query:"prev"`
 	Page     int
 	Size     int
-	Tid      int `validate:"required"`
+	Tid      int `validate:"required" query:"tid"`
 	Group    string
 	UserId   int
 	OrderBy  string
