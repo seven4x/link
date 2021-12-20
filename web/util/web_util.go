@@ -2,6 +2,7 @@ package util
 
 import (
 	"github.com/dgrijalva/jwt-go"
+	"github.com/labstack/echo/v4"
 	"github.com/seven4x/link/web/middleware"
 )
 
