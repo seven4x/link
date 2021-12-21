@@ -2,6 +2,7 @@ import React from "react";
 import {Button, Layout, List} from "antd";
 import styled from "styled-components";
 import styles from './index.module.css'
+import moment from 'moment';
 
 const {Content} = Layout;
 
@@ -103,7 +104,7 @@ class LoadMoreList extends React.Component {
                                                  rel="noreferrer noopener">{item.Title}</Link>}
                                     description={item.Tags}
                                 />
-                                <div>{item.CreateTime}</div>
+                                <div>{moment(item.CreateTime).fromNow()}</div>
                             </List.Item>
                         )}
                     />
