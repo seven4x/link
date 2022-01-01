@@ -4,7 +4,7 @@ import {Button, Divider, Form, Input, message} from "antd";
 import EditableTagGroup from "./comps/EditTagGroup";
 import SearchInput from "./comps/SearchInput";
 import {getInfo, saveLink} from "./service";
-import {useLocation, useHistory} from 'react-router-dom'
+import {useHistory, useLocation} from 'react-router-dom'
 import queryString from 'query-string';
 
 const {TextArea} = Input;
@@ -77,7 +77,7 @@ function Share() {
             //close pop html
             if (!res.ok) {
                 if (res.msgId == "link.repeat-in-same-topic") {
-                    message.info("投稿成功❤️.");
+                    message.info("重复投递❤️.");
                     window.close()
                 } else {
                     message.error("保存失败：" + res.msgId + "|" + res.msg);
