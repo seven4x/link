@@ -1,12 +1,11 @@
 import React, {useContext} from 'react'
 import {Tabs} from 'antd';
-import {StickyContainer,Sticky} from 'react-sticky';
+import {Sticky, StickyContainer} from 'react-sticky';
 import LinkList from "./LinkList";
 import AddLinkItemV2 from "./AddLinkItemV2";
 
 import {ReactComponent as NewIcon} from "../../../assets/icon/new.svg";
 import Icon from '@ant-design/icons';
-import {useFormatMessage} from "react-intl-hooks";
 import {GlobalContext} from "../../../App";
 
 const {TabPane} = Tabs;
@@ -20,9 +19,7 @@ const renderTabBar = (props, DefaultTabBar) => (
     </Sticky>
 );
 
-const OrderableLinkList: React.FC<any> = (props) => {
-    let {topicId} = props
-    const t = useFormatMessage()
+const OrderableLinkList: React.FC<any> = ({topicId}) => {
     const globalContext = useContext(GlobalContext)
     const user = globalContext.user
 
@@ -45,4 +42,4 @@ const OrderableLinkList: React.FC<any> = (props) => {
 }
 
 
-export default React.memo(OrderableLinkList)
+export default OrderableLinkList

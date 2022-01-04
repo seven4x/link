@@ -21,17 +21,23 @@ const LinkList: React.FC<LinkListProps> = ({topicId, filter}) => {
     const [list, setList] = useState<Array<LinkItemData>>([])
     const [data, setData] = useState<Array<LinkItemData>>([])
     const [prev, setPrev] = useState(0)
-
     //初始化
     useEffect(() => {
         console.log("LinkList useEffect")
         setData([])
         setList([])
-        setPrev(0 )//fixme 生效
+        setPrev(0)
         loadData()
+        return () => {
+            console.log("LinkList cleanup")
+            setData([])
+            setList([])
+            setPrev(0)
+        }
     }, [topicId]);
 
-    const loadData = () => {
+
+    const loadData = async () => {
         //搞个假数据为了现实骨架
         let newList = [...new Array(count)].map(() => ({
             isLike: 0,
@@ -43,24 +49,31 @@ const LinkList: React.FC<LinkListProps> = ({topicId, filter}) => {
             commentCount: 0,
             hotComment: {avatar: "", content: "", uid: 0}
         }))
-        setList(data.concat(newList));
-        setLoading(true)
-        ListLinks(topicId, prev, filter).then((res) => {
-            console.log(res)
-            let newData = data.concat(res.data)
-            setLoading(false)
-            setInitLoading(false)
-            setData((old)=>newData)
-            setList((old)=>newData)
-            if (!res?.page?.hasMore) {
-                setMore(false)
-            } else {
-                setMore(true)
-            }
-            setPrev(res?.page && res?.page.nextId)
+        setList(old => {
+            return old.concat(newList)
         });
+        setLoading(true)
+        const res = await ListLinks(topicId, prev, filter)
+
+        console.log(res)
+        setLoading(false)
+        setInitLoading(false)
+        setData(old => {
+            return data.concat(res.data)
+        })
+        setList(old => {
+            return data.concat(res.data)
+        })
+        if (!res?.page?.hasMore) {
+            setMore(false)
+        } else {
+            setMore(true)
+        }
+        setPrev(res?.page && res?.page.nextId)
+
 
     };
+
     const loadMore =
         !initLoading && !loading && more ? (
             <div

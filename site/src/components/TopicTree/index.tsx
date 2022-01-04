@@ -42,12 +42,12 @@ const Index: React.FC = () => {
     const {data, loading, run} = useRequest(ListRelationTopic, {
         manual: true,
         onSuccess: (result, params) => {
-             if (result.ok) {
+            if (result.ok) {
                 let children = []
-                result.data.forEach(t=>{
+                result.data.forEach(t => {
                     children.push({
-                        "title":t.name ,
-                        "key":t.id
+                        "title": t.name,
+                        "key": t.id
 
                     })
                 })
@@ -58,13 +58,14 @@ const Index: React.FC = () => {
             }
         }
     })
+
     function onLoadData({key, children}: any) {
         return new Promise<void>(resolve => {
             if (children) {
                 resolve();
                 return;
             }
-            run(key,'bottom',0).then(res=>{
+            run(key, 'bottom', 0).then(res => {
 
                 resolve();
             })
@@ -72,11 +73,12 @@ const Index: React.FC = () => {
         });
     }
 
-    function onSelect(selectedKeys){
+    function onSelect(selectedKeys) {
         console.log(selectedKeys)
         let topicId = selectedKeys[0]
-        history.push(`/t/${topicId}`)
+        history.replace({pathname: `/t/${topicId}`, state: null})
     }
+
     return (
         <div className={styles.topic_tree}>
             <Tree showLine={true} loadData={onLoadData} treeData={treeData} onSelect={onSelect}/>
