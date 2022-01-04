@@ -3,7 +3,6 @@ import {ListLinks} from "../service";
 import {Button, List, Skeleton} from "antd";
 import {LinkItem} from './LinkItem'
 import {LinkItemData} from '../model'
-import useUrlState from '@ahooksjs/use-url-state';
 
 
 interface LinkListProps {
@@ -25,6 +24,10 @@ const LinkList: React.FC<LinkListProps> = ({topicId, filter}) => {
 
     //初始化
     useEffect(() => {
+        console.log("LinkList useEffect")
+        setData([])
+        setList([])
+        setPrev(0 )//fixme 生效
         loadData()
     }, [topicId]);
 
@@ -47,14 +50,14 @@ const LinkList: React.FC<LinkListProps> = ({topicId, filter}) => {
             let newData = data.concat(res.data)
             setLoading(false)
             setInitLoading(false)
-            setData(newData)
-            setList(newData)
+            setData((old)=>newData)
+            setList((old)=>newData)
             if (!res?.page?.hasMore) {
                 setMore(false)
             } else {
                 setMore(true)
             }
-            setPrev( res?.page && res?.page.nextId )
+            setPrev(res?.page && res?.page.nextId)
         });
 
     };
@@ -91,4 +94,4 @@ const LinkList: React.FC<LinkListProps> = ({topicId, filter}) => {
     );
 };
 
-export default React.memo(LinkList);
+export default LinkList;

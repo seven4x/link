@@ -35,7 +35,7 @@ function TopicHome() {
     const [topic, setTopic] = useState<Topic>({})
     const [mvps, setMvps] = useState([])
     const [relTopic, setRelTopic] = useState([])
-
+    const [topicIntId, setTopicIntId] = useState(topicId)
     const t = useFormatMessage();
     const relativeTopic = t({id: "topic.label.relative-topic"})
 
@@ -43,6 +43,7 @@ function TopicHome() {
         GetTopicDetail(topicId).then(res => {
             setTopic(res.data || {})
             setIsRealId(true)
+            setTopicIntId(res.data.id )
             document.title = (res.data?.name || "未知") + " 破茧♥"
             return res
         }).then(detail => {
@@ -52,8 +53,6 @@ function TopicHome() {
                         setMvps(res.data)
                     }
                 })
-
-
                 ListRelationTopic(detail.data.id, "all", 0).then(res => {
                     res.data.forEach(d => d.name = "➡️️" + d.name)
                     setRelTopic(res.data)
@@ -93,7 +92,7 @@ function TopicHome() {
                         </Col>
                     </Row>
 
-                    {isRealId && <OrderableLinkList topicId={topic.id}/>}
+                    {isRealId && <OrderableLinkList topicId={topicIntId}/>}
                 </ContentWrapper>
 
 
