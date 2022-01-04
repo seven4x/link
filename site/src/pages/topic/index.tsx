@@ -103,7 +103,7 @@ function TopicHome() {
 
                     {
                         relTopic.map(rel => <div>
-                            <a href="javascript:void;" onClick={() => {
+                            <a href="javascript:void(0);" onClick={() => {
                                 history.push(`/t/${rel.id}`)
                             }}> {rel.name}</a>
                         </div>)
