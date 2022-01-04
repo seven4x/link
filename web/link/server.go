@@ -97,16 +97,16 @@ func getPreviewToken(e echo.Context) error {
 func createLink(e echo.Context) error {
 	req := new(CreateLinkRequest)
 	if err := e.Bind(req); err != nil {
-		e.JSON(http.StatusOK, util.Fail(err.Error()))
+		e.JSON(http.StatusBadRequest, util.Fail(err.Error()))
 		return nil
 	}
 	if err := e.Validate(req); err != nil {
-		e.JSON(http.StatusOK, util.Fail(err.Error()))
+		e.JSON(http.StatusBadRequest, util.Fail(err.Error()))
 		return nil
 	}
 	u := e.Get(util.User)
 	if u == nil {
-		e.JSON(http.StatusOK, util.FailMsgId(messages.GlobalActionMustLogin))
+		e.JSON(http.StatusBadRequest, util.FailMsgId(messages.GlobalActionMustLogin))
 		return nil
 	}
 	user := u.(*jwt.Token)
@@ -114,7 +114,11 @@ func createLink(e echo.Context) error {
 	link := req.ToLink()
 	link.CreateBy = claims.Id
 	id, err := svr.Save(link)
-	_ = e.JSON(http.StatusOK, util.Response(id, err))
+	if err != nil {
+		_ = e.JSON(http.StatusInternalServerError, util.Response(id, err))
+	} else {
+		_ = e.JSON(http.StatusOK, util.Response(id, err))
+	}
 
 	return nil
 }

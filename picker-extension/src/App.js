@@ -71,10 +71,11 @@ function App() {
         saveLink(link).then((res) => {
             //close pop html
             if (!res.ok) {
-                if (res.msgId == "link.repeat-in-same-topic") {
-                    message.info("投稿成功❤️.");
+                if (res.msgId === "link.repeat-in-same-topic") {
+                    message.error("重复投递：" + res.msgId + "|" + res.msg);
                 } else {
                     message.error("保存失败：" + res.msgId + "|" + res.msg);
+
                 }
             } else {
                 message.info("投稿成功❤️");

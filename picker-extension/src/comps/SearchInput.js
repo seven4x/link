@@ -9,7 +9,7 @@ const {Option, OptGroup} = Select;
 
 let timeout;
 let currentValue;
-const MAX_LIMIT = 3;
+const MAX_LIMIT = 7;
 
 function searchTopic(value, callback) {
   if (timeout) {
