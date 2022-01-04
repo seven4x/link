@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import {Avatar, Col, Layout, Row} from "antd";
 import styled from "styled-components";
 import {useFormatMessage} from "react-intl-hooks";
@@ -31,7 +31,7 @@ const FooterWrapper = styled(Footer)`
 function TopicHome() {
     let {topicId} = useParams<any>();
     let [isRealId, setIsRealId] = useState<boolean>(!isNaN(parseInt(topicId)))
-
+    let history = useHistory();
     const [topic, setTopic] = useState<Topic>({})
     const [mvps, setMvps] = useState([])
     const [relTopic, setRelTopic] = useState([])
@@ -103,7 +103,9 @@ function TopicHome() {
 
                     {
                         relTopic.map(rel => <div>
-                            <a href={`${rel.id}`}> {rel.name}</a>
+                            <a href="javascript:void;" onClick={() => {
+                                history.push(`/t/${rel.id}`)
+                            }}> {rel.name}</a>
                         </div>)
                     }
                 </Sider>

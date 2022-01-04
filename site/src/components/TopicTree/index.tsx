@@ -76,7 +76,7 @@ const Index: React.FC = () => {
     function onSelect(selectedKeys) {
         console.log(selectedKeys)
         let topicId = selectedKeys[0]
-        history.replace({pathname: `/t/${topicId}`, state: null})
+        history.push(`/t/${topicId}`)
     }
 
     return (
