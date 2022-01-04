@@ -21,6 +21,14 @@ type Topic struct {
 	UpdateAt  time.Time `json:"updateAt" xorm:"update_time updated"`
 	DeletedAt time.Time `json:"-" xorm:"delete_time deleted"`
 }
+type TopicRelVO struct {
+	Id        int    `json:"id"`
+	Name      string `json:"name"`
+	Tags      string `json:"tags"`
+	Icon      string `json:"icon"`
+	Position  string `json:"position"`
+	ShortCode string `json:"shortCode"`
+}
 
 type TopicRel struct {
 	Aid        int       `json:"aid"`      // 上 左

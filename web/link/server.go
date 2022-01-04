@@ -40,8 +40,9 @@ func Router(e *echo.Echo) {
 		})
 	}, middleware.Anonymous())
 	g.GET("/marks/newest", func(e echo.Context) error {
+		//page next方式只能支持按照时间排序
 		return listLink(e, func(request *ListLinkRequest) {
-			request.OrderBy = "link.create_time desc"
+			request.OrderBy = "link.id desc"
 		})
 	}, middleware.Anonymous())
 	g.GET("/marks/mine", func(e echo.Context) error {
@@ -125,17 +126,28 @@ func createLink(e echo.Context) error {
 
 func listLink(e echo.Context, setupRequest func(request *ListLinkRequest)) error {
 	req := new(ListLinkRequest)
-	e.Bind(req)
+	err := e.Bind(req)
+	if err != nil {
+		return err
+	}
 	if err := e.Validate(req); err != nil {
 		return err
 	}
 	uid := util.GetUserId(e)
 	req.UserId = uid
 	setupRequest(req)
-	res, total, err := svr.ListLink(req)
-	data := util.ResponsePage(res, err, total, len(res) > 0)
+	res, err := svr.ListLinkNoJoin(req)
+	if err != nil {
+		return err
+	}
+	l := len(res)
+	hasMore := l == req.Size
+	nextId := 0
+	if l > 0 {
+		nextId = res[len(res)-1].Id
+	}
 	e.Response().Header().Add("Cache-Control", "max-age=1800")
-	return e.JSON(http.StatusOK, data)
+	return e.JSON(http.StatusOK, util.ResponsePage(res, hasMore, nextId))
 }
 
 func myAllPostLink(context echo.Context) error {

@@ -14,7 +14,7 @@ interface DataNode {
 }
 
 const initTreeDate: DataNode[] = [
-    {title: '查主题', key: '0'},
+    {title: '所有主题', key: '0'},
 ];
 
 // It's just a simple demo. You can use tree map to optimize update perf.

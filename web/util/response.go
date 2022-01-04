@@ -20,6 +20,7 @@ type (
 	Page struct {
 		HasMore bool `json:"hasMore"`
 		Total   int  `json:"total,omitempty"`
+		NextId  int  `json:"nextId"`
 	}
 )
 
@@ -44,22 +45,15 @@ func ResponseHasMore(data interface{}, hasMore bool) (res interface{}) {
 	return res
 }
 
-func ResponsePage(data interface{}, svrErr *Err, total int, hasMore bool) (res interface{}) {
-	if svrErr == nil {
-		res = &PageResult{
-			Ok:   true,
-			Data: data,
-			Page: Page{
-				Total:   total,
-				HasMore: hasMore,
-			},
-		}
-	} else {
-		if svrErr.Data != nil {
-			return &ErrorResult{Ok: false, MsgId: svrErr.MsgId, ErrorData: svrErr.Data}
-		} else {
-			return &ErrorResult{Ok: false, MsgId: svrErr.MsgId}
-		}
+func ResponsePage(data interface{}, hasMore bool, next int) (res interface{}) {
+
+	res = &PageResult{
+		Ok:   true,
+		Data: data,
+		Page: Page{
+			HasMore: hasMore,
+			NextId:  next,
+		},
 	}
 
 	return

@@ -1,6 +1,7 @@
 package link
 
 import (
+	"github.com/cockroachdb/errors"
 	cuckoo "github.com/seven4x/cuckoofilter"
 	"github.com/seven4x/link/web/comment"
 	"github.com/seven4x/link/web/messages"
@@ -71,57 +72,20 @@ func (s *Service) Save(link *Link) (id int, errs *util.Err) {
 	return link.Id, nil
 }
 
-func (s *Service) ListLink(req *ListLinkRequest) (res []*ListLinkResponse, total int, errs *util.Err) {
-
-	res, t, errs := s.listLinkNoJoin(req)
-	return res, int(t), errs
-}
-
-//两种查询方法需要用基准测一下哪个快
-func (s *Service) listLinkJoin(req *ListLinkRequest) (res []*ListLinkResponse, total int64, errs *util.Err) {
-	req.Size = 10
-	var links []WithUser
-	var err error
-
-	if req.UserId == 0 {
-		links, total, err = s.dao.ListLink(req)
-	} else {
-		links, total, err = s.dao.ListLinkJoinUserVote(req)
-	}
-	if err != nil {
-		util.Error(err.Error())
-	}
-	res = make([]*ListLinkResponse, 0)
-	visit(&links, func(m WithUser) {
-		link := BuildLinkResponseOfModel(&m)
-		res = append(res, link)
-	})
-	ids := getLinkIds(&links)
-	//var wg sync.WaitGroup
-	wg := sync.WaitGroup{}
-	//热评
-	wg.Add(1)
-	go func() {
-		s.fetchHotComment(ids, res)
-		wg.Done()
-	}()
-
-	wg.Wait()
-	return res, total, nil
-}
-
-/* 需要关联查询：
+/*ListLinkNoJoin
+需要关联查询：
 创建人 头像，昵称
 热评，热评头像、昵称
 是否喜欢
 */
-func (s *Service) listLinkNoJoin(req *ListLinkRequest) (res []*ListLinkResponse, total int64, errs *util.Err) {
+func (s *Service) ListLinkNoJoin(req *ListLinkRequest) (res []*ListLinkResponse, errs error) {
 	req.Size = 10
 	var links []WithUser
 	var err error
-	links, total, err = s.dao.ListLink(req)
+	links, err = s.dao.ListLink(req)
 	if err != nil {
 		util.Error(err.Error())
+		return nil, errors.Wrap(err, "db error")
 	}
 
 	res = make([]*ListLinkResponse, 0)
@@ -150,7 +114,7 @@ func (s *Service) listLinkNoJoin(req *ListLinkRequest) (res []*ListLinkResponse,
 	}
 	wg.Wait()
 
-	return res, total, nil
+	return res, nil
 }
 
 func (s *Service) fetchHotComment(ids []interface{}, links []*ListLinkResponse) {

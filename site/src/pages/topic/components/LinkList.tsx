@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {ListLinks} from "../service";
-import {List,   Skeleton, message} from "antd";
+import {Button, List, Skeleton} from "antd";
 import {LinkItem} from './LinkItem'
 import {LinkItemData} from '../model'
-import {GlobalContext} from "../../../App";
 import useUrlState from '@ahooksjs/use-url-state';
 
 
@@ -15,20 +14,19 @@ interface LinkListProps {
 const count = 3;
 
 const LinkList: React.FC<LinkListProps> = ({topicId, filter}) => {
-    const loginContext = useContext(GlobalContext)
-    let loginUser = loginContext.user
     //初次加载 table的菊花
     const [initLoading, setInitLoading] = useState<boolean>(true)
     //加载更多时不显示加载更多按钮
     const [loading, setLoading] = useState<boolean>(false)
+    const [more, setMore] = useState<boolean>(true)
     const [list, setList] = useState<Array<LinkItemData>>([])
-    const [total, setTotal] = useState(0)
-    const [page, setPage] = useUrlState({p: 1})
+    const [data, setData] = useState<Array<LinkItemData>>([])
+    const [prev, setPrev] = useState(0)
 
     //初始化
     useEffect(() => {
         loadData()
-    }, [topicId, page?.p]);
+    }, [topicId]);
 
     const loadData = () => {
         //搞个假数据为了现实骨架
@@ -42,18 +40,37 @@ const LinkList: React.FC<LinkListProps> = ({topicId, filter}) => {
             commentCount: 0,
             hotComment: {avatar: "", content: "", uid: 0}
         }))
-        setList(newList);
+        setList(data.concat(newList));
         setLoading(true)
-        ListLinks(topicId,Number(page?.p), filter).then((res) => {
-            let newData = res.data
-            console.log(res);
+        ListLinks(topicId, prev, filter).then((res) => {
+            console.log(res)
+            let newData = data.concat(res.data)
             setLoading(false)
             setInitLoading(false)
+            setData(newData)
             setList(newData)
-            setTotal(res.page && res.page.total)
+            if (!res?.page?.hasMore) {
+                setMore(false)
+            } else {
+                setMore(true)
+            }
+            setPrev( res?.page && res?.page.nextId )
         });
 
     };
+    const loadMore =
+        !initLoading && !loading && more ? (
+            <div
+                style={{
+                    textAlign: 'center',
+                    marginTop: 12,
+                    height: 32,
+                    lineHeight: '32px',
+                }}
+            >
+                <Button onClick={loadData}>查看更多</Button>
+            </div>
+        ) : null;
 
     return (
         <div>
@@ -61,20 +78,7 @@ const LinkList: React.FC<LinkListProps> = ({topicId, filter}) => {
                 loading={initLoading}
                 itemLayout="horizontal"
                 dataSource={list}
-                pagination={{
-                    hideOnSinglePage: true,
-                    showSizeChanger: false,
-                    size: "small",
-                    current: Number(page?.p),
-                    onChange: page => {
-                        if (page > 3 && loginUser == null) {
-                            message.info('请登录,查看更多')
-                            return
-                        }
-                        setPage((s) => ({p: page}))
-                    },
-                    total: total
-                }}
+                loadMore={loadMore}
                 renderItem={(item, idx) => (
                     <List.Item key={"link_" + idx}>
                         <Skeleton title={false} loading={item.loading} active>

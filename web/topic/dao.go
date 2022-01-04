@@ -2,7 +2,6 @@ package topic
 
 import (
 	"encoding/json"
-	"errors"
 	"github.com/seven4x/link/web/store"
 	"github.com/seven4x/link/web/util"
 	"time"
@@ -31,6 +30,12 @@ const (
 						where b.bid= ?
 						  and b.position= ?
 						  and a.id > ?`
+
+	ListAllRelTopic = `select a.id,a.name,a.short_code
+					from topic a
+							 left join topic_rel b on a.id = b.bid or a.id = b.aid 
+					where (b.aid= ? or b.bid = ?)
+					  and a.id != ?`
 )
 
 // 这里考虑要不要把 db暴露出去，简单的操作直接在service中做，这样反模式了，跨层调用了
@@ -152,7 +157,7 @@ func convertPositionValue(position int) int {
 	return 1
 }
 
-/*
+/*ListRelativeTopic
 db 1 上下 2 左右
 request 1,2,3,4 上下左右
 */
@@ -177,7 +182,10 @@ func (dao *Dao) ListRelativeTopic(id int, position string, prev int) (topic []To
 		sql = ListTopic
 		break
 	default:
-		return nil, errors.New("position error，not in (1,2,3,4)")
+		dbPosition = id
+		sql = ListAllRelTopic //todo 优化性能
+		prev = id
+		break
 
 	}
 	topic = make([]Topic, 0)

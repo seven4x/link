@@ -24,29 +24,25 @@ func (dao *Dao) Save(link *Link) (i int, err error) {
 	return link.Id, err
 }
 
-func (dao *Dao) ListLink(req *ListLinkRequest) (links []WithUser, total int64, err error) {
-	total, err = dao.countLink(req)
-	if total < 1 {
-		return nil, 0, err
-	}
+func (dao *Dao) ListLink(req *ListLinkRequest) (links []WithUser, err error) {
+
 	links = make([]WithUser, 0)
-	start := (req.Page - 1) * req.Size
-	if start < 0 {
-		start = 0
-	}
+
 	sess := dao.Table("link").
 		Cols(append([]string{"account.nick_name", "account.avatar"}, BaseColumn...)...).
 		Join("left", "account", "account.id=link.create_by").
-		Where("link.topic_id=?", req.Tid).
-		And("link.id>?", req.Prev)
+		Where("link.topic_id=?", req.Tid)
+	if req.Prev != 0 {
+		sess.And("link.id < ?", req.Prev)
+	}
 	if req.FilterMy {
 		sess.And("link.create_by=?", req.UserId)
 	}
 	if req.OrderBy != "" {
 		sess.OrderBy(req.OrderBy)
 	}
-	err = sess.Limit(req.Size, start).Find(&links)
-	return links, total, err
+	err = sess.Limit(req.Size).Find(&links)
+	return links, err
 }
 
 func (dao *Dao) ListLinkJoinUserVote(req *ListLinkRequest) (links []WithUser, total int64, err error) {

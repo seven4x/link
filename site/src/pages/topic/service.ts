@@ -47,7 +47,7 @@ export async function ListRelationTopic(topicId: number, position: string, prev 
             p = '4';
             break;
         default:
-            p = '1';
+            p = '0';
     }
     return request(`/topic/${topicId}/related/${p}`, {method: "GET", params: {prev}})
 }
@@ -69,7 +69,7 @@ export function AddLink(link: any) {
     return request("/link", {method: "POST", data: link})
 }
 
-export async function ListLinks(topicId: number, page: number, filter: string, group?: string) {
+export async function ListLinks(topicId: number, prev: number, filter: string, group?: string) {
     if (topicId == null) {
         return Promise.resolve({data: [], ok: true})
     }
@@ -90,7 +90,7 @@ export async function ListLinks(topicId: number, page: number, filter: string, g
     return request(url, {
         params: {
             tid: topicId,
-            page,
+            prev,
             group
         },
         headers: {
