@@ -57,13 +57,11 @@ func load(rd io.Reader) {
 }
 
 func IsAllowUrl(str string) bool {
-	isurl, host := IsUrl(str)
+	isurl, _ := IsUrl(str)
 	if !isurl {
 		return false
 	}
-	urlOnce.Do(initFilter)
-	has := trie.Search(host)
-	return !has
+	return true
 }
 
 func isUrl2(str string) (bool, string) {
