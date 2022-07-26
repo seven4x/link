@@ -8,7 +8,6 @@ import (
 	"github.com/seven4x/link/web/risk"
 	"github.com/seven4x/link/web/util"
 	"github.com/seven4x/link/web/vote"
-	"strconv"
 	"sync"
 )
 
@@ -40,18 +39,12 @@ func (s *Service) Save(link *Link) (id int, errs *util.Err) {
 		return -1, util.NewError(messages.LinkNotAllowDomain)
 	}
 
-	bytes := []byte(strconv.Itoa(link.TopicId) + "_" + link.Link)
-	success := s.filter.InsertUnique(bytes)
-	if !success {
-		return -1, util.NewError(messages.LinkRepeatInSameTopic)
-	}
 	if link.FirstComment == "" {
 		link.CommentCnt = 0
 	}
 	_, err := s.dao.Save(link)
 	if err != nil {
 		util.Error(err.Error())
-		s.filter.Delete(bytes)
 		return -1, util.NewError(messages.GlobalErrorAboutDatabase)
 	}
 
