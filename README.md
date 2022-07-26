@@ -1,14 +1,15 @@
-# 破茧♥️
+# share  &  vote  &  reading ♥️
 
-https://bitseatech.com  site code source
+the [site](https://bitseatech.com)'s  source code.
 
-
-站点：https://bitseatech.com 源码
-
-目录结构
+I'm using the site manage link favorite.
+ 
+TOC 
 ```text
-picker-extension chrome扩展 用于快速收集链接
-site React前端
-web  Golang 后端
-tool 小工具
+├── LICENSE
+├── README.md
+├── docs useless document
+├── picker-extension chrome extension for quickly collect link
+├── site  frontend by React
+└── web   backend by Golang
 ```
