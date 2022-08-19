@@ -1,4 +1,4 @@
-module github.com/seven4x/link/web
+module github.com/seven4x/link/apiserver
 
 go 1.18
 
