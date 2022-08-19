@@ -13,9 +13,8 @@ func TestDao_ListLink(t *testing.T) {
 		Tid:    1,
 		UserId: 1,
 	}
-	res, total, err := dao.ListLink(req)
+	res, err := dao.ListLink(req)
 	assert.Nil(t, err)
-	assert.True(t, total > 0)
 	assert.NotNil(t, res)
 
 }
