@@ -15,6 +15,7 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.4
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/seven4x/cuckoofilter v0.0.0-20201118062419-d076a934a99e
+	github.com/seven4x/link/web v0.0.0-00010101000000-000000000000
 	github.com/spf13/cobra v1.1.1
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.7.0
@@ -78,3 +79,5 @@ require (
 	golang.org/x/net v0.0.0-20211216030914-fe4d6282115f // indirect
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
 )
+
+replace github.com/seven4x/link/web => ./
