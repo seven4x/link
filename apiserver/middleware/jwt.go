@@ -3,7 +3,6 @@ package middleware
 import (
 	"fmt"
 	"github.com/golang-jwt/jwt"
-	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"time"
 )
@@ -25,7 +24,7 @@ func BuildToken(username string, id int) (token string, claims *JwtCustomClaims,
 		Name: username,
 		Id:   id,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
+			ExpiresAt: time.Now().Add(time.Hour * 24 * 30).Unix(),
 		},
 	}
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
