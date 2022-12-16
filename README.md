@@ -8,6 +8,6 @@ TOC
 ```text
 ├── README.md
 ├── picker-extension chrome extension for quickly collect link
-├── website  frontend by React
-└── apiserver   backend by Golang
+├── website  frontend using React
+└── apiserver   backend using Golang
 ```

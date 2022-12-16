@@ -1,7 +1,7 @@
 package job
 
 import (
-	"github.com/seven4x/link/topic"
+	"github.com/seven4x/link/db"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -15,19 +15,19 @@ func TestRefreshHotTopic(t *testing.T) {
 
 func TestInsertTime(t *testing.T) {
 
-	dao := topic.NewDao()
+	dao := db.NewDao()
 
 	now := time.Now()
 	expireD, _ := time.ParseDuration("24h")
 	expireTime := now.Add(expireD)
-	ts := &topic.HotTopic{
+	ts := &db.HotTopic{
 		Id:         99,
 		Expire:     expireTime,
 		CreateTime: now,
 	}
 	_, e := dao.Insert(ts)
 
-	ts2 := &topic.HotTopic{
+	ts2 := &db.HotTopic{
 		Id: 99,
 	}
 	dao.Find(ts2)
