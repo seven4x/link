@@ -117,11 +117,11 @@ function SearchInput(props) {
         onChange={handleChange}
         notFoundContent={null}
     >
-      <OptGroup label="最近使用" key="used">
-        {usedOptions}
-      </OptGroup>
       <OptGroup label="输入搜索" key="search">
         {options}
+      </OptGroup>
+      <OptGroup label="最近使用" key="used">
+        {usedOptions}
       </OptGroup>
     </Select>
   );

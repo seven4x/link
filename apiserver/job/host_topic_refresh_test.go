@@ -1,7 +1,7 @@
 package job
 
 import (
-	"github.com/seven4x/link/web/topic"
+	"github.com/seven4x/link/topic"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"

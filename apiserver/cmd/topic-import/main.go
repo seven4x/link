@@ -6,8 +6,7 @@ import (
 	"fmt"
 	"github.com/emirpasic/gods/lists/arraylist"
 	"github.com/emirpasic/gods/stacks/arraystack"
-	"github.com/seven4x/link/web/store"
-	t "github.com/seven4x/link/web/topic"
+	"github.com/seven4x/link/db"
 	"github.com/spf13/cobra"
 	"log"
 	"os"
@@ -92,10 +91,10 @@ func saveALl(root *Topic) {
 		return
 	}
 	iterator := root.subs.Iterator()
-	var prev *t.Topic
+	var prev *db.Topic
 	for iterator.Next() {
 		topic := iterator.Value().(*Topic)
-		record := &t.Topic{
+		record := &db.Topic{
 			Name:     topic.name,
 			Lang:     "zh",
 			Tags:     topic.code,
@@ -108,7 +107,7 @@ func saveALl(root *Topic) {
 		topic.id = record.Id
 
 		//上下关系
-		saveRel(&t.TopicRel{
+		saveRel(&db.TopicRel{
 			Aid:      root.id,
 			Bid:      topic.id,
 			Position: 1,
@@ -116,7 +115,7 @@ func saveALl(root *Topic) {
 		})
 		if prev != nil {
 			//左右关系
-			saveRel(&t.TopicRel{
+			saveRel(&db.TopicRel{
 				Aid:      prev.Id,
 				Bid:      topic.id,
 				Position: 2,
@@ -131,10 +130,10 @@ func saveALl(root *Topic) {
 }
 
 var (
-	engine = store.NewDb()
+	engine = db.NewDb()
 )
 
-func saveTopic(topic *t.Topic) error {
+func saveTopic(topic *db.Topic) error {
 	_, err := engine.InsertOne(topic)
 	if err == nil {
 		return nil
@@ -143,7 +142,7 @@ func saveTopic(topic *t.Topic) error {
 		return err
 	}
 }
-func saveRel(rel *t.TopicRel) {
+func saveRel(rel *db.TopicRel) {
 	_, err := engine.InsertOne(rel)
 	if err != nil {
 		println(err.Error())
