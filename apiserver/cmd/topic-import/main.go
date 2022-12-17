@@ -130,7 +130,7 @@ func saveALl(root *Topic) {
 }
 
 var (
-	engine = db.NewDb()
+	engine, _ = db.NewDb()
 )
 
 func saveTopic(topic *db.Topic) error {

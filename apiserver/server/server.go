@@ -21,7 +21,6 @@ var (
 )
 
 func BootEcho() (e *echo.Echo) {
-	// Echo instance
 	e = echo.New()
 	e.Validator = app.NewCustomValidator()
 	logConfig := middleware.LoggerConfig{}
@@ -34,7 +33,6 @@ func BootEcho() (e *echo.Echo) {
 
 	//sentinel参考：https://github.com/alibaba/sentinel-golang/tree/master/adapter/echo
 	//https://github.com/alibaba/sentinel-golang/blob/master/example/datasource/nacos/datasource_nacos_example.go
-
 	initSentinel()
 	//全局限流
 	e.Use(adapter.SentinelMiddleware())
@@ -88,7 +86,6 @@ func initSentinel() {
 }
 
 func initRouter(e *echo.Echo) {
-
 	// 初始化模块
 	RouterComment(e)
 	RouterUser(e)

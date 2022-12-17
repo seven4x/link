@@ -9,7 +9,10 @@ type Dao struct {
 }
 
 func NewDao() (dao *Dao) {
-	dao = &Dao{NewDb()}
-	dao.NewSession()
+	eng, err := NewDb()
+	if err != nil {
+		panic("couldn't create db ")
+	}
+	dao = &Dao{eng}
 	return
 }

@@ -1,7 +1,6 @@
 package db
 
 import (
-	"database/sql"
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/seven4x/link/app"
@@ -10,12 +9,10 @@ import (
 	"xorm.io/xorm/names"
 )
 
-var engine *xorm.Engine
 
-func init() {
-	var err error
+func initDB() (*xorm.Engine, error) {
 
-	engine, err = xorm.NewEngine("sqlite3", buildSqlite3Dsn())
+	engine, err := xorm.NewEngine("sqlite3", buildSqlite3Dsn())
 	if err != nil {
 		app.Error(err.Error())
 		panic(err)
@@ -28,6 +25,7 @@ func init() {
 	if err != nil {
 		app.Error("engine-ping-failed:", err.Error())
 	}
+	return engine, err
 }
 
 func buildSqlite3Dsn() string {
@@ -39,19 +37,6 @@ func buildSqlite3Dsn() string {
 
 }
 
-// NewDb 调用时，p=bil
-func NewDb() (p *xorm.Engine) {
-	p = engine
-	return engine
-}
-
-// SetMockDb 参考：https://blog.marvel6.cn/2020/01/test-and-mock-db-by-xorm-with-the-help-of-convey-and-sqlmock/
-func SetMockDb(mockDb *sql.DB) {
-	engine.DB().DB = mockDb
-}
-
-func CloseEngine() {
-	if engine != nil {
-		_ = engine.Close()
-	}
+func NewDb() (*xorm.Engine, error) {
+	return initDB()
 }
