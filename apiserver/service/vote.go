@@ -29,7 +29,7 @@ import (
       3，投反对票，更新成2，累计投票 -1，反对+1
 
 */
-func (s *Service) Vote(req *api.VoteRequest) (bool, *app.Err) {
+func (s *Service) Vote(req *api.VoteRequest) (bool, error) {
 	//查投票记录
 	isLike, _ := s.Dao.GetUserVote(req.CreateBy, req.Type, req.Id)
 	if isLike == req.IsLike || (isLike == -1 && req.IsLike == 0) {

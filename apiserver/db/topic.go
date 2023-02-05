@@ -3,6 +3,7 @@ package db
 import (
 	"encoding/json"
 	"github.com/seven4x/link/app"
+	"github.com/seven4x/link/app/log"
 	"time"
 	"xorm.io/xorm"
 )
@@ -204,6 +205,6 @@ func (dao *Dao) ListHotTopic(limit int, start, end time.Time) (res []int, err er
 		where create_time between ? and ?
 		group by topic_id limit ?`, start, end, limit).Find(&res)
 	str, _ := json.Marshal(res)
-	app.Infof("%s~%s,hot_topic:%s", start.String(), end.String(), str)
+	log.Infof("%s~%s,hot_topic:%s", start.String(), end.String(), str)
 	return res, err
 }

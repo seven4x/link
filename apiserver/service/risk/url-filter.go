@@ -4,6 +4,7 @@ import (
 	"bufio"
 	valid "github.com/asaskevich/govalidator"
 	"github.com/seven4x/link/app"
+	"github.com/seven4x/link/app/log"
 	"io"
 	"net"
 	"net/http"
@@ -28,8 +29,8 @@ func initFilter() {
 	}
 	rsp, err := c.Get(BlackUrlListRepo)
 	if err != nil {
-		app.Error("初始化URL黑名单错误")
-		app.Error(err.Error())
+		log.Error("初始化URL黑名单错误")
+		log.Error(err.Error())
 		return
 	}
 	defer rsp.Body.Close()
@@ -43,7 +44,7 @@ func load(rd io.Reader) {
 		line, _, err := buf.ReadLine()
 		if err != nil {
 			if err != io.EOF {
-				app.Error("Read URL黑名单错误")
+				log.Error("Read URL黑名单错误")
 			}
 			break
 		}
@@ -53,7 +54,7 @@ func load(rd io.Reader) {
 			i++
 		}
 	}
-	app.Infow("Add_BlackUrl", "size", i)
+	log.Infow("Add_BlackUrl", "size", i)
 }
 
 func IsAllowUrl(str string) bool {
@@ -77,7 +78,7 @@ func isUrl(str string) (bool bool, host string) {
 	}
 	u, err := url.Parse(strTemp)
 	if err != nil {
-		app.Info(err.Error())
+		log.Info(err.Error())
 		return false, ""
 	}
 

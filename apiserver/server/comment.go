@@ -9,14 +9,15 @@ import (
 	"strconv"
 )
 
-func RouterComment(e *echo.Echo) {
+func (s *Server) RouterComment() {
+	e := s.echo
 	g := e.Group("/api1/link")
-	g.POST("/:lid/comment", PostComment, app.JWT())
-	g.GET("/:lid/comment", ListComment, app.Anonymous())
-	g.DELETE("/:lid/comment/:mid", DeleteComment, app.JWT())
+	g.POST("/:lid/comment", s.PostComment, app.JWT())
+	g.GET("/:lid/comment", s.ListComment, app.Anonymous())
+	g.DELETE("/:lid/comment/:mid", s.DeleteComment, app.JWT())
 }
 
-func PostComment(e echo.Context) error {
+func (s *Server) PostComment(e echo.Context) error {
 	req := new(api.NewCommentRequest)
 	if err := e.Bind(req); err != nil {
 		e.JSON(http.StatusOK, api.Fail(err.Error()))
@@ -41,11 +42,11 @@ func PostComment(e echo.Context) error {
 		req.LinkId = id
 	}
 
-	id, err := svr.SaveNewComment(req)
+	id, err := s.svr.SaveNewComment(req)
 	_ = e.JSON(http.StatusOK, api.Response(id, err))
 	return nil
 }
-func ListComment(e echo.Context) error {
+func (s *Server) ListComment(e echo.Context) error {
 	linkId := e.Param("lid")
 	pre := e.Param("prev")
 	linkIdInt, err := strconv.Atoi(linkId)
@@ -59,14 +60,14 @@ func ListComment(e echo.Context) error {
 	req.Size = DefaultSize
 	req.UserId = app.GetUserId(e)
 	req.Prev, _ = strconv.Atoi(pre)
-	res, hasMore, err := svr.ListComment(req)
+	res, hasMore, err := s.svr.ListComment(req)
 	if err != nil {
 		return err
 	}
 	e.JSON(http.StatusOK, api.ResponseHasMore(res, hasMore))
 	return nil
 }
-func DeleteComment(e echo.Context) error {
+func (s *Server) DeleteComment(e echo.Context) error {
 	lid := e.Param("lid")
 	mid := e.Param("mid")
 	linkId, err := strconv.Atoi(lid)
@@ -77,7 +78,7 @@ func DeleteComment(e echo.Context) error {
 	if err != nil {
 		return err
 	}
-	update, err := svr.DeleteComment(linkId, commentId)
+	update, err := s.svr.DeleteComment(linkId, commentId)
 	if err != nil {
 		return err
 	}

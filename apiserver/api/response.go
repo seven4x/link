@@ -61,18 +61,21 @@ func ResponsePage(data interface{}, hasMore bool, next int) (res interface{}) {
 	return
 }
 
-func Response(date interface{}, svrErr *app.Err) (res interface{}) {
+func Response(date interface{}, svrErr error) (res interface{}) {
 	if svrErr == nil {
 		res = &SimpleResult{
 			Ok:   true,
 			Data: date,
 		}
 	} else {
-		if svrErr.Data != nil {
-			return &ErrorResult{Ok: false, MsgId: svrErr.MsgId, ErrorData: svrErr.Data}
-		} else {
-			return &ErrorResult{Ok: false, MsgId: svrErr.MsgId}
+		if err, ok := svrErr.(app.Err); ok {
+			if err.Data != nil {
+				return &ErrorResult{Ok: false, MsgId: err.MsgId, ErrorData: err.Data}
+			} else {
+				return &ErrorResult{Ok: false, MsgId: err.MsgId}
+			}
 		}
+		return svrErr
 	}
 
 	return

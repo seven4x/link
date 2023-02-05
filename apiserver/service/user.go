@@ -11,9 +11,7 @@ import (
 	"strings"
 )
 
-/*
-string 成功是jwt-token,失败是错误消息
-*/
+// Login string 成功是jwt-token,失败是错误消息
 func (s *Service) Login(l api.Login) (res *api.LoginResponse, err error) {
 	if strings.ContainsAny(l.Username, "'<>@#&|") {
 		return nil, errors.New("非法登陆")
@@ -44,7 +42,7 @@ func md5password(originPwd string) string {
 	return pwd
 }
 
-func (s *Service) Register(req *api.RegisterRequest) (b bool, err *app.Err) {
+func (s *Service) Register(req *api.RegisterRequest) (b bool, err error) {
 	if ri, err := s.Dao.GetRegisterInfoByCode(req.Code); err != nil {
 		return false, app.NewError(api.REGISTER_CODE_ERROR)
 	} else {

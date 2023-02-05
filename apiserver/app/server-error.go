@@ -8,12 +8,12 @@ type Err struct {
 	Data  map[string]string
 }
 
-func (e *Err) Error() string {
+func (e Err) Error() string {
 	err, _ := json.Marshal(e)
 	return string(err)
 }
-func NewError(msgId string) *Err {
-	return &Err{
+func NewError(msgId string) Err {
+	return Err{
 		MsgId: msgId,
 	}
 }

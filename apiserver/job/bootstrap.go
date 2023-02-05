@@ -3,6 +3,7 @@ package job
 import (
 	"github.com/robfig/cron/v3"
 	"github.com/seven4x/link/app"
+	"github.com/seven4x/link/app/log"
 	"time"
 )
 
@@ -12,7 +13,7 @@ func StartJob() *cron.Cron {
 	c.AddFunc("@midnight", func() {
 		err := RefreshHotTopic()
 		if err != nil {
-			app.Error(err.Error())
+			log.Error(err.Error())
 		}
 	})
 	c.AddFunc("@hourly", func() {

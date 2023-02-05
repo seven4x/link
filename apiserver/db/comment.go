@@ -3,7 +3,7 @@ package db
 import (
 	"fmt"
 	"github.com/seven4x/link/api"
-	"github.com/seven4x/link/app"
+	"github.com/seven4x/link/app/log"
 	"strconv"
 	"xorm.io/builder"
 )
@@ -63,12 +63,12 @@ func (dao *Dao) ListComment(req *api.ListCommentRequest) (res []*CommentUser, ha
 func (dao *Dao) GrowCommentCnt(linkId int) {
 	_, err := dao.Exec("update link set comment_cnt = comment_cnt + 1 where id=? ", linkId)
 	if err != nil {
-		app.Error(err.Error())
+		log.Error(err.Error())
 	}
 }
 func (dao *Dao) DisGrowCommentCnt(linkId int) {
 	_, err := dao.Exec("update link set comment_cnt = comment_cnt - 1 where id=?  ", linkId)
 	if err != nil {
-		app.Error(err.Error())
+		log.Error(err.Error())
 	}
 }

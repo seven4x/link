@@ -5,30 +5,32 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/seven4x/link/api"
 	"github.com/seven4x/link/app"
+	"github.com/seven4x/link/app/log"
 	"github.com/seven4x/link/db"
 	"net/http"
 	"strconv"
 )
 
-func RouterTopic(e *echo.Echo) {
+func (s *Server) RouterTopic() {
+	e := s.echo
 	g := e.Group("/api1/topic")
-	g.POST("", CreateTopic, app.JWT())
-	g.GET("", SearchTopic)
-	g.GET("/:id", TopicDetail)
-	g.GET("/marks/hot", HotTopic)
-	g.GET("/marks/random", RandomTopic)
-	g.GET("/marks/recent", RecentTopic)
-	g.GET("/:tid/related/:position", RelativeTopic)
-	g.GET("/actions/delete/:id", RemoveTopic, app.JWT())
+	g.POST("", s.CreateTopic, app.JWT())
+	g.GET("", s.SearchTopic)
+	g.GET("/:id", s.TopicDetail)
+	g.GET("/marks/hot", s.HotTopic)
+	g.GET("/marks/random", s.RandomTopic)
+	g.GET("/marks/recent", s.RecentTopic)
+	g.GET("/:tid/related/:position", s.RelativeTopic)
+	g.GET("/actions/delete/:id", s.RemoveTopic, app.JWT())
 }
-func RemoveTopic(e echo.Context) error {
+func (s *Server) RemoveTopic(e echo.Context) error {
 	uid := app.GetUserId(e)
 	if uid == 0 {
 		return e.String(http.StatusBadRequest, "not allow")
 	}
 	id := e.Param("id")
 	topic := new(db.Topic)
-	res, err := svr.Dao.ID(id).Unscoped().Delete(topic)
+	res, err := s.svr.Dao.ID(id).Unscoped().Delete(topic)
 	if err != nil {
 		return e.String(http.StatusInternalServerError, err.Error())
 	}
@@ -44,12 +46,12 @@ func RemoveTopic(e echo.Context) error {
 5. JSON 响应
 
 */
-func CreateTopic(e echo.Context) error {
+func (s *Server) CreateTopic(e echo.Context) error {
 	req := new(api.CreateTopicRequest)
 	//1.解析
 	if err := e.Bind(req); err != nil {
 		_ = e.JSON(http.StatusOK, api.Fail(err.Error()))
-		app.Info(err.Error())
+		log.Info(err.Error())
 		return nil
 	}
 	//2.校验
@@ -73,12 +75,12 @@ func CreateTopic(e echo.Context) error {
 	claims := user.Claims.(*app.JwtCustomClaims)
 	topic.CreateBy = claims.Id
 	//4.处理
-	id, svrErr := svr.SaveTopic(topic, rel)
+	id, svrErr := s.svr.SaveTopic(topic, rel)
 	_ = e.JSON(http.StatusOK, api.Response(id, svrErr))
 	return nil
 }
 
-func SearchTopic(e echo.Context) error {
+func (s *Server) SearchTopic(e echo.Context) error {
 	keyword := e.QueryParam("q")
 	if keyword == "" {
 		e.JSON(http.StatusBadRequest, api.FailMsgId(api.GlobalParamWrong))
@@ -90,20 +92,20 @@ func SearchTopic(e echo.Context) error {
 		size = DefaultSize
 	}
 	prevInt, _ := strconv.Atoi(prev)
-	res, hasMore, err := svr.SearchTopic(keyword, prevInt, size)
+	res, hasMore, err := s.svr.SearchTopic(keyword, prevInt, size)
 	if err != nil {
-		app.Error(err.Error())
+		log.Error(err.Error())
 		return nil
 	}
 	return e.JSON(http.StatusOK, api.ResponseHasMore(res, hasMore))
 }
-func TopicDetail(e echo.Context) error {
+func (s *Server) TopicDetail(e echo.Context) error {
 	id := e.Param("id")
 	var topic *api.TopicDetail
 	if i, err := strconv.Atoi(id); err != nil {
-		topic, _ = svr.GetDetailByAlias(id)
+		topic, _ = s.svr.GetDetailByAlias(id)
 	} else {
-		topic, _ = svr.GetDetailById(i)
+		topic, _ = s.svr.GetDetailById(i)
 	}
 	if topic == nil {
 		return e.JSON(http.StatusOK, api.FailMsgId(api.TopicNotFound))
@@ -111,21 +113,21 @@ func TopicDetail(e echo.Context) error {
 	return e.JSON(http.StatusOK, api.Success(topic))
 }
 
-func HotTopic(e echo.Context) error {
-	res, err := svr.ListHotTopic()
+func (s *Server) HotTopic(e echo.Context) error {
+	res, err := s.svr.ListHotTopic()
 	if err != nil {
 		return err
 	}
 	e.JSON(http.StatusOK, api.Response(res, nil))
 	return nil
 }
-func RandomTopic(e echo.Context) error {
+func (s *Server) RandomTopic(e echo.Context) error {
 	return nil
 }
-func RecentTopic(e echo.Context) error {
+func (s *Server) RecentTopic(e echo.Context) error {
 	return nil
 }
-func RelativeTopic(e echo.Context) error {
+func (s *Server) RelativeTopic(e echo.Context) error {
 	tid := e.Param("tid")
 	if id, err := strconv.Atoi(tid); err != nil {
 		return e.JSON(http.StatusOK, api.Fail("param wrong"))
@@ -136,7 +138,7 @@ func RelativeTopic(e echo.Context) error {
 		if prev != "" {
 			prevInt, _ = strconv.Atoi(prev)
 		}
-		topics, err := svr.ListRelativeTopic(id, position, prevInt)
+		topics, err := s.svr.ListRelativeTopic(id, position, prevInt)
 		if err == nil {
 			return e.JSON(http.StatusOK, api.ResponseHasMore(topics, len(topics) > 0))
 		} else {

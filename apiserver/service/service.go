@@ -6,7 +6,8 @@ type Service struct {
 	Dao *db.Dao //todo fixme
 }
 
-func NewService(dao *db.Dao) *Service {
+func NewService() *Service {
+	dao := db.NewDao()
 	return &Service{
 		Dao: dao,
 	}

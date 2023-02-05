@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/seven4x/link/api"
 	"github.com/seven4x/link/app"
+	"github.com/seven4x/link/app/log"
 	"github.com/seven4x/link/db"
 	"github.com/seven4x/link/service/risk"
 	"sync"
@@ -14,7 +15,7 @@ import (
 2.当前主题重复检查，重复是不添加返回原ID
 3.保存关联评论
 */
-func (s *Service) SaveLink(link *db.Link) (id int, errs *app.Err) {
+func (s *Service) SaveLink(link *db.Link) (id int, errs error) {
 
 	if b := risk.IsAllowUrl(link.Link); !b {
 		return -1, app.NewError(api.LinkNotAllowDomain)
@@ -25,7 +26,7 @@ func (s *Service) SaveLink(link *db.Link) (id int, errs *app.Err) {
 	}
 	_, err := s.Dao.SaveLink(link)
 	if err != nil {
-		app.Error(err.Error())
+		log.Error(err.Error())
 		return -1, app.NewError(api.GlobalErrorAboutDatabase)
 	}
 
@@ -40,7 +41,7 @@ func (s *Service) SaveLink(link *db.Link) (id int, errs *app.Err) {
 	}
 	_, err = s.SaveComment(cmt)
 	if err != nil {
-		app.Error(err.Error())
+		log.Error(err.Error())
 	}
 
 	return link.Id, nil
@@ -58,7 +59,7 @@ func (s *Service) ListLinkNoJoin(req *api.ListLinkRequest) (res []*api.ListLinkR
 	var err error
 	links, err = s.Dao.ListLink(req)
 	if err != nil {
-		app.Error(err.Error())
+		log.Error(err.Error())
 		return nil, errors.New("db error")
 	}
 

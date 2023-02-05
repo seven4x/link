@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/seven4x/link/api"
 	"github.com/seven4x/link/app"
+	"github.com/seven4x/link/app/log"
 	"github.com/seven4x/link/db"
 	"github.com/seven4x/link/service/risk"
 	"strconv"
@@ -14,12 +15,12 @@ import (
 2.检查关联topic是否存在
 3.检查是否重复
 */
-func (s *Service) SaveTopic(topic *db.Topic, rel *db.TopicRel) (id int, svrError *app.Err) {
+func (s *Service) SaveTopic(topic *db.Topic, rel *db.TopicRel) (id int, errs error) {
 
 	if topic.Lang == "zh" {
 		var b, s = risk.IsAllowText(topic.Name)
 		if !b {
-			app.Infow("topic-save-not-allow", "keyword", s)
+			log.Infow("topic-save-not-allow", "keyword", s)
 			return -1, app.NewError(api.TopicContentNotAllowed)
 		}
 	}
@@ -39,7 +40,7 @@ func (s *Service) SaveTopic(topic *db.Topic, rel *db.TopicRel) (id int, svrError
 	if err != nil {
 		return -1, app.NewError(api.TopicBackendDatabaseError)
 	}
-	app.Infow("save-new-topic", "uid", topic.CreateBy, "aid", rel.Aid, "name", topic.Name)
+	log.Infow("save-new-topic", "uid", topic.CreateBy, "aid", rel.Aid, "name", topic.Name)
 	return i, nil
 }
 

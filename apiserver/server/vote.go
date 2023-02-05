@@ -8,11 +8,12 @@ import (
 	"net/http"
 )
 
-func RouterVote(e *echo.Echo) {
-	e.POST("/api1/vote", Vote, app.JWT())
+func (s *Server) RouterVote() {
+	e := s.echo
+	e.POST("/api1/vote", s.Vote, app.JWT())
 }
 
-func Vote(e echo.Context) error {
+func (s *Server) Vote(e echo.Context) error {
 
 	//todo 重复代码 封装
 	req := new(api.VoteRequest)
@@ -35,7 +36,7 @@ func Vote(e echo.Context) error {
 	claims := user.Claims.(*app.JwtCustomClaims)
 	req.CreateBy = claims.Id
 
-	res, err := svr.Vote(req)
+	res, err := s.svr.Vote(req)
 	e.JSON(http.StatusOK, api.Response(res, err))
 
 	return nil

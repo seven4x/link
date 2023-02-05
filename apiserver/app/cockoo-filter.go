@@ -2,6 +2,7 @@ package app
 
 import (
 	cuckoo "github.com/seven4x/cuckoofilter"
+	"github.com/seven4x/link/app/log"
 	"io/ioutil"
 )
 
@@ -41,11 +42,11 @@ func Correction() {
 }
 
 func DumpCuckooFilter() {
-	Info("start DumpCuckooFilter")
+	log.Info("start DumpCuckooFilter")
 	bytes := filter.Encode()
 	err := ioutil.WriteFile(getFilePath(), bytes, 0755)
 	if err != nil {
-		Error(err.Error())
+		log.Error(err.Error())
 	}
 
 }

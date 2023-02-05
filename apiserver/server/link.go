@@ -21,40 +21,41 @@ import (
 
 验证明令： ab -n1000 -c100 http://localhost:1323/link/preview-token
 */
-func RouterLink(e *echo.Echo) {
+func (s *Server) RouterLink() {
+	e := s.echo
 	g := e.Group("/api1/link")
-	g.POST("", CreateLink, app.JWT())
+	g.POST("", s.CreateLink, app.JWT())
 	g.GET("", func(e echo.Context) error {
-		return ListLink(e, func(request *api.ListLinkRequest) {})
+		return s.ListLink(e, func(request *api.ListLinkRequest) {})
 	}, app.Anonymous())
-	g.POST("/actions/batch", BatchImport, app.JWT())
+	g.POST("/actions/batch", s.BatchImport, app.JWT())
 	g.GET("/marks/hot", func(e echo.Context) error {
-		return ListLink(e, func(request *api.ListLinkRequest) {
+		return s.ListLink(e, func(request *api.ListLinkRequest) {
 			request.OrderBy = "link.agree desc"
 		})
 	}, app.Anonymous())
 	g.GET("/marks/newest", func(e echo.Context) error {
 		//page next方式只能支持按照时间排序
-		return ListLink(e, func(request *api.ListLinkRequest) {
+		return s.ListLink(e, func(request *api.ListLinkRequest) {
 			request.OrderBy = "link.id desc"
 		})
 	}, app.Anonymous())
 	g.GET("/marks/mine", func(e echo.Context) error {
-		return ListLink(e, func(request *api.ListLinkRequest) {
+		return s.ListLink(e, func(request *api.ListLinkRequest) {
 			request.FilterMy = true
 		})
 	}, app.JWT())
-	g.GET("/marks/my", MyAllPostLink, app.JWT())
+	g.GET("/marks/my", s.MyAllPostLink, app.JWT())
 
-	g.GET("/preview-token", GetPreviewToken)
+	g.GET("/preview-token", s.GetPreviewToken)
 
-	g.GET("/recent", GetRecentLinks)
+	g.GET("/recent", s.GetRecentLinks)
 }
 
-func GetRecentLinks(context echo.Context) error {
+func (s *Server) GetRecentLinks(context echo.Context) error {
 	prev := context.QueryParam("prev")
 	prevI, _ := strconv.Atoi(prev)
-	res, err := svr.GetRecentLinks(prevI)
+	res, err := s.svr.GetRecentLinks(prevI)
 	nextId := 0
 	if len(res) > 0 {
 		nextId = res[len(res)-1].Id
@@ -72,7 +73,7 @@ func GetRecentLinks(context echo.Context) error {
 }
 
 // 解析URL中所有 a标签中的超链接保存
-func BatchImport(e echo.Context) error {
+func (s *Server) BatchImport(e echo.Context) error {
 	url := e.Param("url")
 
 	return e.JSON(http.StatusOK, map[string]interface{}{
@@ -82,14 +83,14 @@ func BatchImport(e echo.Context) error {
 
 }
 
-func GetPreviewToken(e echo.Context) error {
+func (s *Server) GetPreviewToken(e echo.Context) error {
 	str := app.GetConfigString("link-preview-token")
 
 	_ = e.HTML(http.StatusOK, str)
 	return nil
 }
 
-func CreateLink(e echo.Context) error {
+func (s *Server) CreateLink(e echo.Context) error {
 	req := new(api.CreateLinkRequest)
 	if err := e.Bind(req); err != nil {
 		e.JSON(http.StatusBadRequest, api.Fail(err.Error()))
@@ -108,7 +109,7 @@ func CreateLink(e echo.Context) error {
 	claims := user.Claims.(*app.JwtCustomClaims)
 	link := ToLink(req)
 	link.CreateBy = claims.Id
-	id, err := svr.SaveLink(link)
+	id, err := s.svr.SaveLink(link)
 	if err != nil {
 		_ = e.JSON(http.StatusInternalServerError, api.Response(id, err))
 	} else {
@@ -118,7 +119,7 @@ func CreateLink(e echo.Context) error {
 	return nil
 }
 
-func ListLink(e echo.Context, setupRequest func(request *api.ListLinkRequest)) error {
+func (s *Server) ListLink(e echo.Context, setupRequest func(request *api.ListLinkRequest)) error {
 	req := new(api.ListLinkRequest)
 	err := e.Bind(req)
 	if err != nil {
@@ -130,7 +131,7 @@ func ListLink(e echo.Context, setupRequest func(request *api.ListLinkRequest)) e
 	uid := app.GetUserId(e)
 	req.UserId = uid
 	setupRequest(req)
-	res, err := svr.ListLinkNoJoin(req)
+	res, err := s.svr.ListLinkNoJoin(req)
 	if err != nil {
 		return err
 	}
@@ -144,6 +145,6 @@ func ListLink(e echo.Context, setupRequest func(request *api.ListLinkRequest)) e
 	return e.JSON(http.StatusOK, api.ResponsePage(res, hasMore, nextId))
 }
 
-func MyAllPostLink(context echo.Context) error {
+func (s *Server) MyAllPostLink(context echo.Context) error {
 	return nil
 }

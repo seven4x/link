@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/seven4x/link/api"
 	"github.com/seven4x/link/app"
+	"github.com/seven4x/link/app/log"
 	"github.com/seven4x/link/db"
 	"io/ioutil"
 	"net/http"
@@ -18,18 +19,18 @@ var (
 	secret = "secret"
 )
 
-func RouterUser(e *echo.Echo) {
-
-	e.GET("/api1/wx/cb", WechatCallback)
+func (s *Server) RouterUser() {
+	e := s.echo
+	e.GET("/api1/wx/cb", s.WechatCallback)
 	g := e.Group("/api1/account")
-	g.POST("/login", Login)
-	g.GET("/logout", Logout)
-	g.POST("/register", Register)
-	g.GET("/get-my-code", GeneratorRegisterCode, app.JWT())
-	g.GET("/info", Info, app.JWT())
+	g.POST("/login", s.Login)
+	g.GET("/logout", s.Logout)
+	g.POST("/register", s.Register)
+	g.GET("/get-my-code", s.GeneratorRegisterCode, app.JWT())
+	g.GET("/info", s.Info, app.JWT())
 
 }
-func GeneratorRegisterCode(e echo.Context) error {
+func (s *Server) GeneratorRegisterCode(e echo.Context) error {
 	user := e.Get("user").(*jwt.Token)
 	if user == nil {
 		e.JSON(http.StatusOK, api.Fail("need login"))
@@ -37,7 +38,7 @@ func GeneratorRegisterCode(e echo.Context) error {
 	}
 	claims := user.Claims.(*app.JwtCustomClaims)
 
-	if code, err := svr.GeneratorRegisterCode(claims.Id); err != nil {
+	if code, err := s.svr.GeneratorRegisterCode(claims.Id); err != nil {
 		return e.JSON(http.StatusInternalServerError, api.Fail(err.Error()))
 	} else {
 		return e.JSON(http.StatusOK, api.Success(code))
@@ -45,24 +46,24 @@ func GeneratorRegisterCode(e echo.Context) error {
 	return nil
 }
 
-func Register(e echo.Context) error {
+func (s *Server) Register(e echo.Context) error {
 	req := new(api.RegisterRequest)
 	e.Bind(req)
 	if err := e.Validate(req); err != nil {
 		return err
 	}
-	res, err := svr.Register(req)
+	res, err := s.svr.Register(req)
 	return e.JSON(http.StatusOK, api.Response(res, err))
 }
 
-func Login(e echo.Context) error {
+func (s *Server) Login(e echo.Context) error {
 	req := &api.Login{}
 	if err := e.Bind(req); err != nil {
 		e.JSON(http.StatusOK, api.Fail(err.Error()))
 		return nil
 	}
 
-	if data, err := svr.Login(*req); err == nil {
+	if data, err := s.svr.Login(*req); err == nil {
 		cookie := new(http.Cookie)
 		cookie.Name = "token"
 		cookie.Value = data.Token
@@ -77,7 +78,7 @@ func Login(e echo.Context) error {
 	return nil
 }
 
-func Logout(e echo.Context) error {
+func (s *Server) Logout(e echo.Context) error {
 	cookie := new(http.Cookie)
 	cookie.Name = "token"
 	cookie.Path = "/"
@@ -88,10 +89,10 @@ func Logout(e echo.Context) error {
 }
 
 //https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Wechat_Login.html
-func WechatCallback(e echo.Context) error {
+func (s *Server) WechatCallback(e echo.Context) error {
 	code := e.QueryParam("code")
 	if code == "" {
-		app.Error("wechatCallback token is empty")
+		log.Error("wechatCallback token is empty")
 		return nil
 	}
 	url := "https://common.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code"
@@ -99,13 +100,13 @@ func WechatCallback(e echo.Context) error {
 	resp, err := http.Get(url)
 	defer resp.Body.Close()
 	if err != nil {
-		app.Error(err.Error())
-		app.Error("wechatCallback oauth2 error")
+		log.Error(err.Error())
+		log.Error("wechatCallback oauth2 error")
 		return nil
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		app.Error(err.Error())
+		log.Error(err.Error())
 	}
 	/*
 		{
@@ -122,8 +123,8 @@ func WechatCallback(e echo.Context) error {
 	token, b := m["access_token"]
 	openId, _ := m["openid"]
 	if !b || openId == "" {
-		app.Error("GetAccessToken")
-		app.Info(string(body))
+		log.Error("GetAccessToken")
+		log.Info(string(body))
 		return nil
 	}
 	e.JSON(http.StatusOK, "ok")
@@ -134,7 +135,7 @@ func WechatCallback(e echo.Context) error {
 		defer infoResp.Body.Close()
 		body, err = ioutil.ReadAll(resp.Body)
 		if err != nil {
-			app.Error(err.Error())
+			log.Error(err.Error())
 		}
 		/*
 			{
@@ -162,11 +163,11 @@ func WechatCallback(e echo.Context) error {
 	return nil
 }
 
-func Info(e echo.Context) error {
+func (s *Server) Info(e echo.Context) error {
 	u := app.GetUser(e)
-	app.Info(u)
+	log.Info(u)
 	acc := db.Account{Id: u.Id}
-	svr.Dao.Get(&acc)
+	s.svr.Dao.Get(&acc)
 	info := api.AccountInfo{
 		Id:       u.Id,
 		Name:     u.Name,

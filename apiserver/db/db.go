@@ -4,17 +4,17 @@ import (
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/seven4x/link/app"
+	"github.com/seven4x/link/app/log"
 	"time"
 	"xorm.io/xorm"
 	"xorm.io/xorm/names"
 )
 
-
 func initDB() (*xorm.Engine, error) {
 
 	engine, err := xorm.NewEngine("sqlite3", buildSqlite3Dsn())
 	if err != nil {
-		app.Error(err.Error())
+		log.Error(err.Error())
 		panic(err)
 	}
 	engine.DatabaseTZ = time.Local
@@ -23,7 +23,7 @@ func initDB() (*xorm.Engine, error) {
 	names.NewPrefixMapper(names.SnakeMapper{}, "t_")
 	err = engine.Ping()
 	if err != nil {
-		app.Error("engine-ping-failed:", err.Error())
+		log.Error("engine-ping-failed:", err.Error())
 	}
 	return engine, err
 }

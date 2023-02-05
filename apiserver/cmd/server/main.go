@@ -5,7 +5,6 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/seven4x/link/app"
 	"github.com/seven4x/link/job"
-	"github.com/seven4x/link/server"
 	"log"
 	"os"
 	"os/signal"
@@ -13,7 +12,9 @@ import (
 )
 
 func main() {
-	e := server.BootEcho()
+
+	e := echo.New()
+	BootApp(e)
 
 	c := job.StartJob()
 

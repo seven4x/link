@@ -12,7 +12,7 @@ func (s *Service) SaveComment(comment *db.Comment) (id int, err error) {
 	return comment.Id, err
 }
 
-func (s *Service) SaveNewComment(req *api.NewCommentRequest) (id int, errs *app.Err) {
+func (s *Service) SaveNewComment(req *api.NewCommentRequest) (id int, errs error) {
 	comment := &db.Comment{
 		LinkId:   req.LinkId,
 		Content:  risk.SafeUserText(req.Content),
