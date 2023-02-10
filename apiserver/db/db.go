@@ -2,17 +2,17 @@ package db
 
 import (
 	"fmt"
-	_ "github.com/mattn/go-sqlite3"
+	"time"
+
 	"github.com/seven4x/link/app"
 	"github.com/seven4x/link/app/log"
-	"time"
+
 	"xorm.io/xorm"
 	"xorm.io/xorm/names"
 )
 
-func initDB() (*xorm.Engine, error) {
-
-	engine, err := xorm.NewEngine("sqlite3", buildSqlite3Dsn())
+func NewDb() (*xorm.Engine, error) {
+	engine, err := xorm.NewEngine("sqlite3", fmt.Sprintf("file:%s?cache=shared", app.DbPath))
 	if err != nil {
 		log.Error(err.Error())
 		panic(err)
@@ -26,17 +26,4 @@ func initDB() (*xorm.Engine, error) {
 		log.Error("engine-ping-failed:", err.Error())
 	}
 	return engine, err
-}
-
-func buildSqlite3Dsn() string {
-	path := app.GetConfig("sqlite3.path")
-	if path == "" {
-		path = "~/.link"
-	}
-	return fmt.Sprintf("file:%s?cache=shared", path)
-
-}
-
-func NewDb() (*xorm.Engine, error) {
-	return initDB()
 }

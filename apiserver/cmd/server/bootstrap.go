@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-func BootApp(e *echo.Echo) {
+func BootApp(e *echo.Echo) error {
 
 	e.Validator = app.NewCustomValidator()
 	logConfig := middleware.LoggerConfig{}
@@ -32,7 +32,8 @@ func BootApp(e *echo.Echo) {
 	newServer := server.NewServer(e)
 	newServer.InitRouter()
 
-	app.Migration()
+	err := app.Migration()
+	return err
 }
 
 func initSentinel(e *echo.Echo) {

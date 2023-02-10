@@ -2,19 +2,28 @@ package main
 
 import (
 	"context"
-	"github.com/labstack/echo/v4"
-	"github.com/seven4x/link/app"
-	"github.com/seven4x/link/job"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/labstack/echo/v4"
+	"github.com/seven4x/link/app"
+	"github.com/seven4x/link/job"
+
+	_ "github.com/mattn/go-sqlite3"
+	flag "github.com/spf13/pflag"
 )
 
 func main() {
 
+	flag.Parse()
 	e := echo.New()
-	BootApp(e)
+	err := BootApp(e)
+	if err != nil {
+		log.Printf("%v", err)
+		return
+	}
 
 	c := job.StartJob()
 
