@@ -6,10 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/seven4x/link/app/log"
-
 	migrate "github.com/rubenv/sql-migrate"
-	flag "github.com/spf13/pflag"
 )
 
 //go:embed migrations/*
@@ -17,12 +14,6 @@ var content embed.FS
 var DbPath string
 
 func Migration() error {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return nil
-	}
-	flag.StringVar(&DbPath, "dbpath", home+"/.link/link.db", "the file path of sqlite db")
-	log.Debugf("dbPath is %s", DbPath)
 
 	if _, err := os.Stat(DbPath); os.IsNotExist(err) {
 		f, err := os.Create(DbPath)

@@ -12,12 +12,10 @@ import (
 	"github.com/seven4x/link/job"
 
 	_ "github.com/mattn/go-sqlite3"
-	flag "github.com/spf13/pflag"
 )
 
 func main() {
 
-	flag.Parse()
 	e := echo.New()
 	err := BootApp(e)
 	if err != nil {

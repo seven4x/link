@@ -1,19 +1,25 @@
 package main
 
 import (
-	adapter "github.com/alibaba/sentinel-golang/adapter/echo"
-	sentinel "github.com/alibaba/sentinel-golang/api"
+	"net/http"
+	"os"
+	"strings"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/seven4x/link/app"
 	"github.com/seven4x/link/app/log"
 	"github.com/seven4x/link/server"
-	"net/http"
-	"strings"
+
+	adapter "github.com/alibaba/sentinel-golang/adapter/echo"
+	sentinel "github.com/alibaba/sentinel-golang/api"
+	flag "github.com/spf13/pflag"
 )
 
 func BootApp(e *echo.Echo) error {
-
+	if err := parseConfig(); err != nil {
+		return err
+	}
 	e.Validator = app.NewCustomValidator()
 	logConfig := middleware.LoggerConfig{}
 	// 忽略静态文件日志
@@ -34,6 +40,16 @@ func BootApp(e *echo.Echo) error {
 
 	err := app.Migration()
 	return err
+}
+func parseConfig() error {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return err
+	}
+	flag.StringVar(&app.DbPath, "dbpath", home+"/.link/link.db", "the file path of sqlite db")
+	log.Debugf("dbPath is %s", app.DbPath)
+	flag.Parse()
+	return nil
 }
 
 func initSentinel(e *echo.Echo) {
